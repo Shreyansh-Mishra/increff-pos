@@ -1,0 +1,49 @@
+package com.increff.employee.service;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.increff.employee.dao.BrandDao;
+import com.increff.employee.pojo.BrandPojo;
+
+@Service
+public class BrandService {
+	@Autowired
+	private BrandDao brandDao;
+	
+	@Transactional
+	public void add(BrandPojo b) throws ApiException {
+		normalize(b);
+		BrandPojo existing = brandDao.select(b.getBrand(),b.getCategory());
+		if(existing!=null) {
+			throw new ApiException("Brand Already Exists");
+		}
+		else {
+			brandDao.insert(b);
+		}
+	}
+	
+	@Transactional
+	public List<BrandPojo> selectAll(){
+		return brandDao.selectAll();
+	}
+	
+	@Transactional
+	public BrandPojo selectByNameAndCategory(String name, String category) throws ApiException {
+		BrandPojo b = brandDao.select(name, category);
+		if(b==null) {
+			throw new ApiException("The requested brand and category combination does not exists");
+		}
+		return b;
+	}
+	
+	
+	protected static void normalize(BrandPojo b) {
+		b.setBrand(b.getBrand().toLowerCase().trim());
+		b.setCategory(b.getCategory().toLowerCase().trim());
+	}
+}
