@@ -44,11 +44,29 @@ public class BrandApiController {
 	}
 	
 	@ApiOperation(value= "Get brand by name and category")
-	@RequestMapping(path= "/api/brand/get-brand/{name}/{category}", method = RequestMethod.GET)
+	@RequestMapping(path= "/api/brand/{name}/{category}", method = RequestMethod.GET)
 	public BrandData getBrand(@PathVariable String name,@PathVariable String category) throws ApiException{
 		BrandPojo b = brandService.selectByNameAndCategory(name, category);
 		BrandData b2 = convert(b);
 		return b2;
+	}
+	
+	@ApiOperation(value= "Get brand by name")
+	@RequestMapping(path= "/api/brand/{name}", method = RequestMethod.GET)
+	public List<BrandData> getBrands(@PathVariable String name) throws ApiException{
+		List<BrandPojo> b = brandService.selectByName(name);
+		List<BrandData> b2 = new ArrayList<BrandData>();
+		for(BrandPojo i: b) {
+			b2.add(convert(i));
+		}
+		return b2;
+	}
+	
+	@ApiOperation(value= "Update brand")
+	@RequestMapping(path= "/api/brand/update/{id}", method = RequestMethod.POST)
+	public void updateBrand(@PathVariable int id, @RequestBody BrandForm b) throws ApiException{
+		BrandPojo b2 = convert(b);
+		brandService.updateBrand(id,b2);
 	}
 	
 	
