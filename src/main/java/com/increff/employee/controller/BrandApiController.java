@@ -63,10 +63,16 @@ public class BrandApiController {
 	}
 	
 	@ApiOperation(value= "Update brand")
-	@RequestMapping(path= "/api/brand/update/{id}", method = RequestMethod.POST)
+	@RequestMapping(path= "/api/brand/update/{id}", method = RequestMethod.PUT)
 	public void updateBrand(@PathVariable int id, @RequestBody BrandForm b) throws ApiException{
 		BrandPojo b2 = convert(b);
 		brandService.updateBrand(id,b2);
+	}
+	
+	@ApiOperation(value= "Delete brand")
+	@RequestMapping(path= "/api/brand/delete/{id}", method = RequestMethod.DELETE)
+	public void deleteBrand(@PathVariable int id) throws ApiException{
+		brandService.deleteBrand(id);
 	}
 	
 	

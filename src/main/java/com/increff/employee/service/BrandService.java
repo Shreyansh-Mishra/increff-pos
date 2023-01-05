@@ -67,6 +67,11 @@ public class BrandService {
 		return b;
 	}
 	
+	@Transactional(rollbackOn = ApiException.class)
+	public void deleteBrand(int id) {
+		brandDao.delete(id);
+	}
+	
 	
 	protected static void normalize(BrandPojo b) {
 		b.setBrand(b.getBrand().toLowerCase().trim());
