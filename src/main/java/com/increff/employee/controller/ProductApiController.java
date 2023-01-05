@@ -64,6 +64,12 @@ public class ProductApiController {
 		}
 		return p2;
 	}
+	
+	@ApiOperation("Delete Product")
+	@RequestMapping(path="/api/product/delete-product/{id}", method=RequestMethod.DELETE)
+	public void getProductsByCategory(@PathVariable int id) throws ApiException{
+		productService.deleteProduct(id);
+	}
 
 	private static ProductPojo convert(ProductForm p) {
 		ProductPojo p2 = new ProductPojo();

@@ -31,11 +31,13 @@ public class ProductService {
 		}
 	}
 	
+	@Transactional
 	public List<ProductPojo> getAll() {
 		List<ProductPojo> p = productDao.selectAll();
 		return p;
 	}
 	
+	@Transactional(rollbackOn = ApiException.class)
 	public List<ProductPojo> getByBrand(String brandName) throws ApiException{
 		List<ProductPojo> p2 = productDao.selectBrand(brandName);
 		if(p2.isEmpty()) {
@@ -44,6 +46,7 @@ public class ProductService {
 		return p2;
 	}
 	
+	@Transactional(rollbackOn = ApiException.class)
 	public List<ProductPojo> getByCategory(String category) throws ApiException{
 		List<ProductPojo> p2 = productDao.selectCategory(category);
 		if(p2.isEmpty()) {
@@ -52,11 +55,17 @@ public class ProductService {
 		return p2;
 	}
 	
+	@Transactional(rollbackOn = ApiException.class)
 	public List<ProductPojo> getByBrandAndCategory(String brand,String category) throws ApiException{
 		List<ProductPojo> p2 = productDao.selectBrandAndCategory(brand, category);
 		if(p2.isEmpty()) {
 			throw new ApiException("No product of this Brand and Category found!");
 		}
 		return p2;
+	}
+	
+	@Transactional
+	public void deleteProduct(int id) {
+		productDao.delete(id);
 	}
 }

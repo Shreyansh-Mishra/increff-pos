@@ -2,6 +2,7 @@ package com.increff.employee.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
@@ -17,6 +18,8 @@ public class ProductDao extends AbstractDao {
 	private static String select_category = "select b from ProductPojo b where brand_category in (select c.id from BrandPojo c where c.category = :category)";
 	private static String select_brand_category = "select b from ProductPojo b where brand_category in (select c.id from BrandPojo c where c.brand = :brand and c.category = :category)";
 	private static String select_all = "select p from ProductPojo p";
+	private static String delete_id = "delete from ProductPojo b where id=:id";
+	
 	@Transactional
 	public void insert(ProductPojo p) {
 		em().persist(p);
@@ -56,5 +59,11 @@ public class ProductDao extends AbstractDao {
 		TypedQuery<ProductPojo> query = getQuery(select_id, ProductPojo.class);
 		query.setParameter("id", id);
 		return getSingle(query);
+	}
+	
+	public int delete(int id) {
+		Query query = em().createQuery(delete_id);
+		query.setParameter("id", id);
+		return query.executeUpdate();
 	}
 }
