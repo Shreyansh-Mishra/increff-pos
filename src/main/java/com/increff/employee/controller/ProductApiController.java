@@ -44,9 +44,20 @@ public class ProductApiController {
 	}
 	
 	@ApiOperation("Get Products by brand name")
-	@RequestMapping(path="/api/product/get-product/{brandName}", method=RequestMethod.GET)
-	public List<ProductData> getProductsByBrand(@PathVariable String brandName){
+	@RequestMapping(path="/api/product/get-product-brand/{brandName}", method=RequestMethod.GET)
+	public List<ProductData> getProductsByBrand(@PathVariable String brandName) throws ApiException{
 		List<ProductPojo> p = productService.getByBrand(brandName);
+		List<ProductData> p2 = new ArrayList<ProductData>();
+		for(ProductPojo i: p) {
+			p2.add(convert(i));
+		}
+		return p2;
+	}
+	
+	@ApiOperation("Get Products by Brand and Category")
+	@RequestMapping(path="/api/product/get-product/{brand}/{category}", method=RequestMethod.GET)
+	public List<ProductData> getProductsByCategory(@PathVariable String brand,@PathVariable String category) throws ApiException{
+		List<ProductPojo> p = productService.getByBrandAndCategory(brand,category);
 		List<ProductData> p2 = new ArrayList<ProductData>();
 		for(ProductPojo i: p) {
 			p2.add(convert(i));

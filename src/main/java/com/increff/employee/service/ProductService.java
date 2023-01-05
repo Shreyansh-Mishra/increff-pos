@@ -36,8 +36,27 @@ public class ProductService {
 		return p;
 	}
 	
-	public List<ProductPojo> getByBrand(String brandName){
+	public List<ProductPojo> getByBrand(String brandName) throws ApiException{
 		List<ProductPojo> p2 = productDao.selectBrand(brandName);
+		if(p2.isEmpty()) {
+			throw new ApiException("No product of this Brand available");
+		}
+		return p2;
+	}
+	
+	public List<ProductPojo> getByCategory(String category) throws ApiException{
+		List<ProductPojo> p2 = productDao.selectCategory(category);
+		if(p2.isEmpty()) {
+			throw new ApiException("No Product of this Category found");
+		}
+		return p2;
+	}
+	
+	public List<ProductPojo> getByBrandAndCategory(String brand,String category) throws ApiException{
+		List<ProductPojo> p2 = productDao.selectBrandAndCategory(brand, category);
+		if(p2.isEmpty()) {
+			throw new ApiException("No product of this Brand and Category found!");
+		}
 		return p2;
 	}
 }

@@ -14,8 +14,8 @@ public class ProductDao extends AbstractDao {
 	private static String select_id = "select p from ProductPojo p where id=:id";
 	private static String select_name = "select p from ProductPojo p where name=:name";
 	private static String select_brand = "select b from ProductPojo b where b.brand_category in (select c.id from BrandPojo c where c.brand = :brand)";
-	private static String select_category = "select a from ProductPojo b JOIN BrandDao c where c.category = :category";
-	private static String select_brand_category = "select a from ProductPojo b JOIN BrandDao c where c.brand = :brandName and c.category = :category";
+	private static String select_category = "select b from ProductPojo b where brand_category in (select c.id from BrandPojo c where c.category = :category)";
+	private static String select_brand_category = "select b from ProductPojo b where brand_category in (select c.id from BrandPojo c where c.brand = :brand and c.category = :category)";
 	private static String select_all = "select p from ProductPojo p";
 	@Transactional
 	public void insert(ProductPojo p) {
