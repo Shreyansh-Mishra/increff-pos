@@ -26,7 +26,7 @@ public class ProductApiController {
 	private ProductService productService;
 	
 	@ApiOperation("Adds a Product")
-	@RequestMapping(path="/api/product/add", method=RequestMethod.POST)
+	@RequestMapping(path="/api/product/add-product", method=RequestMethod.POST)
 	public void addProduct(@RequestBody ProductForm p) throws ApiException {
 		ProductPojo p2 = convert(p);
 		productService.add(p2);

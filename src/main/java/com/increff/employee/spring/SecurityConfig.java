@@ -26,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and().authorizeRequests()//
 				.antMatchers("/api/brand/**").permitAll()//
 				.antMatchers("/api/product/**").permitAll()//
+				.antMatchers("/api/inventory/**").permitAll()//
 				.antMatchers("/api/admin/**").hasAuthority("supervisor")//
 				.antMatchers("/api/**").hasAnyAuthority("supervisor", "operator")//
 				.antMatchers("/ui/admin/**").hasAuthority("supervisor")//

@@ -42,6 +42,15 @@ public class BrandService {
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)
+	public BrandPojo selectById(int id) throws ApiException {
+		BrandPojo b = brandDao.select(id);
+		if(b==null) {
+			throw new ApiException("The requested brand and category combination does not exists");
+		}
+		return b;
+	}
+	
+	@Transactional(rollbackOn = ApiException.class)
 	public List<BrandPojo> selectByName(String name) throws ApiException {
 		List<BrandPojo> b = brandDao.select(name);
 		if(b.isEmpty()) {

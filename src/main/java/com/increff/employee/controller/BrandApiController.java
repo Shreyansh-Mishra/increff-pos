@@ -51,8 +51,16 @@ public class BrandApiController {
 		return b2;
 	}
 	
+	@ApiOperation(value= "Get brand by id")
+	@RequestMapping(path= "/api/brand/{id}", method = RequestMethod.GET)
+	public BrandData getBrand(@PathVariable int id) throws ApiException{
+		BrandPojo b = brandService.selectById(id);
+		BrandData b2 = convert(b);
+		return b2;
+	}
+	
 	@ApiOperation(value= "Get brand by name")
-	@RequestMapping(path= "/api/brand/{name}", method = RequestMethod.GET)
+	@RequestMapping(path= "/api/brand/name/{name}", method = RequestMethod.GET)
 	public List<BrandData> getBrands(@PathVariable String name) throws ApiException{
 		List<BrandPojo> b = brandService.selectByName(name);
 		List<BrandData> b2 = new ArrayList<BrandData>();
@@ -74,6 +82,7 @@ public class BrandApiController {
 	public void deleteBrand(@PathVariable int id) throws ApiException{
 		brandService.deleteBrand(id);
 	}
+	
 	
 	
 	private static BrandPojo convert(BrandForm f) {

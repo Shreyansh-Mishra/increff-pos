@@ -10,25 +10,37 @@
 
 <div class="container">
 
-<h3>Employees</h3>
+<h3>Products</h3>
 
  <!-- Top row with form-->
  <div class="row">
 	 <div class="col-12">
-			<form class="form-inline" id="employee-form">
+			<form class="form-inline" id="product-form">
 			  <div class="form-group">
-			    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+			    <label for="inputName" class="col-sm-2 col-form-label">Product</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" name="name" id="inputName" placeholder="enter name">
+			      <input type="text" class="form-control" name="name" id="inputName" placeholder="Enter Product Name">
 			    </div>
 			  </div>
 			  <div class="form-group">
-			    <label for="inputAge" class="col-sm-2 col-form-label">Age</label>
+			    <label for="inputBrand" class="col-sm-2 col-form-label">Brand Name</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" name="age" id="inputAge" placeholder="enter age">
+			      <input type="text" class="form-control" name="brandName" id="inputBrand" placeholder="Enter Brand Name">
 			    </div>
 			  </div>
-			  <button type="button" class="btn btn-primary" id="add-employee">Add</button>
+              <div class="form-group">
+			    <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" name="category" id="inputCategory" placeholder="Enter Category">
+			    </div>
+			  </div>
+              <div class="form-group">
+			    <label for="inputMrp" class="col-sm-2 col-form-label">MRP</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" name="mrp" id="inputMrp" placeholder="Enter MRP">
+			    </div>
+			  </div>
+			  <button type="button" class="btn btn-primary" id="add-product">Add</button>
 			  &nbsp;
 			  <button type="button" class="btn btn-primary" id="refresh-data">Refresh</button>
 			  &nbsp;
@@ -46,12 +58,14 @@
 
  <!-- Table -->
  <div class="col-12">
-	<table class="table table-striped" id="employee-table">
+	<table class="table table-striped" id="product-table">
 	  <thead>
 	    <tr>
 	      <th scope="col">ID</th>
-	      <th scope="col">Name</th>
-	      <th scope="col">Age</th>
+	      <th scope="col">Product Name</th>
+	      <th scope="col">MRP</th>
+          <th scope="col">Barcode</th>
+          <th scope="col">brand_category</th>
 	      <th scope="col">Actions</th>
 	    </tr>
 	  </thead>
@@ -81,27 +95,27 @@
 </div>
 
 <!-- Employee Edit Modal -->
-<div class="modal" tabindex="-1" role="dialog" id="edit-employee-modal">
+<div class="modal" tabindex="-1" role="dialog" id="edit-product-modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Edit Employee</h5>
+        <h5 class="modal-title">Edit Brand</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-			<form class="form-inline" id="employee-edit-form">
+			<form class="form-inline" id="product-edit-form">
 			  <div class="form-group">
-			    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+			    <label for="inputName" class="col-sm-2 col-form-label">Brand Name</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" name="name" placeholder="enter name">
+			      <input type="text" class="form-control" name="brand" placeholder="enter name">
 			    </div>
 			  </div>
 			  <div class="form-group">
-			    <label for="inputAge" class="col-sm-2 col-form-label">Age</label>
+			    <label for="inputAge" class="col-sm-2 col-form-label">Category</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" name="age" placeholder="enter age">
+			      <input type="text" class="form-control" name="category" placeholder="enter age">
 			    </div>
 			  </div>
  	        <input type="hidden" name="id" >
@@ -117,7 +131,7 @@
 
 
 <!-- Employee Edit Modal -->
-<div class="modal" tabindex="-1" role="dialog" id="upload-employee-modal">
+<div class="modal" tabindex="-1" role="dialog" id="upload-product-modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       
@@ -153,7 +167,7 @@
 
 <footer th:replace="snippets.html :: name_footer"></footer>
 
-<script th:src="@{/static/employee.js}"/></script>
+<script th:src="@{/static/product.js}"/></script>
 
 </body>	
 

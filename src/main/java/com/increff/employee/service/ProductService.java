@@ -1,8 +1,10 @@
 package com.increff.employee.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ public class ProductService {
 		BrandPojo b = brandDao.select(p.getBrandName(),p.getCategory());
 		if(b!=null) {
 			p.setBrand_category(b.getId());
+			String unique = UUID.randomUUID().toString();
+			p.setBarcode(unique);
 			productDao.insert(p);
 		}
 		else {
@@ -86,4 +90,12 @@ public class ProductService {
 		p2.setBrand_category(b.getId());
 		productDao.update();
 	}
+
+	public static String usingRandomUUID() {
+
+	    UUID randomUUID = UUID.randomUUID();
+
+	    return randomUUID.toString().replaceAll("-", "");
+
+	  }
 }
