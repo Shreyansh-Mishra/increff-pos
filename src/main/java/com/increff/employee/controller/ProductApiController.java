@@ -70,6 +70,13 @@ public class ProductApiController {
 	public void getProductsByCategory(@PathVariable int id) throws ApiException{
 		productService.deleteProduct(id);
 	}
+	
+	@ApiOperation("Update Product")
+	@RequestMapping(path="/api/product/update-product/{id}", method=RequestMethod.PUT)
+	public void getProductsByCategory(@PathVariable int id, @RequestBody ProductForm p) throws ApiException{
+		ProductPojo p2 = convert(p);
+		productService.update(p2,id);
+	}
 
 	private static ProductPojo convert(ProductForm p) {
 		ProductPojo p2 = new ProductPojo();

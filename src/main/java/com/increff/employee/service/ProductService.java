@@ -68,4 +68,22 @@ public class ProductService {
 	public void deleteProduct(int id) {
 		productDao.delete(id);
 	}
+	
+	@Transactional
+	public void update(ProductPojo p,int id) throws ApiException {
+		ProductPojo p2 = productDao.selectId(id);
+		BrandPojo b = brandDao.select(p.getBrandName(),p.getCategory());
+		if(p2==null) {
+			throw new ApiException("The Product does not exists");
+		}
+		else if(b==null) {
+			throw new ApiException("The Requested Brand and Category combination does not exists");
+		}
+		p2.setBarcode(p.getBarcode());
+		p2.setBrandName(p.getBrandName());
+		p2.setMrp(p.getMrp());
+		p2.setName(p.getName());
+		p2.setBrand_category(b.getId());
+		productDao.update();
+	}
 }

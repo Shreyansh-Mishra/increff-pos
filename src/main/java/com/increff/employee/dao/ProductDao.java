@@ -66,4 +66,7 @@ public class ProductDao extends AbstractDao {
 		query.setParameter("id", id);
 		return query.executeUpdate();
 	}
+	
+	public void update() {
+	}
 }
