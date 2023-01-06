@@ -4,6 +4,11 @@ function getProductUrl(){
 	return baseUrl + "/api/product";
 }
 
+function getBrandUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/brand";
+}
+
 //BUTTON ACTIONS
 function addProduct(event){
 	//Set the values to update
@@ -66,14 +71,13 @@ function getProductList(){
 	});
 }
 
-function deleteEmployee(id){
-	var url = getBrandUrl() + "/delete/" + id;
-
+function deleteProduct(id){
+	var url = getProductUrl() + "/delete-product/" + id;
 	$.ajax({
 	   url: url,
 	   type: 'DELETE',
 	   success: function(data) {
-	   		getBrandList();  
+	   		getProductList();  
 	   },
 	   error: handleAjaxError
 	});
@@ -141,7 +145,7 @@ function displayProductList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button onclick="deleteEmployee(' + e.id + ')">delete</button>'
+		var buttonHtml = '<button onclick="deleteProduct(' + e.id + ')">delete</button>'
 		buttonHtml += ' <button onclick="displayEditEmployee(' + e.id + ')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + e.id + '</td>'
@@ -213,9 +217,48 @@ function init(){
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#employeeFile').on('change', updateFileName)
+    $('#employeeFile').on('change', updateFileName);
+    $('#inputBrand').on('change', populateCategoryDropdown);
+}
+
+function populateCategoryDropdown(){
+    var url = getBrandUrl() + "/get-categories/"+document.getElementById("inputBrand").value;
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(data) {
+            var $select = $('#inputCategory');
+            $select.empty();
+            for(var i in data){
+                var e = data[i];
+                var option = '<option value="' + e + '">' + e + '</option>';
+                $select.append(option);
+            }
+        },
+        error: handleAjaxError
+    });
+}
+
+function populateBrandDropDown(){
+    var url = getBrandUrl()+"/get-brands";
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(data) {
+            var $select = $('#inputBrand');
+            $select.empty();
+            for(var i in data){
+                var e = data[i];
+                var option = '<option value="' + e.brand + '">' + e.brand + '</option>';
+                $select.append(option);
+            }
+        },
+        error: handleAjaxError
+    });
 }
 
 $(document).ready(init);
 $(document).ready(getProductList);
+$(document).ready(populateBrandDropDown);
+
 

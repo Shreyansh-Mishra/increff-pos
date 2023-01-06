@@ -83,6 +83,12 @@ public class BrandApiController {
 		brandService.deleteBrand(id);
 	}
 	
+	@ApiOperation(value= "Get categories from brand")
+	@RequestMapping(path= "/api/brand/get-categories/{brandName}", method = RequestMethod.GET)
+	public List<String> deleteBrand(@PathVariable String brandName) throws ApiException{
+		return brandService.getCategories(brandName);
+	}
+	
 	
 	
 	private static BrandPojo convert(BrandForm f) {
