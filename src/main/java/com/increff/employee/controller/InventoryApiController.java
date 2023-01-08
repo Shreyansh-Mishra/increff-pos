@@ -32,7 +32,7 @@ public class InventoryApiController {
 	}
 	
 	@ApiOperation(value="view inventory")
-	@RequestMapping(path="/api/inventory/view-inventory",method=RequestMethod.GET)
+	@RequestMapping(path="/api/inventory/get-inventory",method=RequestMethod.GET)
 	public List<InventoryData> getWholeInventoryView() {
 		List<InventoryPojo> i = inventoryService.getWholeInventory();
 		List<InventoryData> i2 = new ArrayList<InventoryData>();
@@ -42,10 +42,17 @@ public class InventoryApiController {
 		return i2;
 	}
 	
+	@ApiOperation(value="edit Inventory")
+	@RequestMapping(path="/api/inventory/update-inventory", method=RequestMethod.PUT)
+	public void editinventory(@RequestBody InventoryForm i) throws ApiException {
+		InventoryPojo i2 = convert(i);
+		inventoryService.update(i2);
+	}
+	
 	private static InventoryPojo convert(InventoryForm i) {
 		InventoryPojo i2 = new InventoryPojo();
-		i2.setId(i.getId());
 		i2.setQuantity(i.getQuantity());
+		i2.setBarcode(i.getBarcode());
 		return i2;
 	}
 	

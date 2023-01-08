@@ -18,9 +18,12 @@ public class BrandService {
 	@Transactional(rollbackOn = ApiException.class)
 	public void add(BrandPojo b) throws ApiException {
 		normalize(b);
+		if(isEmpty(b.getBrand(),b.getCategory())) {
+			throw new ApiException("Brand or Category cannot be empty");
+		}
 		BrandPojo existing = brandDao.select(b.getBrand(),b.getCategory());
 		if(existing!=null) {
-			throw new ApiException("Brand Already Exists");
+			throw new ApiException("Brand and Category Already Exists");
 		}
 		else {
 			brandDao.insert(b);
@@ -93,8 +96,15 @@ public class BrandService {
 	}
 	
 	
-	protected static void normalize(BrandPojo b) {
+	public static void normalize(BrandPojo b) {
 		b.setBrand(b.getBrand().toLowerCase().trim());
 		b.setCategory(b.getCategory().toLowerCase().trim());
+	}
+	
+	public static boolean isEmpty(String a, String b) {
+		if(a.isEmpty()||b.isEmpty()) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -102,6 +102,7 @@ public class BrandApiController {
 		BrandData b2 = new BrandData();
 		b2.setBrand(b.getBrand());
 		b2.setCategory(b.getCategory());
+		b2.setId(b.getId());
 		return b2;
 	}
 	

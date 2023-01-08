@@ -21,5 +21,10 @@ public class AppUiController extends AbstractUiController {
 	public ModelAndView admin() {
 		return mav("product.html");
 	}
+	
+	@RequestMapping(value = "/ui/inventory")
+	public ModelAndView inventory() {
+		return mav("inventory.html");
+	}
 
 }

@@ -44,6 +44,14 @@ public class ProductApiController {
 	}
 	
 	@ApiOperation("Get Products by brand name")
+	@RequestMapping(path="/api/product/{id}", method=RequestMethod.GET)
+	public ProductData getProductById(@PathVariable int id) throws ApiException {
+		ProductPojo p = productService.getById(id);
+		ProductData p2 = convert(p);
+		return p2;
+	}
+	
+	@ApiOperation("Get Products by brand name")
 	@RequestMapping(path="/api/product/get-product-brand/{brandName}", method=RequestMethod.GET)
 	public List<ProductData> getProductsByBrand(@PathVariable String brandName) throws ApiException{
 		List<ProductPojo> p = productService.getByBrand(brandName);

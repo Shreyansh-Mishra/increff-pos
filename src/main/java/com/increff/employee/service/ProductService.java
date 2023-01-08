@@ -57,6 +57,14 @@ public class ProductService {
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)
+	public ProductPojo getById(int id) throws ApiException {
+		ProductPojo p = productDao.selectId(id);
+		if(p==null)
+			throw new ApiException("The product does not exists");
+		return p;
+	}
+	
+	@Transactional(rollbackOn = ApiException.class)
 	public List<ProductPojo> getByCategory(String category) throws ApiException{
 		List<ProductPojo> p2 = productDao.selectCategory(category);
 		if(p2.isEmpty()) {

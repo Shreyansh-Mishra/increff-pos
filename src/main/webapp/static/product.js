@@ -23,8 +23,8 @@ function addProduct(event){
 	   headers: {
        	'Content-Type': 'application/json'
        },	   
-	   success: function(response) {
-	   		getProductList();  
+	   success: function(response) {	
+		getProductList();  
 	   },
 	   error: handleAjaxError
 	});
@@ -33,7 +33,7 @@ function addProduct(event){
 }
 
 function updateEmployee(event){
-	$('#edit-employee-modal').modal('toggle');
+	$('#edit-product-modal').modal('toggle');
 	//Get the ID
 	var id = $("#employee-edit-form input[name=id]").val();	
 	var url = getBrandUrl() + "/update/" + id;
@@ -146,7 +146,7 @@ function displayProductList(data){
 	let j=1;
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button onclick="displayEditEmployee(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button onclick="displayEditProduct(' + e.id + ')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.name + '</td>'
@@ -161,13 +161,13 @@ function displayProductList(data){
 	paginate();
 }
 
-function displayEditEmployee(id){
-	var url = getBrandUrl() + "/" + id;
+function displayEditProduct(id){
+	var url = getProductUrl() + "/" + id;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayEmployee(data);   
+	   		displayProduct(data);   
 	   },
 	   error: handleAjaxError
 	});	
@@ -203,11 +203,13 @@ function displayUploadData(){
 	$('#upload-product-modal').modal('toggle');
 }
 
-function displayEmployee(data){
+function displayProduct(data){
 	$("#employee-edit-form input[name=name]").val(data.name);	
-	$("#employee-edit-form input[name=age]").val(data.age);	
-	$("#employee-edit-form input[name=id]").val(data.id);	
-	$('#edit-employee-modal').modal('toggle');
+	$("#employee-edit-form input[name=brandName]").val(data.brand);	
+	$("#employee-edit-form input[name=category]").val(data.category);
+	$("#employee-edit-form input[name=mrp]").val(data.mrp);
+	$("#employee-edit-form input[name=barcode]").val(data.barcode);	
+	$('#edit-product-modal').modal('toggle');
 }
 
 
