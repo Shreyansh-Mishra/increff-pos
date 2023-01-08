@@ -1,15 +1,9 @@
 package com.increff.employee.model;
 
 public class BrandData {
-	private int id;
 	private String brand;
 	private String category;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+	
 	public String getBrand() {
 		return brand;
 	}

@@ -137,20 +137,25 @@ function downloadErrors(){
 //UI DISPLAY METHODS
 
 function displayBrandList(data){
-	var $tbody = $('#employee-table').find('tbody');
+	var $tbody = $('#dtBasicExample').find('tbody');
 	$tbody.empty();
+	let j=1;
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button onclick="deleteEmployee(' + e.id + ')">delete</button>'
-		buttonHtml += ' <button onclick="displayEditEmployee(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button onclick="displayEditEmployee(' + e.id + ')">edit</button>'
 		var row = '<tr>'
-		+ '<td>' + e.id + '</td>'
+		+ '<td>' + j + '</td>'
 		+ '<td>' + e.brand + '</td>'
 		+ '<td>'  + e.category + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
+		j++;
+		
 	}
+	//redraw table with the additional rows
+	paginate();
+	$('#dtBasicExample').DataTable().row.add();
 }
 
 function displayEditEmployee(id){
@@ -212,6 +217,11 @@ function init(){
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#employeeFile').on('change', updateFileName)
+}
+
+function paginate() {
+	$('#dtBasicExample').DataTable();
+	$('.dataTables_length').addClass('bs-select');
 }
 
 $(document).ready(init);

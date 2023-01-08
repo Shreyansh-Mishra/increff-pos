@@ -112,7 +112,7 @@ function uploadRows(){
 	processCount++;
 	
 	var json = JSON.stringify(row);
-	var url = getBrandUrl()+"/add-brand";
+	var url = getProductUrl()+"/add-product";
 	console.log(json);
 	//Make ajax call
 	$.ajax({
@@ -141,14 +141,14 @@ function downloadErrors(){
 //UI DISPLAY METHODS
 
 function displayProductList(data){
-	var $tbody = $('#product-table').find('tbody');
+	var $tbody = $('#dtBasicExample').find('tbody');
 	$tbody.empty();
+	let j=1;
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = '<button onclick="deleteProduct(' + e.id + ')">delete</button>'
-		buttonHtml += ' <button onclick="displayEditEmployee(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button onclick="displayEditEmployee(' + e.id + ')">edit</button>'
 		var row = '<tr>'
-		+ '<td>' + e.id + '</td>'
+		+ '<td>' + j + '</td>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>'  + e.mrp + '</td>'
         + '<td>'  + e.barcode + '</td>'
@@ -156,7 +156,9 @@ function displayProductList(data){
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
+		j++;
 	}
+	paginate();
 }
 
 function displayEditEmployee(id){
@@ -198,7 +200,7 @@ function updateFileName(){
 
 function displayUploadData(){
  	resetUploadDialog(); 	
-	$('#upload-employee-modal').modal('toggle');
+	$('#upload-product-modal').modal('toggle');
 }
 
 function displayEmployee(data){
@@ -229,6 +231,7 @@ function populateCategoryDropdown(){
         success: function(data) {
             var $select = $('#inputCategory');
             $select.empty();
+			$select.removeAttr('disabled');
             for(var i in data){
                 var e = data[i];
                 var option = '<option value="' + e + '">' + e + '</option>';
@@ -247,6 +250,8 @@ function populateBrandDropDown(){
         success: function(data) {
             var $select = $('#inputBrand');
             $select.empty();
+			$select.append('<option value="" disabled selected style="display: none;">' + 'Please Choose' + '</option>');
+			$select.attr('placeholder', 'Select Brand');
             for(var i in data){
                 var e = data[i];
                 var option = '<option value="' + e.brand + '">' + e.brand + '</option>';
@@ -261,4 +266,7 @@ $(document).ready(init);
 $(document).ready(getProductList);
 $(document).ready(populateBrandDropDown);
 
-
+function paginate() {
+	$('#dtBasicExample').DataTable();
+	$('.dataTables_length').addClass('bs-select');
+}

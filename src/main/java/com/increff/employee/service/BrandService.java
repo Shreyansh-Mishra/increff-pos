@@ -62,9 +62,15 @@ public class BrandService {
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateBrand(int id, BrandPojo b) throws ApiException {
 		BrandPojo b2 = checkIfExists(id);
-		b2.setBrand(b.getBrand());
-		b2.setCategory(b.getCategory());
-		brandDao.update(b2);
+		BrandPojo b3 = brandDao.select(b.getBrand(), b.getCategory());
+		if(b3==null) {
+			b2.setBrand(b.getBrand());
+			b2.setCategory(b.getCategory());
+			brandDao.update(b2);
+		}
+		else {
+			throw new ApiException("The brand and category already exists!");
+		}
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)

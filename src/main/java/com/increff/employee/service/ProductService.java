@@ -23,11 +23,17 @@ public class ProductService {
 	
 	@Transactional
 	public void add(ProductPojo p) throws ApiException {
+		normalize(p);
+		if(isNegative(p.getMrp())) {
+			throw new ApiException("Can't set a negative MRP");
+		}
+		ProductPojo p2 = productDao.selectBarcode(p.getBarcode());
+		if(p2!=null) {
+			throw new ApiException("The product already exists");
+		}
 		BrandPojo b = brandDao.select(p.getBrandName(),p.getCategory());
 		if(b!=null) {
 			p.setBrand_category(b.getId());
-			String unique = UUID.randomUUID().toString();
-			p.setBarcode(unique);
 			productDao.insert(p);
 		}
 		else {
@@ -75,12 +81,13 @@ public class ProductService {
 	
 	@Transactional
 	public void update(ProductPojo p,int id) throws ApiException {
-		ProductPojo p2 = productDao.selectId(id);
-		BrandPojo b = brandDao.select(p.getBrandName(),p.getCategory());
+		ProductPojo p2 = productDao.selectId(id); 
 		if(p2==null) {
 			throw new ApiException("The Product does not exists");
 		}
-		else if(b==null) {
+		
+		BrandPojo b = brandDao.select(p.getBrandName(),p.getCategory());
+		if(b==null) {
 			throw new ApiException("The Requested Brand and Category combination does not exists");
 		}
 		p2.setBarcode(p.getBarcode());
@@ -98,4 +105,14 @@ public class ProductService {
 	    return randomUUID.toString().replaceAll("-", "");
 
 	  }
+	
+	public static boolean isNegative(double num) {
+		if(num<0)
+			return true;
+		return false;
+	}
+	
+	protected static void normalize(ProductPojo p) {
+		p.setName(p.getName().toLowerCase().trim());
+	}
 }
