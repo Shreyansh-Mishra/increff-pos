@@ -15,17 +15,32 @@ function orderError(response, edit){
 	   
 }
 
+
+function convertToArrayOfObject(data){
+	var serialized = $form.serializeArray();
+	let arr = []
+	//Convert to array of object
+	for(let i=0;i<serialized.length;i+=3){
+		let obj = {};
+		obj['barcode'] = serialized[i].value;
+		obj['mrp'] = serialized[i+1].value;
+		obj['quantity'] = serialized[i+2].value;
+		arr.push(obj);
+	}
+	return JSON.stringify(arr);
+}
+
 //BUTTON ACTIONS
 function addOrder(event){
 	//Set the values to update
-	var $form = $("#order-form");
-	var json = toJson($form);
+	var $form = $("#order-create-form");
+	var data = convertToArrayOfObject($form);
 	var url = getOrderUrl()+"/add-order";
-
+	console.log(data);
 	$.ajax({
 	   url: url,
 	   type: 'POST',
-	   data: json,
+	   data: data,
 	   headers: {
        	'Content-Type': 'application/json'
        },	   
@@ -261,16 +276,48 @@ function displayOrder(data){
 	$('#edit-order-modal').modal('toggle');
 }
 
+function displayCreateOrder(){	
+	$('#create-order-modal').modal('toggle');
+}
+
 
 //INITIALIZATION CODE
 function init(){
-	$('#add-order').click(addOrder);
+	$('#add-order').click(displayCreateOrder);
+	$('#create-order').click(addOrder);
 	$('#update-order').click(updateOrder);
 	$('#refresh-data').click(getOrderList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#orderFile').on('change', updateFileName)
+    $('#orderFile').on('change', updateFileName);
+	$('#add-row').click(addRow);
+}
+
+let i=1;
+
+function addRow(){
+	$form = $('#order-create-form');
+	$form.append('<hr class="mt-2 mb-3" />');
+	$form.append('<div class="form-group">' +
+	'<label for="barcode" class="col-sm-2 col-form-label">Enter Barcode</label>' +
+	'<div class="col-sm-10">' +
+	  '<input type="text" id="barcode" class="form-control" name="barcode" placeholder="Enter Barcode">' +
+	'</div>' +
+  '</div>' +
+  '<div class="form-group">' +
+	  '<label for="MRP" class="col-sm-2 col-form-label">Enter MRP</label>' +
+	  '<div class="col-sm-10">' +
+		'<input type="number" id="MRP" class="form-control" name="mrp" placeholder="Enter MRP">' +
+	  '</div>' +
+  '</div>' +
+  '<div class="form-group">' +
+	  '<label for="quantity" class="col-sm-2 col-form-label">Quantity</label>' +
+	  '<div class="col-sm-10">' +
+		'<input type="text" id="quantity" class="form-control" name="quantity" placeholder="Enter Quantity">' +
+	  '</div>' +
+  '</div>')
+i++;
 }
 
 function paginate(id) {

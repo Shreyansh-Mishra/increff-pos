@@ -1,26 +1,26 @@
 
-function getorderUrl(){
+function getInventoryUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/order";
+	return baseUrl + "/api/inventory";
 }
 
-function orderError(response, edit){
+function inventoryError(response, edit){
 	let $form;
 	if(edit==false)
-		$form = $("#order-form");
+		$form = $("#inventory-form");
 	else
-		$form = $("#order-edit-form");
+		$form = $("#inventory-edit-form");
 	$form.find(".alert").remove();
 	$form.append(`<div class="alert alert-danger" role="alert">Error : ${JSON.parse(response.responseText).message}</div>`)
 	   
 }
 
 //BUTTON ACTIONS
-function addorder(event){
+function addInventory(event){
 	//Set the values to update
-	var $form = $("#order-form");
+	var $form = $("#inventory-form");
 	var json = toJson($form);
-	var url = getorderUrl()+"/add-product";
+	var url = getInventoryUrl()+"/add-product";
 
 	$.ajax({
 	   url: url,
@@ -30,24 +30,24 @@ function addorder(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getorderList();  
+	   		getInventoryList();  
 	   },
 	   error: (response)=>{
-			orderError(response,false);
+			inventoryError(response,false);
 		}
 	});
 
 	return false;
 }
 
-function updateorder(event){
-	$('#edit-order-modal').modal('toggle');
+function updateInventory(event){
+	$('#edit-inventory-modal').modal('toggle');
 	//Get the ID
-	var id = $("#order-edit-form input[name=id]").val();	
-	var url = getorderUrl() + id;
+	var id = $("#inventory-edit-form input[name=id]").val();	
+	var url = getInventoryUrl() + id;
 
 	//Set the values to update
-	var $form = $("#order-edit-form");
+	var $form = $("#inventory-edit-form");
 	let jsoni = toJson($form);
 	$.ajax({
 	   url: url,
@@ -57,10 +57,10 @@ function updateorder(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getorderList();   
+	   		getInventoryList();   
 	   },
 	   error: (response)=>{
-		orderError(response,false);
+		inventoryError(response,false);
 		}
 	});
 
@@ -68,33 +68,33 @@ function updateorder(event){
 }
 
 
-function getorderList(){
+function getInventoryList(){
 	//empty all the error present in form
-	$("#order-form").find(".alert").remove();
-	var url = getorderUrl()+"/get-order";
+	$("#inventory-form").find(".alert").remove();
+	var url = getInventoryUrl()+"/get-inventory";
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayorderList(data);  
+	   		displayInventoryList(data);  
 	   },
 	   error: (response)=>{
-		orderError(response,false);
+		inventoryError(response,false);
 		}
 	});
 }
 
-function deleteorder(id){
-	var url = getorderUrl() + "/delete/" + id;
+function deleteInventory(id){
+	var url = getInventoryUrl() + "/delete/" + id;
 
 	$.ajax({
 	   url: url,
 	   type: 'DELETE',
 	   success: function(data) {
-	   		getorderList();  
+	   		getInventoryList();  
 	   },
 	   error: (response)=>{
-		orderError(response,false);
+		inventoryError(response,false);
 		}
 	});
 }
@@ -106,7 +106,7 @@ var processCount = 0;
 
 
 function processData(){
-	var file = $('#orderFile')[0].files[0];
+	var file = $('#inventoryFile')[0].files[0];
 	readFileData(file, readFileDataCallback);
 }
 
@@ -128,7 +128,7 @@ function uploadRows(){
 	processCount++;
 	
 	var json = JSON.stringify(row);
-	var url = getorderUrl()+"/add-product";
+	var url = getInventoryUrl()+"/add-product";
 	//Make ajax call
 	$.ajax({
 	   url: url,
@@ -155,14 +155,14 @@ function downloadErrors(){
 
 //UI DISPLAY METHODS
 
-function displayorderList(data){
+function displayInventoryList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
 	$tbody.empty();
 	let j=1;
 	for(var i in data){
 		var e = data[i];
 
-		var buttonHtml = ' <button onclick="displayEditorder(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button onclick="displayEditInventory(' + e.id + ')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.id + '</td>'
@@ -175,25 +175,25 @@ function displayorderList(data){
 	paginate();
 }
 
-function displayEditorder(id){
-	var url = getorderUrl() + "/" + id;
+function displayEditInventory(id){
+	var url = getInventoryUrl() + "/" + id;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayorder(data);   
+	   		displayInventory(data);   
 	   },
 	   error: (response)=>{
-		orderError(response,false);
+		inventoryError(response,false);
 		}
 	});	
 }
 
 function resetUploadDialog(){
 	//Reset file name
-	var $file = $('#orderFile');
+	var $file = $('#inventoryFile');
 	$file.val('');
-	$('#orderFileName').html("Choose File");
+	$('#inventoryFileName').html("Choose File");
 	//Reset various counts
 	processCount = 0;
 	fileData = [];
@@ -209,33 +209,33 @@ function updateUploadDialog(){
 }
 
 function updateFileName(){
-	var $file = $('#orderFile');
+	var $file = $('#inventoryFile');
 	var fileName = $file.val();
-	$('#orderFileName').html(fileName);
+	$('#inventoryFileName').html(fileName);
 }
 
 function displayUploadData(){
  	resetUploadDialog(); 	
-	$('#upload-order-modal').modal('toggle');
+	$('#upload-inventory-modal').modal('toggle');
 }
 
-function displayorder(data){
-	$("#order-edit-form input[name=name]").val(data.name);	
-	$("#order-edit-form input[name=age]").val(data.age);	
-	$("#order-edit-form input[name=id]").val(data.id);	
-	$('#edit-order-modal').modal('toggle');
+function displayInventory(data){
+	$("#inventory-edit-form input[name=name]").val(data.name);	
+	$("#inventory-edit-form input[name=age]").val(data.age);	
+	$("#inventory-edit-form input[name=id]").val(data.id);	
+	$('#edit-inventory-modal').modal('toggle');
 }
 
 
 //INITIALIZATION CODE
 function init(){
-	$('#add-order').click(addorder);
-	$('#update-order').click(updateorder);
-	$('#refresh-data').click(getorderList);
+	$('#add-inventory').click(addInventory);
+	$('#update-inventory').click(updateInventory);
+	$('#refresh-data').click(getInventoryList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#orderFile').on('change', updateFileName)
+    $('#inventoryFile').on('change', updateFileName)
 }
 
 function paginate() {
@@ -244,5 +244,5 @@ function paginate() {
 }
 
 $(document).ready(init);
-$(document).ready(getorderList);
+$(document).ready(getInventoryList);
 
