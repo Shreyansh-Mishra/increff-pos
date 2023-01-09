@@ -12,17 +12,17 @@ public class OrderPojo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private long time;
+	private String time;
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public long getTime() {
+	public String getTime() {
 		return time;
 	}
-	public void setTime(long time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 	

@@ -1,6 +1,8 @@
 package com.increff.employee.service;
 
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +65,14 @@ public class OrderService {
 	@Transactional
 	public void deleteOrder(int id) {
 		orderDao.delete(id);
+	}
+	
+	@Transactional
+	public List<OrderPojo> getAllOrders(){
+		return orderDao.selectAll();
+	}
+	
+	public List<OrderItemPojo> getItems(int id){
+		return orderDao.selectItems(id);
 	}
 }

@@ -1,5 +1,5 @@
 
-function getorderUrl(){
+function getOrderUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/order";
 }
@@ -16,11 +16,11 @@ function orderError(response, edit){
 }
 
 //BUTTON ACTIONS
-function addorder(event){
+function addOrder(event){
 	//Set the values to update
 	var $form = $("#order-form");
 	var json = toJson($form);
-	var url = getorderUrl()+"/add-product";
+	var url = getOrderUrl()+"/add-order";
 
 	$.ajax({
 	   url: url,
@@ -30,7 +30,7 @@ function addorder(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getorderList();  
+	   		getOrderList();  
 	   },
 	   error: (response)=>{
 			orderError(response,false);
@@ -40,11 +40,11 @@ function addorder(event){
 	return false;
 }
 
-function updateorder(event){
+function updateOrder(event){
 	$('#edit-order-modal').modal('toggle');
 	//Get the ID
 	var id = $("#order-edit-form input[name=id]").val();	
-	var url = getorderUrl() + id;
+	var url = getOrderUrl() + id;
 
 	//Set the values to update
 	var $form = $("#order-edit-form");
@@ -57,7 +57,7 @@ function updateorder(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getorderList();   
+	   		getOrderList();   
 	   },
 	   error: (response)=>{
 		orderError(response,false);
@@ -68,15 +68,15 @@ function updateorder(event){
 }
 
 
-function getorderList(){
+function getOrderList(){
 	//empty all the error present in form
 	$("#order-form").find(".alert").remove();
-	var url = getorderUrl()+"/get-order";
+	var url = getOrderUrl()+"/get-orders";
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayorderList(data);  
+	   		displayOrderList(data);  
 	   },
 	   error: (response)=>{
 		orderError(response,false);
@@ -84,14 +84,14 @@ function getorderList(){
 	});
 }
 
-function deleteorder(id){
-	var url = getorderUrl() + "/delete/" + id;
+function deleteOrder(id){
+	var url = getOrderUrl() + "/delete/" + id;
 
 	$.ajax({
 	   url: url,
 	   type: 'DELETE',
 	   success: function(data) {
-	   		getorderList();  
+	   		getOrderList();  
 	   },
 	   error: (response)=>{
 		orderError(response,false);
@@ -128,7 +128,7 @@ function uploadRows(){
 	processCount++;
 	
 	var json = JSON.stringify(row);
-	var url = getorderUrl()+"/add-product";
+	var url = getOrderUrl()+"/add-order";
 	//Make ajax call
 	$.ajax({
 	   url: url,
@@ -155,33 +155,68 @@ function downloadErrors(){
 
 //UI DISPLAY METHODS
 
-function displayorderList(data){
+function displayOrderList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
 	$tbody.empty();
 	let j=1;
 	for(var i in data){
 		var e = data[i];
 
-		var buttonHtml = ' <button onclick="displayEditorder(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button onclick="displayEditOrder(' + e.id + ')">edit</button>'
+        buttonHtml += ' <button onclick="displayWholeOrder('+e.id+')">view</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.id + '</td>'
-		+ '<td>'  + e.quantity + '</td>'
+		+ '<td>'  + e.time.toString() + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 		j++;	
 	}
-	paginate();
+	paginate("#dtBasicExample");
 }
 
-function displayEditorder(id){
-	var url = getorderUrl() + "/" + id;
+function displayWholeOrder(id){
+    var url = getOrderUrl() + "/" + id;
+    $.ajax({
+       url: url,
+       type: 'GET',
+       success: function(data) {
+       		displayOrderItems(data);   
+       },
+       error: (response)=>{
+        orderError(response,false);
+        }
+    });	
+}
+
+function displayOrderItems(data){
+    var $tbody = $('#dtBasicExample2').find('tbody');
+    $tbody.empty();
+    let j=1;
+    for(var i in data){
+        var e = data[i];
+        var row = '<tr>'
+        + '<td>' + j + '</td>'
+        + '<td>' + e.orderId + '</td>'
+        + '<td>'  + e.productId + '</td>'
+        + '<td>' + e.quantity + '</td>'
+        + '<td>' + e.sellingPrice + '</td>'
+        + '</tr>';
+        $tbody.append(row);
+        j++;	
+    }
+    paginate("#dtBasicExample2");
+    $('#view-order-modal').modal('toggle');
+}
+
+function displayEditOrder(id){
+	var url = getOrderUrl() + "/" + id;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayorder(data);   
+	   		displayOrder(data);   
 	   },
 	   error: (response)=>{
 		orderError(response,false);
@@ -219,7 +254,7 @@ function displayUploadData(){
 	$('#upload-order-modal').modal('toggle');
 }
 
-function displayorder(data){
+function displayOrder(data){
 	$("#order-edit-form input[name=name]").val(data.name);	
 	$("#order-edit-form input[name=age]").val(data.age);	
 	$("#order-edit-form input[name=id]").val(data.id);	
@@ -229,20 +264,20 @@ function displayorder(data){
 
 //INITIALIZATION CODE
 function init(){
-	$('#add-order').click(addorder);
-	$('#update-order').click(updateorder);
-	$('#refresh-data').click(getorderList);
+	$('#add-order').click(addOrder);
+	$('#update-order').click(updateOrder);
+	$('#refresh-data').click(getOrderList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#orderFile').on('change', updateFileName)
 }
 
-function paginate() {
-	$('#dtBasicExample').DataTable();
+function paginate(id) {
+	$(id).DataTable();
 	$('.dataTables_length').addClass('bs-select');
 }
 
 $(document).ready(init);
-$(document).ready(getorderList);
+$(document).ready(getOrderList);
 

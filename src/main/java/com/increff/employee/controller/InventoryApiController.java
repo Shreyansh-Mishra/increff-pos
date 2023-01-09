@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,8 +43,14 @@ public class InventoryApiController {
 		return i2;
 	}
 	
+	@ApiOperation(value="Get by id")
+	@RequestMapping(path="/api/inventory/{id}", method=RequestMethod.GET)
+	public InventoryPojo getItemById(@PathVariable int id) {
+		return inventoryService.getById(id);
+	}
+	
 	@ApiOperation(value="edit Inventory")
-	@RequestMapping(path="/api/inventory/update-inventory", method=RequestMethod.PUT)
+	@RequestMapping(path="/api/inventory/{id}", method=RequestMethod.PUT)
 	public void editinventory(@RequestBody InventoryForm i) throws ApiException {
 		InventoryPojo i2 = convert(i);
 		inventoryService.update(i2);
