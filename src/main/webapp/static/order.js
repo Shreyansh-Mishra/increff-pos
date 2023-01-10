@@ -34,6 +34,7 @@ function convertToArrayOfObject(data){
 function addOrder(event){
 	//Set the values to update
 	var $form = $("#order-create-form");
+	$('#create-order-modal').modal('toggle');
 	var data = convertToArrayOfObject($form);
 	var url = getOrderUrl()+"/add-order";
 	console.log(data);

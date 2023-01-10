@@ -34,11 +34,12 @@ function updateInventory(event){
 	$('#edit-inventory-modal').modal('toggle');
 	//Get the ID
 	var id = $("#inventory-edit-form input[name=id]").val();	
-	var url = getInventoryUrl() + id;
+	var url = getInventoryUrl() + "/"+id;
 
 	//Set the values to update
 	var $form = $("#inventory-edit-form");
 	let jsoni = toJson($form);
+	jsoni.barcode = $("#inventory-edit-form input[name=barcode]").val();
 	$.ajax({
 	   url: url,
 	   type: 'PUT',
@@ -145,6 +146,8 @@ function downloadErrors(){
 
 //UI DISPLAY METHODS
 
+var barcode;
+
 function displayInventoryList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
 	$tbody.empty();
@@ -152,8 +155,7 @@ function displayInventoryList(data){
 	console.log(data);
 	for(var i in data){
 		var e = data[i];
-
-		var buttonHtml = ' <button onclick="displayEditInventory(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button onclick="displayEditInventory(' + e.id +')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.barcode + '</td>'
@@ -211,8 +213,8 @@ function displayUploadData(){
 }
 
 function displayInventory(data){
-	$("#inventory-edit-form input[name=name]").val(data.name);	
-	$("#inventory-edit-form input[name=age]").val(data.age);	
+	console.log(barcode);	
+	$("#inventory-edit-form input[name=barcode]").val(barcode);	
 	$("#inventory-edit-form input[name=id]").val(data.id);	
 	$('#edit-inventory-modal').modal('toggle');
 }

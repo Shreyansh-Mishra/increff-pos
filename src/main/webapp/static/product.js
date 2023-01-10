@@ -37,11 +37,11 @@ function addProduct(event){
 function updateEmployee(event){
 	$('#edit-product-modal').modal('toggle');
 	//Get the ID
-	var id = $("#employee-edit-form input[name=id]").val();	
-	var url = getBrandUrl() + "/update/" + id;
+	var id = $("#product-edit-form input[name=id]").val();	
+	var url = getProductUrl() + "/" + id;
 
 	//Set the values to update
-	var $form = $("#employee-edit-form");
+	var $form = $("#product-edit-form");
 	let jsoni = toJson($form);
 	console.log(jsoni);
 	$.ajax({
@@ -207,11 +207,12 @@ function displayUploadData(){
 }
 
 function displayProduct(data){
-	$("#employee-edit-form input[name=name]").val(data.name);	
-	$("#employee-edit-form input[name=brandName]").val(data.brand);	
-	$("#employee-edit-form input[name=category]").val(data.category);
-	$("#employee-edit-form input[name=mrp]").val(data.mrp);
-	$("#employee-edit-form input[name=barcode]").val(data.barcode);	
+	$("#product-edit-form input[name=name]").val(data.name);	
+	$("#product-edit-form input[name=brandName]").val(data.brandName);	
+	$("#product-edit-form input[name=category]").val(data.category);
+	$("#product-edit-form input[name=mrp]").val(data.mrp);
+	$("#product-edit-form input[name=barcode]").val(data.barcode);	
+	$("#product-edit-form input[name=id]").val(data.id);
 	$('#edit-product-modal').modal('toggle');
 }
 

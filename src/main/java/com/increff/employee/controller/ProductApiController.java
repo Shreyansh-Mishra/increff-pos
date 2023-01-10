@@ -85,8 +85,8 @@ public class ProductApiController {
 		productService.deleteProduct(id);
 	}
 	
-	@ApiOperation("Update Product")
-	@RequestMapping(path="/api/product/update-product/{id}", method=RequestMethod.PUT)
+	@ApiOperation("Edit Product")
+	@RequestMapping(path="/api/product/{id}", method=RequestMethod.PUT)
 	public void getProductsByCategory(@PathVariable int id, @RequestBody ProductForm p) throws ApiException{
 		ProductPojo p2 = convert(p);
 		productService.update(p2,id);

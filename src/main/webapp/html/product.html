@@ -17,36 +17,36 @@
 	 <div class="col-12">
 			<form class="form-inline" id="product-form">
 			  <div class="form-group">
-			    <label for="inputName" class="col-sm col-form-label">Product</label>
-			    <div class="col-sm">
+			    <label for="inputName" class="col-sm-2 col-form-label">Product</label>
+			    <div class="col-sm-10">
 			      <input type="text" class="form-control" name="name" id="inputName" placeholder="Enter Product Name">
 			    </div>
 			  </div>
-			  <div class="form-select">
-			    <label for="inputBrand" class="col-sm col-form-label">Brand Name</label>
-			    <div class="col-sm">
-			      <select class="form-control" name="brandName" id="inputBrand" placeholder="Select Brand Name">
-                  </select>
-                </div>
-			  </div>
-              <div class="form-select">
-			    <label for="inputCategory" class="col-sm col-form-label">Category</label>
-			    <div class="col-sm">
-			      <select class="form-control" name="category" id="inputCategory" placeholder="Enter Category" disabled>
-                    <option value="" disabled selected style="display: none;"> Choose Brand First </option>
-				  </select>
-			    </div>
-			  </div>
               <div class="form-group">
-			    <label for="inputMrp" class="col-sm col-form-label">MRP</label>
-			    <div class="col-sm">
+			    <label for="inputMrp" class="col-sm-2 col-form-label">MRP</label>
+			    <div class="col-sm-10">
 			      <input type="number" class="form-control" name="mrp" id="inputMrp" placeholder="Enter MRP">
 			    </div>
 			  </div>
 			  <div class="form-group">
-			    <label for="barcode" class="col-sm col-form-label">Barcode</label>
-			    <div class="col-sm">
+			    <label for="barcode" class="col-sm-2 col-form-label">Barcode</label>
+			    <div class="col-sm-10">
 			      <input type="text" class="form-control" name="barcode" id="barcode" placeholder="Enter Barcode">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="inputBrand" class="col-sm-2 col-form-label">Brand Name</label>
+			    <div class="col-sm-10">
+			      <select class="form-control" name="brandName" id="inputBrand" placeholder="Select Brand Name">
+                  </select>
+                </div>
+			  </div>
+              <div class="form-group">
+			    <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
+			    <div class="col-sm-10">
+			      <select class="form-control" name="category" id="inputCategory" placeholder="Enter Category" disabled>
+                    <option value="" disabled selected style="display: none;"> Choose Brand First </option>
+				  </select>
 			    </div>
 			  </div>
 			  <button type="button" class="btn btn-primary" id="add-product">Add</button>
@@ -131,7 +131,7 @@
 				<div class="form-group">
 					<label for="brand" class="col-sm-2 col-form-label">Brand Name</label>
 					<div class="col-sm-10">
-					  <input type="text" class="form-control" id="brand" name="brand" placeholder="Enter Brand Name">
+					  <input type="text" class="form-control" id="brand" name="brandName" placeholder="Enter Brand Name">
 					</div>
 			  	</div>
 
@@ -139,6 +139,18 @@
 					<label for="category" class="col-sm-2 col-form-label">Category</label>
 					<div class="col-sm-10">
 					<input type="text" class="form-control" id="category" name="category" placeholder="Enter Category">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="category" class="col-sm-2 col-form-label">MRP</label>
+					<div class="col-sm-10">
+					<input type="text" class="form-control" id="category" name="mrp" placeholder="Enter MRP">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="category" class="col-sm-2 col-form-label">Barcode</label>
+					<div class="col-sm-10">
+					<input type="text" class="form-control" id="category" name="barcode" placeholder="Enter Barcode">
 					</div>
 				</div>
  	        <input type="hidden" name="id" >

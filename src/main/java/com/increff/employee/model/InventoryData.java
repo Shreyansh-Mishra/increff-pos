@@ -3,6 +3,13 @@ package com.increff.employee.model;
 public class InventoryData {
 	private String barcode;
 	private int quantity;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	private int id;
 	public String getBarcode() {
 		return barcode;
 	}

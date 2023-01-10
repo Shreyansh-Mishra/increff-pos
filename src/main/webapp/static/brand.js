@@ -195,6 +195,9 @@ function updateUploadDialog(){
 	$('#rowCount').html("" + fileData.length);
 	$('#processCount').html("" + processCount);
 	$('#errorCount').html("" + errorData.length);
+	if(errorData.length>0){
+		swal.fire("There was some Problem with some of your files");
+	}
 }
 
 function updateFileName(){

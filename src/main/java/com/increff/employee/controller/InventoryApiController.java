@@ -70,6 +70,7 @@ public class InventoryApiController {
 	private static InventoryData convert(InventoryPojo i) {
 		InventoryData i2 = new InventoryData();
 		i2.setQuantity(i.getQuantity());
+		i2.setId(i.getId());
 		return i2;
 	}
 	

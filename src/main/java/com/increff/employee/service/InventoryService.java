@@ -22,11 +22,14 @@ public class InventoryService {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public void insert(InventoryPojo i) throws ApiException {
+		if(isNegative(i.getQuantity()))
+			throw new ApiException("Quantity needs to be a positive value");
 		ProductPojo p = checkExisting(i.getBarcode());
 		InventoryPojo i2 = inventoryDao.selectId(p.getId());
 		if(i2!=null) {
 			throw new ApiException("The Product already exists in the Inventory");
 		}
+		
 		i.setId(p.getId());
 		inventoryDao.add(i);
 	}
