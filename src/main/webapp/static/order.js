@@ -17,7 +17,7 @@ function orderError(response, edit){
 
 
 function convertToArrayOfObject(data){
-	var serialized = $form.serializeArray();
+	var serialized = data.serializeArray();
 	let arr = []
 	//Convert to array of object
 	for(let i=0;i<serialized.length;i+=3){
@@ -213,9 +213,10 @@ function displayOrderItems(data){
         var e = data[i];
         var row = '<tr>'
         + '<td>' + j + '</td>'
+        + '<td>' + e.itemName + '</td>'
+        + '<td>'  + e.barcode + '</td>'
         + '<td>' + e.orderId + '</td>'
-        + '<td>'  + e.productId + '</td>'
-        + '<td>' + e.quantity + '</td>'
+		+ '<td>' + e.quantity + '</td>'
         + '<td>' + e.sellingPrice + '</td>'
         + '</tr>';
         $tbody.append(row);
@@ -299,7 +300,8 @@ let i=1;
 function addRow(){
 	$form = $('#order-create-form');
 	$form.append('<hr class="mt-2 mb-3" />');
-	$form.append('<br><div class="form-group">'+
+	$form.append('<div class="d-flex justify-content-between" style="margin-bottom: 1%;">'+
+	'<div class="form-group">'+
 	'<label for="inputName" class="col-sm-2 col-form-label">Barcode</label>'+
 	'<div class="col-sm-10">'+
 	  '<input type="text" class="form-control" name="brand" id="inputName" placeholder="Enter Barcode">'+
@@ -316,6 +318,7 @@ function addRow(){
    '<div class="col-sm-10">'+
 	 '<input type="text" class="form-control" name="category" id="inputAge" placeholder="Enter Quantity">'+
    '</div>'+
+ '</div>'+
  '</div>')
 i++;
 }

@@ -1,8 +1,6 @@
 package com.increff.employee.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -14,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.increff.employee.dto.OrderDto;
 import com.increff.employee.model.OrderForm;
+import com.increff.employee.model.OrderItemData;
 import com.increff.employee.pojo.OrderItemPojo;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.ApiException;
@@ -29,20 +29,15 @@ public class OrderApiController {
 	@Autowired
 	OrderService orderService;
 	
-	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+	@Autowired
+	OrderDto orderDto;
 	
 	@ApiOperation(value = "Create an order")
 	@RequestMapping(path= "/api/order/add-order", method=RequestMethod.POST)
 	public void createOrder(@RequestBody List<OrderForm> o) throws ApiException {
 		List<OrderItemPojo> o2 = convert(o);
-		orderService.addItems(o2);
-		
 		OrderPojo order = new OrderPojo();
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-		order.setTime(sdf.format(cal.getTime()));
-		orderService.add(order);
-		
+		orderService.addItems(o2,order);
 	}
 	
 	@ApiOperation(value = "Get all orders")
@@ -53,8 +48,14 @@ public class OrderApiController {
 	
 	@ApiOperation(value = "Get order items")
 	@RequestMapping(path="/api/order/{id}", method=RequestMethod.GET)
-	public List<OrderItemPojo> getOrderItems(@PathVariable int id){
-		return orderService.getItems(id);
+	public List<OrderItemData> getOrderItems(@PathVariable int id) throws ApiException{
+		List<OrderItemPojo> items = orderService.getItems(id);
+		List<OrderItemData> orderItems = new ArrayList<OrderItemData>();
+		for(OrderItemPojo i: items) {
+			OrderItemData o = orderDto.convert(i);
+			orderItems.add(o);
+		}
+		return orderItems;
 	}
 	
 	public static OrderItemPojo convert(OrderForm o) {

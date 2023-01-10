@@ -1,6 +1,8 @@
 package com.increff.employee.service;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -25,13 +27,15 @@ public class OrderService {
 	@Autowired
 	ProductDao productDao;
 	
+	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+	
 	@Transactional
 	public void add(OrderPojo o) {
 		orderDao.insertOrder(o);
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)
-	public void addItems(List<OrderItemPojo> orderItems) throws ApiException {
+	public void addItems(List<OrderItemPojo> orderItems,OrderPojo orderPojo) throws ApiException {
 		for(OrderItemPojo o: orderItems) {
 			ProductPojo p = productDao.selectBarcode(o.getBarcode());
 			if(p==null) {
@@ -39,11 +43,20 @@ public class OrderService {
 			}
 			o.setProductId(p.getId());
 			InventoryPojo i = inventoryDao.selectId(p.getId());
+			if(i==null) {
+				throw new ApiException("The Product "+p.getName() +" isn't present in the Inventory");
+			}
 			int newQuantity = i.getQuantity()-o.getQuantity();
 			if(newQuantity<0) {
 				throw new ApiException("Not Enough quantity of "+p.getName()+" present in the Inventory");
 			}
+			
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+			orderPojo.setTime(sdf.format(cal.getTime()));
+			orderDao.insertOrder(orderPojo);
 			i.setQuantity(newQuantity);
+			o.setOrderId(orderPojo.getId());
 			inventoryDao.update(i);
 			orderDao.insert(o);
 		}
