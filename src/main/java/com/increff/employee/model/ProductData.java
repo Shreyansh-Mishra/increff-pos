@@ -5,7 +5,20 @@ public class ProductData {
 	private double mrp;
 	private String name;
 	private String barcode;
-	private int brand_category;
+	private String brandName;
+	private String category;
+	public String getBrandName() {
+		return brandName;
+	}
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
 	public int getId() {
 		return id;
 	}
@@ -30,12 +43,7 @@ public class ProductData {
 	public void setBarcode(String barcode) {
 		this.barcode = barcode;
 	}
-	public int getBrand_category() {
-		return brand_category;
-	}
-	public void setBrand_category(int brand_category) {
-		this.brand_category = brand_category;
-	}
+	
 	
 	
 }

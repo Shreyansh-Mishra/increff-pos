@@ -4,16 +4,6 @@ function getInventoryUrl(){
 	return baseUrl + "/api/inventory";
 }
 
-function inventoryError(response, edit){
-	let $form;
-	if(edit==false)
-		$form = $("#inventory-form");
-	else
-		$form = $("#inventory-edit-form");
-	$form.find(".alert").remove();
-	$form.append(`<div class="alert alert-danger" role="alert">Error : ${JSON.parse(response.responseText).message}</div>`)
-	   
-}
 
 //BUTTON ACTIONS
 function addInventory(event){
@@ -33,7 +23,7 @@ function addInventory(event){
 	   		getInventoryList();  
 	   },
 	   error: (response)=>{
-			inventoryError(response,false);
+			handleError(response);
 		}
 	});
 
@@ -60,7 +50,7 @@ function updateInventory(event){
 	   		getInventoryList();   
 	   },
 	   error: (response)=>{
-		inventoryError(response,false);
+		handleError(response);
 		}
 	});
 
@@ -79,7 +69,7 @@ function getInventoryList(){
 	   		displayInventoryList(data);  
 	   },
 	   error: (response)=>{
-		inventoryError(response,false);
+		handleError(response);
 		}
 	});
 }
@@ -94,7 +84,7 @@ function deleteInventory(id){
 	   		getInventoryList();  
 	   },
 	   error: (response)=>{
-		inventoryError(response,false);
+		handleError(response);
 		}
 	});
 }
@@ -159,13 +149,14 @@ function displayInventoryList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
 	$tbody.empty();
 	let j=1;
+	console.log(data);
 	for(var i in data){
 		var e = data[i];
 
 		var buttonHtml = ' <button onclick="displayEditInventory(' + e.id + ')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
-		+ '<td>' + e.id + '</td>'
+		+ '<td>' + e.barcode + '</td>'
 		+ '<td>'  + e.quantity + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
@@ -184,7 +175,7 @@ function displayEditInventory(id){
 	   		displayInventory(data);   
 	   },
 	   error: (response)=>{
-		inventoryError(response,false);
+		handleError(response);
 		}
 	});	
 }

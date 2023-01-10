@@ -4,17 +4,6 @@ function getBrandUrl(){
 	return baseUrl + "/api/brand";
 }
 
-function brandError(response, edit){
-	let $form;
-	if(edit==false)
-		$form = $("#brand-form");
-	else
-		$form = $("#brand-edit-form");
-	$form.find(".alert").remove();
-	$form.append(`<div class="alert alert-danger" role="alert">Error : ${JSON.parse(response.responseText).message}</div>`)
-	   
-}
-
 //BUTTON ACTIONS
 function addBrand(event){
 	//Set the values to update
@@ -33,7 +22,7 @@ function addBrand(event){
 	   		getBrandList();  
 	   },
 	   error: (response)=>{
-			brandError(response,false);
+			handleError(response);
 		}
 	});
 
@@ -60,7 +49,7 @@ function updateBrand(event){
 	   		getBrandList();   
 	   },
 	   error: (response)=>{
-		brandError(response,false);
+		handleError(response);
 		}
 	});
 
@@ -79,7 +68,7 @@ function getBrandList(){
 	   		displayBrandList(data);  
 	   },
 	   error: (response)=>{
-		brandError(response,false);
+		handleError(response);
 		}
 	});
 }
@@ -94,7 +83,7 @@ function deleteBrand(id){
 	   		getBrandList();  
 	   },
 	   error: (response)=>{
-		brandError(response,false);
+		handleError(response);
 		}
 	});
 }
@@ -184,7 +173,7 @@ function displayEditBrand(id){
 	   		displayBrand(data);   
 	   },
 	   error: (response)=>{
-		brandError(response,false);
+		handleError(response);
 		}
 	});	
 }
@@ -231,7 +220,7 @@ function displayBrand(data){
 function init(){
 	$('#add-brand').click(addBrand);
 	$('#update-brand').click(updateBrand);
-	$('#refresh-data').click(getBrandList);
+	$('#refresh-data').click(()=>location.reload());
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);

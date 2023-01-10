@@ -26,7 +26,9 @@ function addProduct(event){
 	   success: function(response) {	
 		getProductList();  
 	   },
-	   error: handleAjaxError
+	   error: (response) => {
+		handleError(response);
+	   }
 	});
 
 	return false;
@@ -52,7 +54,7 @@ function updateEmployee(event){
 	   success: function(response) {
 	   		getBrandList();   
 	   },
-	   error: handleAjaxError
+	   error: handleError
 	});
 
 	return false;
@@ -67,7 +69,7 @@ function getProductList(){
 	   success: function(data) {
 	   		displayProductList(data);  
 	   },
-	   error: handleAjaxError
+	   error: handleError
 	});
 }
 
@@ -79,7 +81,7 @@ function deleteProduct(id){
 	   success: function(data) {
 	   		getProductList();  
 	   },
-	   error: handleAjaxError
+	   error: handleError
 	});
 }
 
@@ -152,7 +154,8 @@ function displayProductList(data){
 		+ '<td>' + e.name + '</td>'
 		+ '<td>'  + e.mrp + '</td>'
         + '<td>'  + e.barcode + '</td>'
-        + '<td>'  + e.brand_category + '</td>'
+        + '<td>'  + e.brandName + '</td>'
+		+ '<td>'  + e.category + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
@@ -169,7 +172,7 @@ function displayEditProduct(id){
 	   success: function(data) {
 	   		displayProduct(data);   
 	   },
-	   error: handleAjaxError
+	   error: handleError
 	});	
 }
 
@@ -217,7 +220,7 @@ function displayProduct(data){
 function init(){
 	$('#add-product').click(addProduct);
 	$('#update-employee').click(updateEmployee);
-	$('#refresh-data').click(getProductList);
+	$('#refresh-data').click(()=>location.reload());
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
@@ -240,7 +243,7 @@ function populateCategoryDropdown(){
                 $select.append(option);
             }
         },
-        error: handleAjaxError
+        error: handleError
     });
 }
 
@@ -260,7 +263,7 @@ function populateBrandDropDown(){
                 $select.append(option);
             }
         },
-        error: handleAjaxError
+        error: handleError
     });
 }
 

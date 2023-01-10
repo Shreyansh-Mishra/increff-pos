@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.increff.employee.dto.InventoryDto;
 import com.increff.employee.model.InventoryData;
 import com.increff.employee.model.InventoryForm;
 import com.increff.employee.pojo.InventoryPojo;
@@ -25,6 +26,9 @@ public class InventoryApiController {
 	@Autowired
 	private InventoryService inventoryService;
 	
+	@Autowired
+	private InventoryDto inventoryDto;
+	
 	@ApiOperation(value="adds product to inventory")
 	@RequestMapping(path="/api/inventory/add-product",method=RequestMethod.POST)
 	public void addProductToInventory(@RequestBody InventoryForm i) throws ApiException {
@@ -34,11 +38,11 @@ public class InventoryApiController {
 	
 	@ApiOperation(value="view inventory")
 	@RequestMapping(path="/api/inventory/get-inventory",method=RequestMethod.GET)
-	public List<InventoryData> getWholeInventoryView() {
+	public List<InventoryData> getWholeInventoryView() throws ApiException {
 		List<InventoryPojo> i = inventoryService.getWholeInventory();
 		List<InventoryData> i2 = new ArrayList<InventoryData>();
 		for(InventoryPojo j: i) {
-			i2.add(convert(j));
+			i2.add(inventoryDto.convert(convert(j),j));
 		}
 		return i2;
 	}
@@ -65,7 +69,6 @@ public class InventoryApiController {
 	
 	private static InventoryData convert(InventoryPojo i) {
 		InventoryData i2 = new InventoryData();
-		i2.setId(i.getId());
 		i2.setQuantity(i.getQuantity());
 		return i2;
 	}

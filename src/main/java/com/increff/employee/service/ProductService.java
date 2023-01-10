@@ -105,6 +105,11 @@ public class ProductService {
 		p2.setBrand_category(b.getId());
 		productDao.update();
 	}
+	
+	@Transactional
+	public ProductPojo getByBarcode(String barcode) {
+		return productDao.selectBarcode(barcode);
+	}
 
 	public static String usingRandomUUID() {
 

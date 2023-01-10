@@ -18,12 +18,16 @@ import com.increff.employee.service.ProductService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
+import com.increff.employee.dto.ProductDto;
 @Api
 @RestController
 public class ProductApiController {
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private ProductDto productDto;
+	
 	
 	@ApiOperation("Adds a Product")
 	@RequestMapping(path="/api/product/add-product", method=RequestMethod.POST)
@@ -34,11 +38,13 @@ public class ProductApiController {
 	
 	@ApiOperation("Get All Products")
 	@RequestMapping(path="/api/product/get-products", method=RequestMethod.GET)
-	public List<ProductData> getProducts(){
+	public List<ProductData> getProducts() throws ApiException{
 		List<ProductPojo> p = productService.getAll();
 		List<ProductData> p2 = new ArrayList<ProductData>();
 		for(ProductPojo i: p) {
-			p2.add(convert(i));
+			ProductData p3 = convert(i);
+			p3 = productDto.convert(p3,i);
+			p2.add(p3);
 		}
 		return p2;
 	}
@@ -100,7 +106,6 @@ public class ProductApiController {
 	private static ProductData convert(ProductPojo p) {
 		ProductData p2 = new ProductData();
 		p2.setBarcode(p.getBarcode());
-		p2.setBrand_category(p.getBrand_category());
 		p2.setId(p.getId());
 		p2.setMrp(p.getMrp());
 		p2.setName(p.getName());

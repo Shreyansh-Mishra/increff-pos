@@ -13,6 +13,13 @@ function toJson($form){
 }
 
 
+function handleError(response){
+	let $div;
+	$div = $("#error");
+	$div.find(".alert").remove();
+	$div.append(`<div class="alert alert-danger" role="alert">Error : ${JSON.parse(response.responseText).message}</div>`)
+}
+
 function handleAjaxError(response){
     console.log(response.responseText);
 	var response = JSON.parse(response.responseText);
