@@ -30,27 +30,23 @@ public class OrderService {
 		orderDao.insertOrder(o);
 	}
 	
-	@Transactional
-	public String addItems(OrderItemPojo o,String barcode,int id) throws ApiException {
-		ProductPojo p = productDao.selectBarcode(barcode);
-		if(p==null) {
-			return "Product with barcode "+barcode+" is not present!";
-		}
-		else {
+	@Transactional(rollbackOn = ApiException.class)
+	public void addItems(List<OrderItemPojo> orderItems) throws ApiException {
+		for(OrderItemPojo o: orderItems) {
+			ProductPojo p = productDao.selectBarcode(o.getBarcode());
+			if(p==null) {
+				throw new ApiException("Product with barcode "+o.getBarcode()+" is not present!");
+			}
 			o.setProductId(p.getId());
-			o.setOrderId(id);
 			InventoryPojo i = inventoryDao.selectId(p.getId());
 			int newQuantity = i.getQuantity()-o.getQuantity();
 			if(newQuantity<0) {
-				return "Not Enough quantity of "+p.getName()+" present in the Inventory";
+				throw new ApiException("Not Enough quantity of "+p.getName()+" present in the Inventory");
 			}
-			else {
-				i.setQuantity(newQuantity);
-				inventoryDao.update(i);
-				orderDao.insert(o);
-			}
+			i.setQuantity(newQuantity);
+			inventoryDao.update(i);
+			orderDao.insert(o);
 		}
-	return "";
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)

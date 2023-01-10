@@ -299,24 +299,24 @@ let i=1;
 function addRow(){
 	$form = $('#order-create-form');
 	$form.append('<hr class="mt-2 mb-3" />');
-	$form.append('<div class="form-group">' +
-	'<label for="barcode" class="col-sm-2 col-form-label">Enter Barcode</label>' +
-	'<div class="col-sm-10">' +
-	  '<input type="text" id="barcode" class="form-control" name="barcode" placeholder="Enter Barcode">' +
-	'</div>' +
-  '</div>' +
-  '<div class="form-group">' +
-	  '<label for="MRP" class="col-sm-2 col-form-label">Enter MRP</label>' +
-	  '<div class="col-sm-10">' +
-		'<input type="number" id="MRP" class="form-control" name="mrp" placeholder="Enter MRP">' +
-	  '</div>' +
-  '</div>' +
-  '<div class="form-group">' +
-	  '<label for="quantity" class="col-sm-2 col-form-label">Quantity</label>' +
-	  '<div class="col-sm-10">' +
-		'<input type="text" id="quantity" class="form-control" name="quantity" placeholder="Enter Quantity">' +
-	  '</div>' +
-  '</div>')
+	$form.append('<br><div class="form-group">'+
+	'<label for="inputName" class="col-sm-2 col-form-label">Barcode</label>'+
+	'<div class="col-sm-10">'+
+	  '<input type="text" class="form-control" name="brand" id="inputName" placeholder="Enter Barcode">'+
+	'</div>'+
+  '</div>'+
+  '<div class="form-group">'+
+	'<label for="inputAge" class="col-sm-2 col-form-label">MRP</label>'+
+	'<div class="col-sm-10">'+
+	  '<input type="text" class="form-control" name="category" id="inputAge" placeholder="Enter MRP">'+
+	'</div>'+
+  '</div>'+
+  '<div class="form-group">'+
+   '<label for="inputAge" class="col-sm-2 col-form-label">Quantity</label>'+
+   '<div class="col-sm-10">'+
+	 '<input type="text" class="form-control" name="category" id="inputAge" placeholder="Enter Quantity">'+
+   '</div>'+
+ '</div>')
 i++;
 }
 

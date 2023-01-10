@@ -34,26 +34,15 @@ public class OrderApiController {
 	@ApiOperation(value = "Create an order")
 	@RequestMapping(path= "/api/order/add-order", method=RequestMethod.POST)
 	public void createOrder(@RequestBody List<OrderForm> o) throws ApiException {
+		List<OrderItemPojo> o2 = convert(o);
+		orderService.addItems(o2);
+		
 		OrderPojo order = new OrderPojo();
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 		order.setTime(sdf.format(cal.getTime()));
 		orderService.add(order);
-		List<String> exceptions = new ArrayList<String>();
-		for(OrderForm i: o) {
-			OrderItemPojo o2 = convert(i);
-			String s = orderService.addItems(o2, i.getBarcode(),order.getId());
-			if(s.length()>0) {
-				exceptions.add(s);
-			}
-		}
-		if(exceptions.size()==o.size()) {
-			orderService.deleteOrder(order.getId());
-		}
-		if(exceptions.size()>0) {
-			String s = String.join("\n",exceptions);
-			throw new ApiException(s);
-		}
+		
 	}
 	
 	@ApiOperation(value = "Get all orders")
@@ -72,6 +61,16 @@ public class OrderApiController {
 		OrderItemPojo o2 = new OrderItemPojo();
 		o2.setQuantity(o.getQuantity());
 		o2.setSellingPrice(o.getMrp());
+		o2.setBarcode(o.getBarcode());
 		return o2;
+	}
+	
+	public static List<OrderItemPojo> convert(List<OrderForm> form){
+		List<OrderItemPojo> list= new ArrayList<OrderItemPojo>();
+		for(OrderForm i: form) {
+			OrderItemPojo o = convert(i);
+			list.add(o);
+		}
+		return list;
 	}
 }
