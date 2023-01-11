@@ -1,8 +1,7 @@
 package com.increff.employee.service;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.Instant;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -37,6 +36,9 @@ public class OrderService {
 	@Transactional(rollbackOn = ApiException.class)
 	public void addItems(List<OrderItemPojo> orderItems,OrderPojo orderPojo) throws ApiException {
 		for(OrderItemPojo o: orderItems) {
+			if(o.getBarcode().isBlank()||o.getQuantity()==0||o.getSellingPrice()==0) {
+				throw new ApiException("All fields are mandatory, please check again!");
+			}
 			ProductPojo p = productDao.selectBarcode(o.getBarcode());
 			if(o.getQuantity()<0) {
 				throw new ApiException("Quantity should be a positive value");
@@ -57,9 +59,7 @@ public class OrderService {
 				throw new ApiException("Not Enough quantity of "+p.getName()+" present in the Inventory");
 			}
 			
-			Calendar cal = Calendar.getInstance();
-			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-			orderPojo.setTime(sdf.format(cal.getTime()));
+			orderPojo.setTime(getTimestamp());
 			orderDao.insertOrder(orderPojo);
 			i.setQuantity(newQuantity);
 			o.setOrderId(orderPojo.getId());
@@ -89,5 +89,13 @@ public class OrderService {
 	
 	public List<OrderItemPojo> getItems(int id){
 		return orderDao.selectItems(id);
+	}
+	
+	public static String getTimestamp() {
+		String ts = Instant.now().toString();
+		ts=ts.replace('T', ' ');
+		ts=ts.replace('Z',' ');
+		ts = ts.substring(0, 16);
+		return ts;
 	}
 }

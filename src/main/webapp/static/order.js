@@ -39,7 +39,12 @@ function addOrder(event){
        },	   
 	   success: function(response) {
 	   		handleSuccess("Order Created");
-			getOrderList();  
+			getOrderList();
+			orderArr = [];
+			deleteArr = [];
+			barcodeMap = {};
+			i=1;
+			clearOrderItemsTable();
 	   },
 	   error: (response)=>{
 		handleError(response);
@@ -47,6 +52,11 @@ function addOrder(event){
 	});
 
 	return false;
+}
+
+function clearOrderItemsTable(){
+	console.log($("#dtBasicExample-order-create > tbody").html)
+	$("#dtBasicExample-order-create").DataTable().clear().draw();
 }
 
 function updateOrder(event){
@@ -166,6 +176,7 @@ function downloadErrors(){
 
 function displayOrderList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
+	$('#dtBasicExample').DataTable().destroy();
 	$tbody.empty();
 	let j=1;
 	for(var i in data){
@@ -199,6 +210,7 @@ function displayWholeOrder(id){
 
 function displayOrderItems(data){
     var $tbody = $('#dtBasicExample2').find('tbody');
+	$('#dtBasicExample2').DataTable().destroy();
     $tbody.empty();
     let j=1;
     for(var i in data){
@@ -279,7 +291,6 @@ function init(){
 	$('#add-order').click(displayCreateOrder);
 	$('#create-order').click(addOrder);
 	$('#update-order').click(updateOrder);
-	$('#refresh-data').click(getOrderList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
@@ -293,28 +304,51 @@ let orderArr = []
 
 let deleteArr = []
 
+let barcodeMap = {}
+
+$(document).on('keydown', 'input[pattern]', function(e){
+	var input = $(this);
+	var oldVal = input.val();
+	var regex = new RegExp(input.attr('pattern'), 'g');
+  
+	setTimeout(function(){
+	  var newVal = input.val();
+	  if(!regex.test(newVal)){
+		input.val(oldVal); 
+	  }
+	}, 1);
+});
+
 function addRow(){
 	$form = $('#order-create-form');
-	barcode = $form.find('input[name=barcode]').val();
-	mrp = $form.find('input[name=mrp]').val();
-	quantity = $form.find('input[name=quantity]').val();
-	orderArr.push({barcode:barcode,mrp:mrp,quantity:quantity});
-	console.log(orderArr);
-	//empty the input fields
+	var barcode = $form.find('input[name=barcode]').val();
+	var mrp = $form.find('input[name=mrp]').val();
+	var q = $form.find('input[name=quantity]').val();
+	let isExist = $('.'+barcode).length
 	$form.find('input[name=barcode]').val('');
 	$form.find('input[name=mrp]').val('');
 	$form.find('input[name=quantity]').val('');
-	$('#dtBasicExample-order-create').DataTable().destroy();
+	if(isExist>0){
+		let quant = parseInt(q) + parseInt($('.'+barcode).find('input[name=quantity]').val())
+		$('.'+barcode).find('input[name=quantity]').val(quant)
+		orderArr[barcodeMap[barcode]-1]['quantity'] = quant
+	}
+	else{
+	barcodeMap[barcode] = i;
+	orderArr.push({barcode:barcode,mrp:mrp,quantity:q});
+	console.log(orderArr);
+	// $('#dtBasicExample-order-create').DataTable().destroy();
 	var $tbody = $('#dtBasicExample-order-create').find('tbody');
-	var row = '<tr id='+i+'>'
-	+ '<td>' + '<input disabled name=barcode value='+barcode+'  /></td>'
-	+ '<td>'  + '<input disabled name=mrp value='+mrp+' /></td>'
-	+ '<td>' + '<input disabled name=quantity value='+quantity+' /></td>'
-	+ '<td>' + '<button onclick="deleteRow('+i+')">delete</button>' + '&nbsp<button id='+i+' onclick="editRow('+i+')">edit</button>' + '</td>'
+	var row = '<tr id='+i+' class='+barcode+'>'
+	+ '<td>' + '<input type="text" disabled name=barcode value='+barcode+'  /></td>'
+	+ '<td>'  + '<input type="number" pattern="^\\d*(\\.\\d{0,2})?$" disabled name=mrp value='+mrp+' /></td>'
+	+ '<td>' + '<input type="number" disabled name=quantity value='+q+' /></td>'
+	+ '<td>'  + '<button id='+i+' onclick="editRow('+i+')">edit</button>'+ '&nbsp<button onclick="deleteRow('+i+')">delete</button>' + '</td>'
 	+ '</tr>';
 	$tbody.append(row);
 	i++;
 	paginate("#dtBasicExample-order-create");
+	}
 }
 
 function editRow(i){
@@ -328,12 +362,18 @@ function editRow(i){
 
 function saveRow(i){
 	var $tr = $('#'+i);
+	console.log('.'+$tr.attr('class'));
+	delete barcodeMap['.'+$tr.attr('class')];
+	$tr.removeAttr('class');
+	$tr.addClass($tr.find('input[name=barcode]').val());
 	var $editRow = $tr.find('button[id='+i+']');
 	$editRow.html('edit');
 	$tr.find('input').attr('disabled', 'disabled');
 	orderArr[i-1].barcode = $tr.find('input[name=barcode]').val();
 	orderArr[i-1].mrp = $tr.find('input[name=mrp]').val();
 	orderArr[i-1].quantity = $tr.find('input[name=quantity]').val();
+	barcodeMap[$tr.find('input[name=barcode]').val()] = i;
+	//add new barcode as class to the tr element
 	$editRow.attr('onclick', 'editRow('+i+')');
 	console.log(orderArr);
 }
@@ -341,6 +381,7 @@ function saveRow(i){
 function deleteRow(i){
 	deleteArr.push(i-1);
 	$('#'+i).remove();
+	delete barcodeMap[orderArr[i-1].barcode];
 	console.log(deleteArr);
 }
 

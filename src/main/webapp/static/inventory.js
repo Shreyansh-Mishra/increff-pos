@@ -150,6 +150,7 @@ var barcode;
 
 function displayInventoryList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
+	$('#dtBasicExample').DataTable().destroy();
 	$tbody.empty();
 	let j=1;
 	console.log(data);
@@ -225,7 +226,6 @@ function displayInventory(data,barcode){
 function init(){
 	$('#add-inventory').click(addInventory);
 	$('#update-inventory').click(updateInventory);
-	$('#refresh-data').click(getInventoryList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);

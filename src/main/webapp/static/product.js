@@ -24,7 +24,8 @@ function addProduct(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {	
-		getProductList();  
+		getProductList();
+		handleSuccess("Product added successfully");
 	   },
 	   error: (response) => {
 		handleError(response);
@@ -52,7 +53,7 @@ function updateEmployee(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getBrandList();   
+	   		getProductList();   
 	   },
 	   error: (response)=>{
 		handleError(response);
@@ -150,6 +151,7 @@ function downloadErrors(){
 
 function displayProductList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
+	$('#dtBasicExample').DataTable().destroy();
 	$tbody.empty();
 	let j=1;
 	for(var i in data){
@@ -227,7 +229,6 @@ function displayProduct(data){
 function init(){
 	$('#add-product').click(addProduct);
 	$('#update-employee').click(updateEmployee);
-	$('#refresh-data').click(()=>location.reload());
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
@@ -277,6 +278,19 @@ function populateBrandDropDown(){
 $(document).ready(init);
 $(document).ready(getProductList);
 $(document).ready(populateBrandDropDown);
+
+$(document).on('keydown', 'input[pattern]', function(e){
+	var input = $(this);
+	var oldVal = input.val();
+	var regex = new RegExp(input.attr('pattern'), 'g');
+  
+	setTimeout(function(){
+	  var newVal = input.val();
+	  if(!regex.test(newVal)){
+		input.val(oldVal); 
+	  }
+	}, 1);
+  });
 
 function paginate() {
 	$('#dtBasicExample').DataTable();

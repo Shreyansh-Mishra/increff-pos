@@ -89,7 +89,12 @@ public class ProductService {
 	
 	@Transactional
 	public void update(ProductPojo p,int id) throws ApiException {
-		ProductPojo p2 = productDao.selectId(id); 
+		ProductPojo p2 = productDao.selectBarcode(p.getBarcode());
+		if(p2!=null && p2.getBarcode()!=p.getBarcode()) {
+			throw new ApiException("A Product already exists with the same barcode!");
+		}
+		
+		p2 = productDao.selectId(id); 
 		if(p2==null) {
 			throw new ApiException("The Product does not exists");
 		}

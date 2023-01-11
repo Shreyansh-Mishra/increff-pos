@@ -19,7 +19,8 @@ function addBrand(event){
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getBrandList();  
+	   		getBrandList();
+			handleSuccess("Brand added successfully");  
 	   },
 	   error: (response)=>{
 			handleError(response);
@@ -224,7 +225,6 @@ function displayBrand(data){
 function init(){
 	$('#add-brand').click(addBrand);
 	$('#update-brand').click(updateBrand);
-	$('#refresh-data').click(()=>location.reload());
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
