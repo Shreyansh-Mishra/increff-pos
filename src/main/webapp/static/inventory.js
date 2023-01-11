@@ -155,7 +155,7 @@ function displayInventoryList(data){
 	console.log(data);
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button onclick="displayEditInventory(' + e.id +')">edit</button>'
+		var buttonHtml = ` <button onclick="displayEditInventory(${e.id},'${e.barcode}')">edit</button>`
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.barcode + '</td>'
@@ -168,13 +168,14 @@ function displayInventoryList(data){
 	paginate();
 }
 
-function displayEditInventory(id){
+function displayEditInventory(id,barcode){
+	console.log(barcode);
 	var url = getInventoryUrl() + "/" + id;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayInventory(data);   
+	   		displayInventory(data,barcode);   
 	   },
 	   error: (response)=>{
 		handleError(response);
@@ -212,7 +213,7 @@ function displayUploadData(){
 	$('#upload-inventory-modal').modal('toggle');
 }
 
-function displayInventory(data){
+function displayInventory(data,barcode){
 	console.log(barcode);	
 	$("#inventory-edit-form input[name=barcode]").val(barcode);	
 	$("#inventory-edit-form input[name=id]").val(data.id);	

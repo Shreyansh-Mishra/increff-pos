@@ -27,11 +27,12 @@ public class InventoryService {
 		ProductPojo p = checkExisting(i.getBarcode());
 		InventoryPojo i2 = inventoryDao.selectId(p.getId());
 		if(i2!=null) {
-			throw new ApiException("The Product already exists in the Inventory");
+			i2.setQuantity(i.getQuantity()+i2.getQuantity());
 		}
-		
+		else {
 		i.setId(p.getId());
 		inventoryDao.add(i);
+		}
 	}
 	
 	@Transactional

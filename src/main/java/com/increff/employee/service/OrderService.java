@@ -38,6 +38,12 @@ public class OrderService {
 	public void addItems(List<OrderItemPojo> orderItems,OrderPojo orderPojo) throws ApiException {
 		for(OrderItemPojo o: orderItems) {
 			ProductPojo p = productDao.selectBarcode(o.getBarcode());
+			if(o.getQuantity()<0) {
+				throw new ApiException("Quantity should be a positive value");
+			}
+			if(o.getSellingPrice()<0) {
+				throw new ApiException("Selling Price needs to be positive");
+			}
 			if(p==null) {
 				throw new ApiException("Product with barcode "+o.getBarcode()+" is not present!");
 			}

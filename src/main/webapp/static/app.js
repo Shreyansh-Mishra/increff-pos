@@ -33,6 +33,14 @@ function readFileData(file, callback){
 	Papa.parse(file, config);
 }
 
+function handleSuccess(message){
+    swal({
+        title: "Success",
+        text: message,
+        icon: "success",
+      });
+}
+
 
 function writeFileData(arr){
 	var config = {

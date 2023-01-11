@@ -4,18 +4,6 @@ function getOrderUrl(){
 	return baseUrl + "/api/order";
 }
 
-function orderError(response, edit){
-	let $form;
-	if(edit==false)
-		$form = $("#order-form");
-	else
-		$form = $("#order-edit-form");
-	$form.find(".alert").remove();
-	$form.append(`<div class="alert alert-danger" role="alert">Error : ${JSON.parse(response.responseText).message}</div>`)
-	   
-}
-
-
 function convertToArrayOfObject(data){
 	var serialized = data.serializeArray();
 	let arr = []
@@ -32,25 +20,30 @@ function convertToArrayOfObject(data){
 
 //BUTTON ACTIONS
 function addOrder(event){
-	//Set the values to update
-	var $form = $("#order-create-form");
 	$('#create-order-modal').modal('toggle');
-	var data = convertToArrayOfObject($form);
 	var url = getOrderUrl()+"/add-order";
+	let data = []
+	for(let i=0;i<orderArr.length;i++){
+		if(deleteArr.includes(i)){
+			continue;
+		}
+		data.push(orderArr[i]);
+	}
 	console.log(data);
 	$.ajax({
 	   url: url,
 	   type: 'POST',
-	   data: data,
+	   data: JSON.stringify(data),
 	   headers: {
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
-	   		getOrderList();  
+	   		handleSuccess("Order Created");
+			getOrderList();  
 	   },
 	   error: (response)=>{
-			orderError(response,false);
-		}
+		handleError(response);
+	   }
 	});
 
 	return false;
@@ -76,8 +69,8 @@ function updateOrder(event){
 	   		getOrderList();   
 	   },
 	   error: (response)=>{
-		orderError(response,false);
-		}
+		handleError(response);
+	   }
 	});
 
 	return false;
@@ -95,8 +88,8 @@ function getOrderList(){
 	   		displayOrderList(data);  
 	   },
 	   error: (response)=>{
-		orderError(response,false);
-		}
+		handleError(response);
+	   }
 	});
 }
 
@@ -110,8 +103,8 @@ function deleteOrder(id){
 	   		getOrderList();  
 	   },
 	   error: (response)=>{
-		orderError(response,false);
-		}
+		handleError(response);
+	   }
 	});
 }
 
@@ -177,9 +170,7 @@ function displayOrderList(data){
 	let j=1;
 	for(var i in data){
 		var e = data[i];
-
-		var buttonHtml = ' <button onclick="displayEditOrder(' + e.id + ')">edit</button>'
-        buttonHtml += ' <button onclick="displayWholeOrder('+e.id+')">view</button>'
+        var buttonHtml = ' <button onclick="displayWholeOrder('+e.id+')">view</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.id + '</td>'
@@ -201,8 +192,8 @@ function displayWholeOrder(id){
        		displayOrderItems(data);   
        },
        error: (response)=>{
-        orderError(response,false);
-        }
+		handleError(response);
+	   }
     });	
 }
 
@@ -236,8 +227,8 @@ function displayEditOrder(id){
 	   		displayOrder(data);   
 	   },
 	   error: (response)=>{
-		orderError(response,false);
-		}
+		handleError(response);
+	   }
 	});	
 }
 
@@ -298,30 +289,59 @@ function init(){
 
 let i=1;
 
+let orderArr = []
+
+let deleteArr = []
+
 function addRow(){
 	$form = $('#order-create-form');
-	$form.append('<hr class="mt-2 mb-3" />');
-	$form.append('<div class="d-flex justify-content-between" style="margin-bottom: 1%;">'+
-	'<div class="form-group">'+
-	'<label for="inputName" class="col-sm-2 col-form-label">Barcode</label>'+
-	'<div class="col-sm-10">'+
-	  '<input type="text" class="form-control" name="brand" id="inputName" placeholder="Enter Barcode">'+
-	'</div>'+
-  '</div>'+
-  '<div class="form-group">'+
-	'<label for="inputAge" class="col-sm-2 col-form-label">MRP</label>'+
-	'<div class="col-sm-10">'+
-	  '<input type="text" class="form-control" name="category" id="inputAge" placeholder="Enter MRP">'+
-	'</div>'+
-  '</div>'+
-  '<div class="form-group">'+
-   '<label for="inputAge" class="col-sm-2 col-form-label">Quantity</label>'+
-   '<div class="col-sm-10">'+
-	 '<input type="text" class="form-control" name="category" id="inputAge" placeholder="Enter Quantity">'+
-   '</div>'+
- '</div>'+
- '</div>')
-i++;
+	barcode = $form.find('input[name=barcode]').val();
+	mrp = $form.find('input[name=mrp]').val();
+	quantity = $form.find('input[name=quantity]').val();
+	orderArr.push({barcode:barcode,mrp:mrp,quantity:quantity});
+	console.log(orderArr);
+	//empty the input fields
+	$form.find('input[name=barcode]').val('');
+	$form.find('input[name=mrp]').val('');
+	$form.find('input[name=quantity]').val('');
+	$('#dtBasicExample-order-create').DataTable().destroy();
+	var $tbody = $('#dtBasicExample-order-create').find('tbody');
+	var row = '<tr id='+i+'>'
+	+ '<td>' + '<input disabled name=barcode value='+barcode+'  /></td>'
+	+ '<td>'  + '<input disabled name=mrp value='+mrp+' /></td>'
+	+ '<td>' + '<input disabled name=quantity value='+quantity+' /></td>'
+	+ '<td>' + '<button onclick="deleteRow('+i+')">delete</button>' + '&nbsp<button id='+i+' onclick="editRow('+i+')">edit</button>' + '</td>'
+	+ '</tr>';
+	$tbody.append(row);
+	i++;
+	paginate("#dtBasicExample-order-create");
+}
+
+function editRow(i){
+	var $tr = $('#'+i);
+	var $editRow = $tr.find('button[id='+i+']');
+	$editRow.html('save');
+	$tr.find('input').removeAttr('disabled');
+	$editRow.attr('onclick', 'saveRow('+i+')');
+	console.log(orderArr);
+}
+
+function saveRow(i){
+	var $tr = $('#'+i);
+	var $editRow = $tr.find('button[id='+i+']');
+	$editRow.html('edit');
+	$tr.find('input').attr('disabled', 'disabled');
+	orderArr[i-1].barcode = $tr.find('input[name=barcode]').val();
+	orderArr[i-1].mrp = $tr.find('input[name=mrp]').val();
+	orderArr[i-1].quantity = $tr.find('input[name=quantity]').val();
+	$editRow.attr('onclick', 'editRow('+i+')');
+	console.log(orderArr);
+}
+
+function deleteRow(i){
+	deleteArr.push(i-1);
+	$('#'+i).remove();
+	console.log(deleteArr);
 }
 
 function paginate(id) {

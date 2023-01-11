@@ -54,7 +54,9 @@ function updateEmployee(event){
 	   success: function(response) {
 	   		getBrandList();   
 	   },
-	   error: handleError
+	   error: (response)=>{
+		handleError(response);
+	   }
 	});
 
 	return false;
@@ -69,7 +71,9 @@ function getProductList(){
 	   success: function(data) {
 	   		displayProductList(data);  
 	   },
-	   error: handleError
+	   error: (response)=>{
+		handleError(response);
+	   }
 	});
 }
 
@@ -81,7 +85,9 @@ function deleteProduct(id){
 	   success: function(data) {
 	   		getProductList();  
 	   },
-	   error: handleError
+	   error: (response)=>{
+		handleError(response);
+	   }
 	});
 }
 

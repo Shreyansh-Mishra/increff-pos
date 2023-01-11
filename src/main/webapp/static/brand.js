@@ -146,6 +146,7 @@ function downloadErrors(){
 
 function displayBrandList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
+	$('#dtBasicExample').DataTable().destroy();
 	$tbody.empty();
 	let j=1;
 	for(var i in data){
