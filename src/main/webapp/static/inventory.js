@@ -111,6 +111,11 @@ function uploadRows(){
 	updateUploadDialog();
 	//If everything processed then return
 	if(processCount==fileData.length){
+		if(errorData.length>0){
+			alert("There was some problem with some of your entries!");
+		}
+		else if(errorData.length==0)
+			handleSuccess("All brands uploaded successfully");
 		return;
 	}
 	
@@ -206,7 +211,7 @@ function updateUploadDialog(){
 function updateFileName(){
 	var $file = $('#inventoryFile');
 	var fileName = $file.val();
-	$('#inventoryFileName').html(fileName);
+	$('#inventoryFileName').html(fileName.split('\\')[fileName.split('\\').length-1]);
 }
 
 function displayUploadData(){

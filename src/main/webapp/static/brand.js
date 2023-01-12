@@ -110,6 +110,11 @@ function uploadRows(){
 	updateUploadDialog();
 	//If everything processed then return
 	if(processCount==fileData.length){
+		if(errorData.length>0){
+			alert("There was some problem with some of your entries!");
+		}
+		else if(errorData.length==0)
+			handleSuccess("All brands uploaded successfully");
 		return;
 	}
 	
@@ -197,15 +202,11 @@ function updateUploadDialog(){
 	$('#rowCount').html("" + fileData.length);
 	$('#processCount').html("" + processCount);
 	$('#errorCount').html("" + errorData.length);
-	if(errorData.length>0){
-		swal.fire("There was some Problem with some of your files");
-	}
 }
 
 function updateFileName(){
 	var $file = $('#brandFile');
 	var fileName = $file.val();
-	console.log(fileName.split('\\')[fileName.split('\\').length-1]);
 	$('#brandFileName').html(fileName.split('\\')[fileName.split('\\').length-1]);
 }
 
