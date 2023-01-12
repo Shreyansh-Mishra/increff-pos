@@ -205,7 +205,8 @@ function updateUploadDialog(){
 function updateFileName(){
 	var $file = $('#brandFile');
 	var fileName = $file.val();
-	$('#brandFileName').html(fileName);
+	console.log(fileName.split('\\')[fileName.split('\\').length-1]);
+	$('#brandFileName').html(fileName.split('\\')[fileName.split('\\').length-1]);
 }
 
 function displayUploadData(){
@@ -228,7 +229,7 @@ function init(){
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#brandFile').on('change', updateFileName)
+    $('#brandFile').on('change', updateFileName);
 }
 
 function paginate() {

@@ -35,6 +35,8 @@ public class OrderService {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public void addItems(List<OrderItemPojo> orderItems,OrderPojo orderPojo) throws ApiException {
+		orderPojo.setTime(getTimestamp());
+		orderDao.insertOrder(orderPojo);
 		for(OrderItemPojo o: orderItems) {
 			if(o.getBarcode().isBlank()||o.getQuantity()==0||o.getSellingPrice()==0) {
 				throw new ApiException("All fields are mandatory, please check again!");
@@ -59,8 +61,6 @@ public class OrderService {
 				throw new ApiException("Not Enough quantity of "+p.getName()+" present in the Inventory");
 			}
 			
-			orderPojo.setTime(getTimestamp());
-			orderDao.insertOrder(orderPojo);
 			i.setQuantity(newQuantity);
 			o.setOrderId(orderPojo.getId());
 			inventoryDao.update(i);

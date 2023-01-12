@@ -324,6 +324,14 @@ function addRow(){
 	var barcode = $form.find('input[name=barcode]').val();
 	var mrp = $form.find('input[name=mrp]').val();
 	var q = $form.find('input[name=quantity]').val();
+	if(barcode=='' || mrp=='' || q==''){
+		swal({
+			title: "Error",
+			text: "Please fill all the fields!",
+			icon: "error",
+		  });
+		return;
+	}
 	let isExist = $('.'+barcode).length
 	$form.find('input[name=barcode]').val('');
 	$form.find('input[name=mrp]').val('');
@@ -356,6 +364,8 @@ function editRow(i){
 	var $editRow = $tr.find('button[id='+i+']');
 	$editRow.html('save');
 	$tr.find('input').removeAttr('disabled');
+	//input field barcode should remained disabled
+	$tr.find('input[name=barcode]').attr('disabled', 'disabled');
 	$editRow.attr('onclick', 'saveRow('+i+')');
 	console.log(orderArr);
 }
