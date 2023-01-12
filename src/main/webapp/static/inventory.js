@@ -114,8 +114,11 @@ function uploadRows(){
 		if(errorData.length>0){
 			alert("There was some problem with some of your entries!");
 		}
-		else if(errorData.length==0)
-			handleSuccess("All brands uploaded successfully");
+		else if(errorData.length==0){	
+		$('#upload-inventory-modal').modal('toggle');
+			handleSuccess("Inventory updated successfully");
+		}
+			getInventoryList();
 		return;
 	}
 	
@@ -161,9 +164,11 @@ function displayInventoryList(data){
 	console.log(data);
 	for(var i in data){
 		var e = data[i];
+		console.log(e);
 		var buttonHtml = ` <button onclick="displayEditInventory(${e.id},'${e.barcode}')">edit</button>`
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
+		+ '<td>' + e.name + '</td>'
 		+ '<td>' + e.barcode + '</td>'
 		+ '<td>'  + e.quantity + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
@@ -221,7 +226,8 @@ function displayUploadData(){
 
 function displayInventory(data,barcode){
 	console.log(barcode);	
-	$("#inventory-edit-form input[name=barcode]").val(barcode);	
+	$("#inventory-edit-form input[name=barcode]").val(barcode);
+	$("#inventory-edit-form input[name=quantity]").val(data.quantity);		
 	$("#inventory-edit-form input[name=id]").val(data.id);	
 	$('#edit-inventory-modal').modal('toggle');
 }

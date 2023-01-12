@@ -116,8 +116,11 @@ function uploadRows(){
 		if(errorData.length>0){
 			alert("There was some problem with some of your entries!");
 		}
-		else if(errorData.length==0)
-			handleSuccess("All brands uploaded successfully");
+		else if(errorData.length==0){
+			handleSuccess("All products uploaded successfully");
+			$('#upload-product-modal').modal('toggle');
+		}
+		getProductList();
 		return;
 	}
 	
@@ -161,7 +164,7 @@ function displayProductList(data){
 	let j=1;
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button onclick="displayEditProduct(' + e.id + ')">edit</button>'
+		var buttonHtml = ` <button onclick="displayEditProduct(${e.id},'${e.brandName}','${e.category}')">edit</button>`
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.name + '</td>'
@@ -177,13 +180,14 @@ function displayProductList(data){
 	paginate();
 }
 
-function displayEditProduct(id){
+function displayEditProduct(id,brandName,category){
 	var url = getProductUrl() + "/" + id;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayProduct(data);   
+		console.log(data);
+	   		displayProduct(data,brandName,category);   
 	   },
 	   error: handleError
 	});	
@@ -219,10 +223,11 @@ function displayUploadData(){
 	$('#upload-product-modal').modal('toggle');
 }
 
-function displayProduct(data){
+function displayProduct(data,brandName,category){
+	console.log(data);
 	$("#product-edit-form input[name=name]").val(data.name);	
-	$("#product-edit-form input[name=brandName]").val(data.brandName);	
-	$("#product-edit-form input[name=category]").val(data.category);
+	$("#product-edit-form input[name=brandName]").val(brandName);	
+	$("#product-edit-form input[name=category]").val(category);
 	$("#product-edit-form input[name=mrp]").val(data.mrp);
 	$("#product-edit-form input[name=barcode]").val(data.barcode);	
 	$("#product-edit-form input[name=id]").val(data.id);

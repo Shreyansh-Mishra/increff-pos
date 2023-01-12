@@ -31,7 +31,6 @@ function addBrand(event){
 }
 
 function updateBrand(event){
-	$('#edit-brand-modal').modal('toggle');
 	//Get the ID
 	var id = $("#brand-edit-form input[name=id]").val();	
 	var url = getBrandUrl() + "/update/" + id;
@@ -113,8 +112,11 @@ function uploadRows(){
 		if(errorData.length>0){
 			alert("There was some problem with some of your entries!");
 		}
-		else if(errorData.length==0)
+		else if(errorData.length==0){
+			$('#upload-brand-modal').modal('toggle');
 			handleSuccess("All brands uploaded successfully");
+		}
+		getBrandList();
 		return;
 	}
 	
@@ -158,7 +160,7 @@ function displayBrandList(data){
 	for(var i in data){
 		var e = data[i];
 
-		var buttonHtml = ' <button onclick="displayEditBrand(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button class="swalModal" onclick="displayEditBrand(' + e.id + ')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.brand + '</td>'
@@ -215,11 +217,24 @@ function displayUploadData(){
 	$('#upload-brand-modal').modal('toggle');
 }
 
+
 function displayBrand(data){
-	$("#brand-edit-form input[name=name]").val(data.name);	
-	$("#brand-edit-form input[name=age]").val(data.age);	
+	$("#brand-edit-form input[name=brand]").val(data.brand);	
+	$("#brand-edit-form input[name=category]").val(data.category);	
 	$("#brand-edit-form input[name=id]").val(data.id);	
-	$('#edit-brand-modal').modal('toggle');
+	// $('#edit-brand-modal').modal('toggle');
+	Swal.fire({
+		title: 'Edit Brand',
+		text: 'So we can stay in touch',
+		html:`<form id="#brand-edit-form"><input type="text" name="brand" class="swal2-input"><input type="text" name="category" class="swal2-input"><input type="hidden" value=${data.id} name="id"></form>`,
+		showDenyButton: true,
+  		showCancelButton: true,
+  		confirmButtonText: `Save`,
+  		denyButtonText: `Don't save`,
+		preConfirm: () => {
+				
+		}	
+	})
 }
 
 

@@ -14,7 +14,7 @@ function toJson($form){
 
 
 function handleError(response){
-    swal({
+    Swal.fire({
         title: "Error",
         text: JSON.parse(response.responseText).message,
         icon: "error",
@@ -34,7 +34,7 @@ function readFileData(file, callback){
 }
 
 function handleSuccess(message){
-    swal({
+    Swal.fire({
         title: "Success",
         text: message,
         icon: "success",

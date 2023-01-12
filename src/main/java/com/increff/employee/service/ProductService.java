@@ -24,9 +24,6 @@ public class ProductService {
 	@Transactional
 	public void add(ProductPojo p) throws ApiException {
 		normalize(p);
-		if(isNegative(p.getMrp())) {
-			throw new ApiException("Can't set a negative MRP");
-		}
 		ProductPojo p2 = productDao.selectBarcode(p.getBarcode());
 		if(p2!=null) {
 			throw new ApiException("The product already exists");
@@ -90,8 +87,8 @@ public class ProductService {
 	@Transactional
 	public void update(ProductPojo p,int id) throws ApiException {
 		ProductPojo p2 = productDao.selectBarcode(p.getBarcode());
-		if(p2!=null && p2.getBarcode()!=p.getBarcode()) {
-			throw new ApiException("A Product already exists with the same barcode!");
+		if(p2.getBarcode().equals(p.getBarcode())==false && p2!=null) {
+			throw new ApiException("A Product already exists with the same barcode!"+p2.getBarcode().length()+" "+p.getBarcode().length());
 		}
 		
 		p2 = productDao.selectId(id); 

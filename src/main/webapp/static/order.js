@@ -325,7 +325,7 @@ function addRow(){
 	var mrp = $form.find('input[name=mrp]').val();
 	var q = $form.find('input[name=quantity]').val();
 	if(barcode=='' || mrp=='' || q==''){
-		swal({
+		Swal.fire({
 			title: "Error",
 			text: "Please fill all the fields!",
 			icon: "error",
@@ -337,6 +337,14 @@ function addRow(){
 	$form.find('input[name=mrp]').val('');
 	$form.find('input[name=quantity]').val('');
 	if(isExist>0){
+		if(orderArr[barcodeMap[barcode]-1]['mrp']!=mrp){
+			Swal.fire({
+				title: "Error",
+				text: "Selling price of already existing item can't be different!",
+				icon: "error",
+			  });
+			return;
+		}
 		let quant = parseInt(q) + parseInt($('.'+barcode).find('input[name=quantity]').val())
 		$('.'+barcode).find('input[name=quantity]').val(quant)
 		orderArr[barcodeMap[barcode]-1]['quantity'] = quant

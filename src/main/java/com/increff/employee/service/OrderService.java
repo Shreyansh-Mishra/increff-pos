@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.increff.employee.dao.InventoryDao;
 import com.increff.employee.dao.OrderDao;
+import com.increff.employee.dao.OrderItemDao;
 import com.increff.employee.dao.ProductDao;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.OrderItemPojo;
@@ -25,6 +26,8 @@ public class OrderService {
 	InventoryDao inventoryDao;
 	@Autowired
 	ProductDao productDao;
+	@Autowired
+	OrderItemDao orderItemDao;
 	
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 	
@@ -64,7 +67,7 @@ public class OrderService {
 			i.setQuantity(newQuantity);
 			o.setOrderId(orderPojo.getId());
 			inventoryDao.update(i);
-			orderDao.insert(o);
+			orderItemDao.insert(o);
 		}
 	}
 	
@@ -88,7 +91,7 @@ public class OrderService {
 	}
 	
 	public List<OrderItemPojo> getItems(int id){
-		return orderDao.selectItems(id);
+		return orderItemDao.selectItems(id);
 	}
 	
 	public static String getTimestamp() {

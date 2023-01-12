@@ -50,7 +50,7 @@
 	<table class="table table-striped " id="dtBasicExample">
 	  <thead>
 	    <tr>
-	      <th scope="col">ID</th>
+	      <th scope="col">S.No.</th>
 	      <th scope="col">Brand Name</th>
 	      <th scope="col">Category</th>
 	      <th scope="col">Actions</th>
@@ -81,6 +81,8 @@
 </div>
 </div>
 
+
+
 <!-- brand Edit Modal -->
 <div class="modal" tabindex="-1" role="dialog" id="edit-brand-modal">
   <div class="modal-dialog" role="document">
@@ -92,7 +94,7 @@
         </button>
       </div>
       <div class="modal-body">
-			<form class="form-inline" id="brand-edit-form">
+			<!-- <form class="form-inline" id="brand-edit-form">
 			  <div class="form-group">
 			    <label for="inputName" class="col-sm-2 col-form-label">Brand Name</label>
 			    <div class="col-sm-10">
@@ -106,7 +108,7 @@
 			    </div>
 			  </div>
  	        <input type="hidden" name="id" >
-			</form>        
+			</form>         -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -134,7 +136,7 @@
 		  <input type="file" class="custom-file-input" id="brandFile">
 		  <label class="custom-file-label" for="brandFile" id="brandFileName">Choose file</label>
 		</div>
-		<a th:href="@{/sample/brand.tsv}" target="_blank">Download Sample</a> 
+		<a th:href="@{/sample/brands.tsv}" target="_blank">Download Sample</a> 
 		<br>
 		Rows: <span id="rowCount">0</span>, 
 		Processed: <span id="processCount">0</span>, 

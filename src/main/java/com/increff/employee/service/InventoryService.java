@@ -22,8 +22,6 @@ public class InventoryService {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public void insert(InventoryPojo i) throws ApiException {
-		if(isNegative(i.getQuantity()))
-			throw new ApiException("Quantity needs to be a positive value");
 		ProductPojo p = checkExisting(i.getBarcode());
 		InventoryPojo i2 = inventoryDao.selectId(p.getId());
 		if(i2!=null) {
@@ -47,8 +45,6 @@ public class InventoryService {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public void update(InventoryPojo i) throws ApiException {
-		if(isNegative(i.getQuantity()))
-			throw new ApiException("Quantity needs to be a positive value");
 		ProductPojo p = checkExisting(i.getBarcode());
 		InventoryPojo i2 = inventoryDao.selectId(p.getId());
 		if(i2==null) {
@@ -67,11 +63,7 @@ public class InventoryService {
 		return p;
 	}
 	
-	public static boolean isNegative(int a) {
-		if(a<0)
-			return true;
-		return false;
-	}
+	
 	
 	
 }
