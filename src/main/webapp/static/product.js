@@ -164,7 +164,7 @@ function displayProductList(data){
 	let j=1;
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ` <button onclick="displayEditProduct(${e.id},'${e.brandName}','${e.category}')">edit</button>`
+		var buttonHtml = ` <button class="btn btn-link btn-sm btn-rounded" onclick="displayEditProduct(${e.id},'${e.brandName}','${e.category}')">edit</button>`
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.name + '</td>'
@@ -273,7 +273,7 @@ function populateBrandDropDown(){
         success: function(data) {
             var $select = $('#inputBrand');
             $select.empty();
-			$select.append('<option value="" disabled selected style="display: none;">' + 'Please Choose' + '</option>');
+			$select.append('<option value="" disabled selected style="display: none;">' + 'Choose Brand' + '</option>');
 			$select.attr('placeholder', 'Select Brand');
             for(var i in data){
                 var e = data[i];

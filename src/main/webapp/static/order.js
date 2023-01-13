@@ -181,7 +181,7 @@ function displayOrderList(data){
 	let j=1;
 	for(var i in data){
 		var e = data[i];
-        var buttonHtml = ' <button onclick="displayWholeOrder('+e.id+')">view</button>'
+        var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayWholeOrder('+e.id+')">view</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.id + '</td>'
