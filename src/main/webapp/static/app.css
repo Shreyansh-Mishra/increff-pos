@@ -26,3 +26,11 @@ body {
 	margin: 2%;
 }
 
+.fa-edit{
+	border: none;
+	background-color: transparent;
+}
+
+li{
+	color: black !important;
+}

@@ -160,7 +160,7 @@ function displayBrandList(data){
 	for(var i in data){
 		var e = data[i];
 
-		var buttonHtml = ' <button class="swalModal" onclick="displayEditBrand(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayEditBrand(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.brand + '</td>'
@@ -255,4 +255,5 @@ function paginate() {
 
 $(document).ready(init);
 $(document).ready(getBrandList);
+
 
