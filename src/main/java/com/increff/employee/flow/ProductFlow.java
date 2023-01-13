@@ -68,8 +68,14 @@ public class ProductFlow {
 		return p2;
 	}
 	
-	public void updateProduct(int id, ProductForm p) throws ApiException {
-		ProductPojo p2 = convert(p);
+	public void updateProduct(int id, ProductForm form) throws ApiException {
+		if(form.getName().isBlank()||form.getBarcode().isBlank()) {
+			throw new ApiException("Please fill all the fields!");
+		}
+		if(isNegative(form.getMrp())) {
+			throw new ApiException("Enter a Valid MRP");
+		}
+		ProductPojo p2 = convert(form);
 		productService.update(p2,id);
 	}
 	

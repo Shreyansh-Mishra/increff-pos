@@ -20,11 +20,11 @@
 					<label class="form-label" for="form1Example1">Product Name</label>
 				</div>
 				<div class="col form-outline mb-1 mr-2">
-					<input type="text" id="form1Example2" name="mrp" class="form-control" />
+					<input type="number" pattern="^\d*(\.\d{0,2})?$" id="form1Example2" name="mrp" class="form-control" />
 					<label class="form-label" for="form1Example2">MRP</label>
 				</div>
 				<div class="col form-outline mb-1 mr-2">
-					<input type="text" id="form1Example3" name="barcode" class="form-control" />
+					<input type="text"  id="form1Example3" name="barcode" class="form-control" />
 					<label class="form-label" for="form1Example3">Barcode</label>
 				</div>
 			</div>
@@ -97,7 +97,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Edit Product</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-mdb-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -140,7 +140,7 @@
 			</form>        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="update-employee">Update</button>
       </div>
     </div>
@@ -155,7 +155,7 @@
       
       <div class="modal-header">
         <h5 class="modal-title">Upload Products</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-mdb-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -173,7 +173,7 @@
       </div>
       
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="process-data">Upload</button>
         <button type="button" class="btn btn-warning" id="download-errors">Download Errors</button>
       </div>

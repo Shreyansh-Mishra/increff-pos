@@ -30,22 +30,23 @@ function addBrand(event){
 	return false;
 }
 
-function updateBrand(event){
+function updateBrand(id, brandName, category){
 	//Get the ID
-	var id = $("#brand-edit-form input[name=id]").val();	
 	var url = getBrandUrl() + "/update/" + id;
-
+	var brandData = {brand: brandName,category: category}
+	console.log(brandData,JSON.stringify(brandData));
 	//Set the values to update
-	var $form = $("#brand-edit-form");
-	let jsoni = toJson($form);
+	// var $form = $("#brand-edit-form");
+	// let jsoni = toJson($form);
 	$.ajax({
 	   url: url,
 	   type: 'PUT',
-	   data: jsoni,
+	   data: JSON.stringify(brandData),
 	   headers: {
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+			handleSuccess("Brand updated successfully");
 	   		getBrandList();   
 	   },
 	   error: (response)=>{
@@ -218,22 +219,36 @@ function displayUploadData(){
 }
 
 
-function displayBrand(data){
-	$("#brand-edit-form input[name=brand]").val(data.brand);	
-	$("#brand-edit-form input[name=category]").val(data.category);	
-	$("#brand-edit-form input[name=id]").val(data.id);	
+function displayBrand(data){	
 	// $('#edit-brand-modal').modal('toggle');
 	Swal.fire({
 		title: 'Edit Brand',
-		text: 'So we can stay in touch',
-		html:`<form id="#brand-edit-form"><input type="text" name="brand" class="swal2-input"><input type="text" name="category" class="swal2-input"><input type="hidden" value=${data.id} name="id"></form>`,
-		showDenyButton: true,
+		width: "40%",
+		html:`<form class="form-inline" id="#brand-edit-form">
+		<div class="container">
+		<div class="form-outline row">
+		<label class="col" for="brand">Brand</label>
+		<input placeholder="Brand Name" value="${data.brand}" id="brand" type="text" name="brand" class="swal2-input col" />
+		</div>
+		<div class="form-outline row">
+		<label class="col" for="category">Category</label>
+		<input placeholder="Category" value="${data.category}" id="category" type="text" name="category" class="swal2-input col" />
+		</div>
+		<input id="id" type="hidden" value=${data.id} name="id">
+		</div>
+		</form>`,
   		showCancelButton: true,
   		confirmButtonText: `Save`,
   		denyButtonText: `Don't save`,
 		preConfirm: () => {
-				
-		}	
+			let id = Swal.getPopup().querySelector('#id').value;
+			let brand = Swal.getPopup().querySelector('#brand').value;
+			let category = Swal.getPopup().querySelector('#category').value;
+			return {id,brand,category}
+		}
+	}).then((result)=>{
+		updateBrand(result.value.id,result.value.brand,result.value.category);
+
 	})
 }
 

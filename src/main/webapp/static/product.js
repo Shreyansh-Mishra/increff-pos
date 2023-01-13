@@ -35,24 +35,18 @@ function addProduct(event){
 	return false;
 }
 
-function updateEmployee(event){
-	$('#edit-product-modal').modal('toggle');
-	//Get the ID
-	var id = $("#product-edit-form input[name=id]").val();	
+function updateProduct(id,brand,category,name,mrp,barcode){
 	var url = getProductUrl() + "/" + id;
-
-	//Set the values to update
-	var $form = $("#product-edit-form");
-	let jsoni = toJson($form);
-	console.log(jsoni);
+	let productData = {barcode:barcode,brandName:brand,category:category,name:name,mrp:mrp}
 	$.ajax({
 	   url: url,
 	   type: 'PUT',
-	   data: jsoni,
+	   data: JSON.stringify(productData),
 	   headers: {
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+			handleSuccess("Product updated successfully");
 	   		getProductList();   
 	   },
 	   error: (response)=>{
@@ -130,7 +124,6 @@ function uploadRows(){
 	
 	var json = JSON.stringify(row);
 	var url = getProductUrl()+"/add-product";
-	console.log(json);
 	//Make ajax call
 	$.ajax({
 	   url: url,
@@ -186,7 +179,6 @@ function displayEditProduct(id,brandName,category){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-		console.log(data);
 	   		displayProduct(data,brandName,category);   
 	   },
 	   error: handleError
@@ -224,21 +216,68 @@ function displayUploadData(){
 }
 
 function displayProduct(data,brandName,category){
-	console.log(data);
 	$("#product-edit-form input[name=name]").val(data.name);	
 	$("#product-edit-form input[name=brandName]").val(brandName);	
 	$("#product-edit-form input[name=category]").val(category);
 	$("#product-edit-form input[name=mrp]").val(data.mrp);
 	$("#product-edit-form input[name=barcode]").val(data.barcode);	
 	$("#product-edit-form input[name=id]").val(data.id);
-	$('#edit-product-modal').modal('toggle');
+	// $('#edit-product-modal').modal('toggle');
+	Swal.fire({
+		title: 'Edit Product',
+		width: '70%',
+		html:`<form class="form-inline" id="#product-edit-form">
+		<div class="container">
+		<div class="form-outline row">
+		<label class="col" for="name">Product Name</label>
+		<input placeholder="Product Name" value="${data.name}" id="name" type="text" name="name" class="swal2-input col" />
+		</div>
+
+		<div class="form-outline row">
+		<label class="col" for="brand">Brand Name</label>
+		<input placeholder="Brand Name" value="${brandName}" id="brand" type="text" name="brandName" class="swal2-input col" />
+		</div>
+		
+		<div class="form-outline row">
+		<label class="col" for="category">Category</label>
+		<input placeholder="Category" value="${category}" id="category" type="text" name="category" class="swal2-input col" />
+		</div>
+
+		<div class="form-outline row">
+		<label class="col" for="mrp">MRP</label>
+		<input placeholder="MRP" pattern="^\\d*(\\.\\d{0,2})?$" value="${data.mrp}" id="mrp" type="number" name="mrp" class="swal2-input col" />
+		</div>
+
+		<div class="form-outline row">
+		<label class="col" for="barcode">Barcode</label>
+		<input placeholder="Barcode" value="${data.barcode}" id="barcode" type="text" name="barcode" class="swal2-input col" />
+		</div>
+
+		<input id="id" type="hidden" value=${data.id} name="id">
+		</div>
+		</form>`,
+  		showCancelButton: true,
+  		confirmButtonText: `Save`,
+  		denyButtonText: `Don't save`,
+		preConfirm: () => {
+			let id = Swal.getPopup().querySelector('#id').value;
+			let brand = Swal.getPopup().querySelector('#brand').value;
+			let category = Swal.getPopup().querySelector('#category').value;
+			let name = Swal.getPopup().querySelector('#name').value;
+			let mrp = Swal.getPopup().querySelector('#mrp').value;
+			let barcode = Swal.getPopup().querySelector('#barcode').value;
+			return {id,brand,category,name,mrp,barcode}
+		}
+	}).then((result)=>{
+		updateProduct(result.value.id,result.value.brand,result.value.category,result.value.name,result.value.mrp,result.value.barcode);
+	})
 }
 
 
 //INITIALIZATION CODE
 function init(){
 	$('#add-product').click(addProduct);
-	$('#update-employee').click(updateEmployee);
+	$('#update-product').click(updateProduct);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);

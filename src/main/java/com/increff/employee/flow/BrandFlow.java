@@ -56,6 +56,9 @@ public class BrandFlow {
 	}
 	
 	public void updateBrand(int id, BrandForm b) throws ApiException {
+		if(b.getBrand().isBlank()||b.getCategory().isBlank()) {
+			throw new ApiException("Brand or Category cannot be empty!");
+		}
 		BrandPojo b2 = convert(b);
 		brandService.updateBrand(id,b2);
 	}
