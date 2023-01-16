@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.increff.employee.flow.OrderFlow;
+import com.increff.employee.model.OrderData;
 import com.increff.employee.model.OrderForm;
 import com.increff.employee.model.OrderItemData;
-import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.OrderService;
 
@@ -38,7 +38,7 @@ public class OrderApiController {
 	
 	@ApiOperation(value = "Get all orders")
 	@RequestMapping(path="/api/order/get-orders", method=RequestMethod.GET)
-	public List<OrderPojo> getOrders() {
+	public List<OrderData> getOrders() {
 		return orderFlow.getOrders();
 	}
 	

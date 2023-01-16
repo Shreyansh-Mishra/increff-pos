@@ -13,10 +13,12 @@ import com.increff.employee.dao.InventoryDao;
 import com.increff.employee.dao.OrderDao;
 import com.increff.employee.dao.OrderItemDao;
 import com.increff.employee.dao.ProductDao;
+import com.increff.employee.dao.SchedulerDao;
 import com.increff.employee.pojo.InventoryPojo;
 import com.increff.employee.pojo.OrderItemPojo;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.pojo.ProductPojo;
+import com.increff.employee.pojo.SchedulerPojo;
 
 @Service
 public class OrderService {
@@ -28,6 +30,8 @@ public class OrderService {
 	ProductDao productDao;
 	@Autowired
 	OrderItemDao orderItemDao;
+	@Autowired
+	SchedulerDao schedulerDao;
 	
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 	
@@ -38,7 +42,7 @@ public class OrderService {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public void addItems(List<OrderItemPojo> orderItems,OrderPojo orderPojo) throws ApiException {
-		orderPojo.setTime(getTimestamp());
+//		orderPojo.setTime(getTimestamp());
 		orderDao.insertOrder(orderPojo);
 		for(OrderItemPojo o: orderItems) {
 			if(o.getBarcode().isBlank()||o.getQuantity()==0||o.getSellingPrice()==0) {
@@ -90,8 +94,47 @@ public class OrderService {
 		return orderDao.selectAll();
 	}
 	
+	@Transactional
+	public void addToScheduler(SchedulerPojo scheduler, int orderId) {
+		OrderPojo o = orderDao.selectId(orderId);
+		SchedulerPojo s = schedulerDao.checkExisting(o.getTime());
+		List<OrderItemPojo> items = orderItemDao.selectItems(orderId);
+		double revenue = 0;
+		for(OrderItemPojo item: items) {
+			revenue+=(item.getSellingPrice()*item.getQuantity());
+		}
+		if(s==null) {
+			SchedulerPojo s2 = new SchedulerPojo();
+			s2.setDate(o.getTime());
+			s2.setInvoiced_items_count(items.size());
+			s2.setInvoiced_orders_count(1);
+			s2.setRevenue(revenue);
+			schedulerDao.insert(s2);
+		}
+		else {
+			s.setInvoiced_items_count(s.getInvoiced_items_count()+items.size());
+			s.setInvoiced_orders_count(s.getInvoiced_orders_count()+1);
+			s.setRevenue(s.getRevenue()+revenue);
+			schedulerDao.update(s);
+		}
+	}
+	
+	@Transactional
+	public List<SchedulerPojo> getSchedulerData() {
+		return schedulerDao.select();
+	}
+	
+	
 	public List<OrderItemPojo> getItems(int id){
 		return orderItemDao.selectItems(id);
+	}
+	
+	public List<Object[]> getOrdersByDate(Instant startDate, Instant endDate){
+		return orderDao.selectByDate(startDate,endDate);
+	}
+	
+	public List<Object[]> getReportByBrandAndCategory(Instant startDate, Instant endDate){
+		return orderDao.selectBrandCategorySalesByDate(startDate, endDate);
 	}
 	
 	public static String getTimestamp() {
@@ -101,4 +144,5 @@ public class OrderService {
 		ts = ts.substring(0, 16);
 		return ts;
 	}
+	
 }

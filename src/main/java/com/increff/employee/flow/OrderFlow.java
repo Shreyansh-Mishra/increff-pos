@@ -6,11 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.increff.employee.model.OrderData;
 import com.increff.employee.model.OrderForm;
 import com.increff.employee.model.OrderItemData;
 import com.increff.employee.pojo.OrderItemPojo;
 import com.increff.employee.pojo.OrderPojo;
 import com.increff.employee.pojo.ProductPojo;
+import com.increff.employee.pojo.SchedulerPojo;
 import com.increff.employee.service.ApiException;
 import com.increff.employee.service.OrderService;
 import com.increff.employee.service.ProductService;
@@ -30,11 +32,18 @@ public class OrderFlow {
 		}
 		List<OrderItemPojo> o2 = convert(o);
 		OrderPojo order = new OrderPojo();
+		SchedulerPojo scheduler = new SchedulerPojo();
 		orderService.addItems(o2,order);
+		orderService.addToScheduler(scheduler, order.getId());
 	}
 	
-	public List<OrderPojo> getOrders(){
-		return orderService.getAllOrders();
+	public List<OrderData> getOrders(){
+		List<OrderPojo> orders = orderService.getAllOrders();
+		List<OrderData> orderData = new ArrayList<OrderData>();
+		for(OrderPojo order: orders) {
+			orderData.add(convert(order));
+		}
+		return orderData;
 	}
 	
 	public List<OrderItemData> getOrderItems(int id) throws ApiException{
@@ -45,6 +54,15 @@ public class OrderFlow {
 			orderItems.add(o);
 		}
 		return orderItems;
+	}
+	
+	public static OrderData convert(OrderPojo order) {
+		OrderData data = new OrderData();
+		
+		String time = order.getTime().toString();
+		data.setId(order.getId());
+		data.setTime(time);
+		return data;
 	}
 	
 	public OrderItemData convert(OrderItemPojo o) throws ApiException {

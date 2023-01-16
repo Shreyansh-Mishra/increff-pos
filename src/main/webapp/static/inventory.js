@@ -30,24 +30,21 @@ function addInventory(event){
 	return false;
 }
 
-function updateInventory(event){
-	$('#edit-inventory-modal').modal('toggle');
+function updateInventory(id,quantity,barcode){
 	//Get the ID
-	var id = $("#inventory-edit-form input[name=id]").val();	
 	var url = getInventoryUrl() + "/"+id;
 
 	//Set the values to update
-	var $form = $("#inventory-edit-form");
-	let jsoni = toJson($form);
-	jsoni.barcode = $("#inventory-edit-form input[name=barcode]").val();
+	let jsoni = {quantity,barcode};
 	$.ajax({
 	   url: url,
 	   type: 'PUT',
-	   data: jsoni,
+	   data: JSON.stringify(jsoni),
 	   headers: {
        	'Content-Type': 'application/json'
        },	   
 	   success: function(response) {
+			handleSuccess('Inventory Updated!');
 	   		getInventoryList();   
 	   },
 	   error: (response)=>{
@@ -225,18 +222,37 @@ function displayUploadData(){
 }
 
 function displayInventory(data,barcode){
-	console.log(barcode);	
-	$("#inventory-edit-form input[name=barcode]").val(barcode);
-	$("#inventory-edit-form input[name=quantity]").val(data.quantity);		
-	$("#inventory-edit-form input[name=id]").val(data.id);	
-	$('#edit-inventory-modal').modal('toggle');
+	console.log(barcode);
+	Swal.fire({
+		title: 'Edit Brand',
+		width: "40%",
+		html:`<form class="form-inline" id="#inventory-edit-form">
+		<div class="container">
+		<div class="form-outline row">
+		<label class="col" for="quantity">Brand</label>
+		<input placeholder="Quantity" value="${data.quantity}" id="quantity" type="number" name="quantity" class="swal2-input col" />
+		</div>
+		<input type="hidden" id="id" value="${data.id}"/>
+		<input type="hidden" id="barcode" value="${barcode}"/>
+		</div>
+		</form>`,
+  		showCancelButton: true,
+  		confirmButtonText: `Save`,
+		preConfirm: () => {
+			let id = Swal.getPopup().querySelector('#id').value;
+			let quantity = Swal.getPopup().querySelector('#quantity').value;
+			let barcode = Swal.getPopup().querySelector('#barcode').value;
+			return {id,quantity,barcode}
+		}
+	}).then((result)=>{
+		updateInventory(result.value.id,result.value.quantity,result.value.barcode);
+	})
 }
 
 
 //INITIALIZATION CODE
 function init(){
 	$('#add-inventory').click(addInventory);
-	$('#update-inventory').click(updateInventory);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);

@@ -1,10 +1,13 @@
 package com.increff.employee.pojo;
 
 
+import java.time.Instant;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 
 @Entity
 public class OrderPojo {
@@ -12,18 +15,24 @@ public class OrderPojo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String time;
+	private Instant time;
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getTime() {
+	public Instant getTime() {
 		return time;
 	}
-	public void setTime(String time) {
+	public void setTime(Instant time) {
 		this.time = time;
+	}
+	
+	@PrePersist
+	protected void onCreate() {
+		Instant it = Instant.now();
+		time = it;
 	}
 	
 }

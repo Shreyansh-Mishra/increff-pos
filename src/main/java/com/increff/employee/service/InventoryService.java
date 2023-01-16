@@ -63,6 +63,11 @@ public class InventoryService {
 		return p;
 	}
 	
+	@Transactional
+	public List<Object[]> getInventoryReport(){
+		return inventoryDao.selectInventory();
+	}
+	
 	
 	
 	

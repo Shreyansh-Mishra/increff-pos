@@ -1,26 +1,20 @@
 package com.increff.employee.model;
 
+
 public class OrderData {
-	private String barcode;
-	private int quantity;
-	private double mrp;
-	public String getBarcode() {
-		return barcode;
+	private int id;
+	private String time;
+	public int getId() {
+		return id;
 	}
-	public void setBarcode(String barcode) {
-		this.barcode = barcode;
+	public void setId(int id) {
+		this.id = id;
 	}
-	public int getQuantity() {
-		return quantity;
+	public String getTime() {
+		return time;
 	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-	public double getMrp() {
-		return mrp;
-	}
-	public void setMrp(double mrp) {
-		this.mrp = mrp;
+	public void setTime(String time) {
+		this.time = time;
 	}
 	
 }
