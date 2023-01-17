@@ -185,7 +185,7 @@ function displayOrderList(data){
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.id + '</td>'
-		+ '<td>'  + e.time.toString() + '</td>'
+		+ '<td>'  + e.time.toString().split('T')[0]+' '+e.time.toString().split('T')[1].split(':')[0]+':'+e.time.toString().split('T')[1].split(':')[1] + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);

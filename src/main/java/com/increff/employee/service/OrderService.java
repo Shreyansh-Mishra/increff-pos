@@ -100,8 +100,10 @@ public class OrderService {
 		SchedulerPojo s = schedulerDao.checkExisting(o.getTime());
 		List<OrderItemPojo> items = orderItemDao.selectItems(orderId);
 		double revenue = 0;
+		int itemcount = 0;
 		for(OrderItemPojo item: items) {
 			revenue+=(item.getSellingPrice()*item.getQuantity());
+			itemcount += item.getQuantity();
 		}
 		if(s==null) {
 			SchedulerPojo s2 = new SchedulerPojo();
@@ -112,7 +114,7 @@ public class OrderService {
 			schedulerDao.insert(s2);
 		}
 		else {
-			s.setInvoiced_items_count(s.getInvoiced_items_count()+items.size());
+			s.setInvoiced_items_count(s.getInvoiced_items_count()+itemcount);
 			s.setInvoiced_orders_count(s.getInvoiced_orders_count()+1);
 			s.setRevenue(s.getRevenue()+revenue);
 			schedulerDao.update(s);
@@ -129,12 +131,13 @@ public class OrderService {
 		return orderItemDao.selectItems(id);
 	}
 	
-	public List<Object[]> getOrdersByDate(Instant startDate, Instant endDate){
-		return orderDao.selectByDate(startDate,endDate);
-	}
 	
 	public List<Object[]> getReportByBrandAndCategory(Instant startDate, Instant endDate){
 		return orderDao.selectBrandCategorySalesByDate(startDate, endDate);
+	}
+	
+	public List<OrderPojo> getOrdersBetweenDates(Instant startDate, Instant endDate){
+		return orderDao.selectBetweenDates(startDate, endDate);
 	}
 	
 	public static String getTimestamp() {

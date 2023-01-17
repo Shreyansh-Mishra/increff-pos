@@ -1,6 +1,5 @@
 package com.increff.employee.model;
 
-import java.math.BigInteger;
 
 public class DayWiseReportData {
 	private String date;

@@ -1,16 +1,49 @@
 
-function getReportUrl(){
+function getSalesReportUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/report";
 }
 
-function getReportList(){
-	var url = getReportUrl()+"/get-sales-report";
+function getSalesReportList(){
+    $form = $('#report-form');
+    var json = toJson($form);
+    json=JSON.parse(json);
+	var url = getSalesReportUrl()+"/get-sales-report"+"/"+json['startDate']+"/"+json['endDate'];
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayReportList(data);  
+	   	if(json['brand']!='all' && json['category']!='all'){
+            let filteredData = []
+            for(d of data){
+                if(d.brand==json['brand'] && d.category==json['category']){
+                    filteredData.push(d);
+                }
+            }
+            data = filteredData;
+        }
+        else if(json['brand']!='all'){
+            let filteredData = []
+            for(d of data){
+                if(d.brand==json['brand']){
+                    filteredData.push(d);
+                }
+            }
+            data = filteredData;
+        }	
+
+        else if(json['category']!='all'){
+            let filteredData = []
+            for(d of data){
+                if(d.category==json['category']){
+                    filteredData.push(d);
+                }
+            }
+            data = filteredData;
+        }
+        
+        displaySalesReportList(data);
+              
 	   },
 	   error: (response)=>{
 		handleError(response);
@@ -19,7 +52,7 @@ function getReportList(){
 }
 
 
-function displayReportList(data){
+function displaySalesReportList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
 	$('#dtBasicExample').DataTable().destroy();
 	$tbody.empty();
@@ -27,12 +60,13 @@ function displayReportList(data){
     console.log(data);
 	for(var i in data){
 		var e = data[i];
-        var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayWholeReport('+e.id+')">view</button>'
+        var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayWholeSalesReport('+e.id+')">view</button>'
 		var row = '<tr>'
-		+ '<td>' + e.date.split('T')[0] + '</td>'
-		+ '<td>' + e.invoiced_orders_count + '</td>'
-		+ '<td>'  + e.invoiced_items_count + '</td>'
-		+ '<td>' + e.total_revenue + '</td>'
+        + '<td>' + j + '</td>'
+		+ '<td>' + e.brand + '</td>'
+		+ '<td>' + e.category + '</td>'
+		+ '<td>'  + e.quantity + '</td>'
+		+ '<td>' + e.revenue + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 		j++;	
@@ -47,7 +81,7 @@ function filterByDate(){
     console.log(json);
     var startDate = new Date(json['startDate']);
     var endDate = new Date(json['endDate']);
-    var url = getReportUrl()+"/get-sales-report";
+    var url = getSalesReportUrl()+"/get-sales-report";
 	$.ajax({
 	   url: url,
 	   type: 'GET',
@@ -65,7 +99,7 @@ function filterByDate(){
                     filteredData.push(obj)
                 }
             }
-            displayReportList(filteredData);
+            displaySalesReportList(filteredData);
 	   },
 	   error: (response)=>{
 		handleError(response);
@@ -77,7 +111,7 @@ function filterByDate(){
 
 //INITIALIZATION CODE
 function init(){
-    $('#get-report').click(filterByDate);
+    $('#get-sales-report').click(getSalesReportList);
 }
 
 
@@ -88,4 +122,3 @@ function paginate(id) {
 }
 
 $(document).ready(init);
-$(document).ready(getReportList)

@@ -5,7 +5,7 @@ function getReportUrl(){
 }
 
 function getReportList(){
-	var url = getReportUrl()+"/get-sales-report";
+	var url = getReportUrl()+"/get-inventory-report";
 	$.ajax({
 	   url: url,
 	   type: 'GET',
@@ -29,10 +29,10 @@ function displayReportList(data){
 		var e = data[i];
         var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayWholeReport('+e.id+')">view</button>'
 		var row = '<tr>'
-		+ '<td>' + e.date.split('T')[0] + '</td>'
-		+ '<td>' + e.invoiced_orders_count + '</td>'
-		+ '<td>'  + e.invoiced_items_count + '</td>'
-		+ '<td>' + e.total_revenue + '</td>'
+		+ '<td>' + j + '</td>'
+		+ '<td>' + e.brand + '</td>'
+		+ '<td>'  + e.category + '</td>'
+		+ '<td>' + e.quantity + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 		j++;	
@@ -41,31 +41,12 @@ function displayReportList(data){
 }
 
 function filterByDate(){
-    var $form = $('#report-form');
-    var json = toJson($form);
-    json=JSON.parse(json);
-    console.log(json);
-    var startDate = new Date(json['startDate']);
-    var endDate = new Date(json['endDate']);
     var url = getReportUrl()+"/get-sales-report";
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-            //filter the data between startDate and endDate
-            let filteredData = []
-            for(d of data){
-                let obj = {}
-                console.log(new Date(d.date.split('T')[0]), startDate, endDate);
-                if(new Date(d.date.split('T')[0]) >= startDate && new Date(d.date.split('T')[0]) <= endDate){
-                    obj['date'] = d.date
-                    obj['invoiced_orders_count'] = d.invoiced_orders_count
-                    obj['invoiced_items_count'] = d.invoiced_items_count
-                    obj['total_revenue'] = d.total_revenue
-                    filteredData.push(obj)
-                }
-            }
-            displayReportList(filteredData);
+            displayReportList(data);
 	   },
 	   error: (response)=>{
 		handleError(response);
