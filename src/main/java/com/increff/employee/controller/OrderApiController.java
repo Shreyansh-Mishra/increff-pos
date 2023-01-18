@@ -53,7 +53,7 @@ public class OrderApiController {
 
 	@ApiOperation(value = "Get Invoice")
 	@RequestMapping(path="/api/order/invoice/{id}", method=RequestMethod.GET, produces = "application/pdf")
-	public StreamingResponseBody getInvoice(@PathVariable int id, HttpServletResponse response) throws ApiException, Exception{
+	public StreamingResponseBody getInvoice(@PathVariable int id, HttpServletResponse response) throws Exception{
 		//get file with the name as id
 		InvoicePojo invoice = orderFlow.getInvoice(id);
 		File file = new File(invoice.getPath());

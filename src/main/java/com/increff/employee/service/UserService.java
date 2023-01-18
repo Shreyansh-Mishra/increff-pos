@@ -4,11 +4,13 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.xpath.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.increff.employee.dao.UserDao;
 import com.increff.employee.pojo.UserPojo;
+import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public class UserService {
@@ -17,13 +19,14 @@ public class UserService {
 	private UserDao dao;
 
 	@Transactional
-	public void add(UserPojo p) throws ApiException {
+	public Boolean add(UserPojo p) throws ApiException {
 		normalize(p);
 		UserPojo existing = dao.select(p.getEmail());
 		if (existing != null) {
-			throw new ApiException("User with given email already exists");
+			return false;
 		}
 		dao.insert(p);
+		return true;
 	}
 
 	@Transactional(rollbackOn = ApiException.class)

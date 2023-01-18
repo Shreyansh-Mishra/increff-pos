@@ -146,8 +146,12 @@ public class OrderService {
 	}
 
 	@Transactional
-	public InvoicePojo getInvoice(int id){
-		return invoiceDao.getPath(id);
+	public InvoicePojo getInvoice(int id) throws ApiException {
+		InvoicePojo invoice = invoiceDao.getPath(id);
+		if(invoice==null){
+			throw new ApiException("Invoice with id "+id+" does not exist");
+		}
+		return invoice;
 	}
 	
 	public static String getTimestamp() {

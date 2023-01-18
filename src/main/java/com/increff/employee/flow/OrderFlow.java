@@ -66,7 +66,7 @@ public class OrderFlow {
 		return orderItems;
 	}
 
-	public InvoicePojo getInvoice(int id) throws ApiException, Exception{
+	public InvoicePojo getInvoice(int id) throws ApiException{
 		InvoicePojo invoice = orderService.getInvoice(id);
 		return invoice;
 	}
