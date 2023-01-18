@@ -161,7 +161,7 @@ function displayProductList(data){
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.name + '</td>'
-		+ '<td>'  + e.mrp + '</td>'
+		+ '<td align="right">'  + Math.round((e.mrp + Number.EPSILON) * 100) / 100 + '</td>'
         + '<td>'  + e.barcode + '</td>'
         + '<td>'  + e.brandName + '</td>'
 		+ '<td>'  + e.category + '</td>'

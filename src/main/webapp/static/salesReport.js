@@ -66,7 +66,7 @@ function displaySalesReportList(data){
 		+ '<td>' + e.brand + '</td>'
 		+ '<td>' + e.category + '</td>'
 		+ '<td>'  + e.quantity + '</td>'
-		+ '<td>' + e.revenue + '</td>'
+		+ '<td>' + Math.round((e.revenue + Number.EPSILON) * 100) / 100 + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 		j++;	

@@ -6,19 +6,10 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.increff.employee.dao.*;
+import com.increff.employee.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.increff.employee.dao.InventoryDao;
-import com.increff.employee.dao.OrderDao;
-import com.increff.employee.dao.OrderItemDao;
-import com.increff.employee.dao.ProductDao;
-import com.increff.employee.dao.SchedulerDao;
-import com.increff.employee.pojo.InventoryPojo;
-import com.increff.employee.pojo.OrderItemPojo;
-import com.increff.employee.pojo.OrderPojo;
-import com.increff.employee.pojo.ProductPojo;
-import com.increff.employee.pojo.SchedulerPojo;
 
 @Service
 public class OrderService {
@@ -32,6 +23,9 @@ public class OrderService {
 	OrderItemDao orderItemDao;
 	@Autowired
 	SchedulerDao schedulerDao;
+
+	@Autowired
+	InvoiceDao invoiceDao;
 	
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 	
@@ -126,18 +120,34 @@ public class OrderService {
 		return schedulerDao.select();
 	}
 	
+	@Transactional
+	public OrderPojo getOrderById(int id) {
+		return orderDao.selectId(id);
+	}
 	
+	@Transactional
 	public List<OrderItemPojo> getItems(int id){
 		return orderItemDao.selectItems(id);
 	}
 	
-	
+	@Transactional
 	public List<Object[]> getReportByBrandAndCategory(Instant startDate, Instant endDate){
 		return orderDao.selectBrandCategorySalesByDate(startDate, endDate);
 	}
 	
+	@Transactional
 	public List<OrderPojo> getOrdersBetweenDates(Instant startDate, Instant endDate){
 		return orderDao.selectBetweenDates(startDate, endDate);
+	}
+
+	@Transactional
+	public void addInvoice (InvoicePojo i){
+		invoiceDao.insert(i);
+	}
+
+	@Transactional
+	public InvoicePojo getInvoice(int id){
+		return invoiceDao.getPath(id);
 	}
 	
 	public static String getTimestamp() {

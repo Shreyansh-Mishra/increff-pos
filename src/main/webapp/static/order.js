@@ -174,6 +174,16 @@ function downloadErrors(){
 
 //UI DISPLAY METHODS
 
+Number.prototype.padLeft = function(base,chr){
+    var  len = (String(base || 10).length - String(this).length)+1;
+    return len > 0? new Array(len).join(chr || '0')+this : this;
+}
+
+function downloadPdf(id){
+	var url = getOrderUrl() + "/invoice/" + id;
+	window.open(url, '_blank');
+}
+
 function displayOrderList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
 	$('#dtBasicExample').DataTable().destroy();
@@ -181,11 +191,17 @@ function displayOrderList(data){
 	let j=1;
 	for(var i in data){
 		var e = data[i];
-        var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayWholeOrder('+e.id+')">view</button>'
+		var d = new Date(e.time);
+		var time = [(d.getMonth()+1).padLeft(),
+			d.getDate().padLeft(),
+			d.getFullYear()].join('/') +' ' +
+		   [d.getHours().padLeft(),
+			d.getMinutes().padLeft()].join(':');
+        var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayWholeOrder('+e.id+')">view</button> &nbsp <button class="btn btn-link btn-sm btn-rounded" onclick="downloadPdf('+e.id+')">Download</button>';
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.id + '</td>'
-		+ '<td>'  + e.time.toString().split('T')[0]+' '+e.time.toString().split('T')[1].split(':')[0]+':'+e.time.toString().split('T')[1].split(':')[1] + '</td>'
+		+ '<td>'  + time + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
@@ -359,7 +375,7 @@ function addRow(){
 	+ '<td>' + '<input type="text" disabled name=barcode value='+barcode+'  /></td>'
 	+ '<td>'  + '<input type="number" pattern="^\\d*(\\.\\d{0,2})?$" disabled name=mrp value='+mrp+' /></td>'
 	+ '<td>' + '<input type="number" disabled name=quantity value='+q+' /></td>'
-	+ '<td>'  + '<button id='+i+' onclick="editRow('+i+')">edit</button>'+ '&nbsp<button onclick="deleteRow('+i+')">delete</button>' + '</td>'
+	+ '<td>'  + '<button class="btn btn-link btn-sm btn-rounded" id='+i+' onclick="editRow('+i+')">edit</button>'+ '&nbsp<button class="btn btn-link btn-sm btn-rounded" onclick="deleteRow('+i+')">delete</button>' + '</td>'
 	+ '</tr>';
 	$tbody.append(row);
 	i++;

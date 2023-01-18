@@ -224,7 +224,7 @@ function displayUploadData(){
 function displayInventory(data,barcode){
 	console.log(barcode);
 	Swal.fire({
-		title: 'Edit Brand',
+		title: 'Edit Inventory',
 		width: "40%",
 		html:`<form class="form-inline" id="#inventory-edit-form">
 		<div class="container">

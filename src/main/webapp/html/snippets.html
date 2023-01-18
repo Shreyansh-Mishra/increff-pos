@@ -44,8 +44,8 @@
     </button>
     
   <div class="collapse navbar-collapse" id="navbarNav">
-    <a class="navbar-brand mt-2 mt-lg-0" th:href="@{/}">
-      <img th:src="@{/static/logo.jpg}" alt="" loading="lazy" height="15">
+    <a class="navbar-brand mt-1 mt-lg-0" th:href="@{/}">
+      <img th:src="@{/static/increff-logo1.png}" alt="" loading="lazy" height="40">
     </a>
 
     <ul class="navbar-nav">
@@ -83,19 +83,19 @@
     
     <div class="collapse navbar-collapse" id="navbarNav">
     
-      <a class="navbar-brand mt-2 mt-lg-0" th:href="@{/}">
-        <img th:src="@{/static/logo.jpg}" class="d-inline-block align-top" alt="Increff Logo" loading="lazy" height="15">
+      <a class="navbar-brand mt-1 mt-lg-0" th:href="@{/}">
+        <img th:src="@{/static/increff-logo1.png}" class="d-inline-block align-top" alt="Increff Logo" loading="lazy" height="40">
       </a>
   
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
+        <li class="nav-item selected">
           <a class="nav-link" th:href="@{/ui/home}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:href="@{/ui/employee}">Brands</a>
+          <a class="nav-link" th:href="@{/ui/brands}">Brands</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:href="@{/ui/admin}">Products</a>
+          <a class="nav-link" th:href="@{/ui/products}">Products</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" th:href="@{/ui/inventory}">Inventory</a>
@@ -118,7 +118,7 @@
       <ul class="navbar-nav">
         <li class="navbar-text">
           [[${info.getEmail()}]]
-          &nbsp;&gt;&nbsp;
+          &nbsp;&nbsp;
         </li>
         <li class="nav-item">
           <a class="btn btn-primary" th:href="@{/session/logout}">Logout</a>

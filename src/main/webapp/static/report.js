@@ -32,7 +32,7 @@ function displayReportList(data){
 		+ '<td>' + e.date.split('T')[0] + '</td>'
 		+ '<td>' + e.invoiced_orders_count + '</td>'
 		+ '<td>'  + e.invoiced_items_count + '</td>'
-		+ '<td>' + e.total_revenue + '</td>'
+		+ '<td>' + Math.round((e.total_revenue + Number.EPSILON) * 100) / 100 + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 		j++;	
