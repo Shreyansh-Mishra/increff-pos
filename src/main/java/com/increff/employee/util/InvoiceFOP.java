@@ -18,7 +18,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
-import com.increff.employee.service.ApiException;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -44,15 +43,15 @@ public class InvoiceFOP {
 	ProductService productService;
 	
 	public String generatePdf(int id) throws Exception {
-		OrderPojo order = orderService.getOrderById(id);
-		List<OrderItemPojo> items = orderService.getItems(id);
+		OrderPojo order = orderService.selectOrderById(id);
+		List<OrderItemPojo> items = orderService.selectItems(id);
 		OrderFOPObject orderFop = new OrderFOPObject();
 		orderFop.setOrderId(order.getId());
 		orderFop.setDate(order.getTime().toString());
 		List<OrderItemData> fopItems = new ArrayList<OrderItemData>();
 		for(OrderItemPojo item: items) {
 			OrderItemData i = new OrderItemData();
-			ProductPojo product = productService.getById(item.getProductId());
+			ProductPojo product = productService.selectById(item.getProductId());
 			i.setItemName(product.getName());
 			i.setBarcode(product.getBarcode());
 			i.setOrderId(item.getOrderId());

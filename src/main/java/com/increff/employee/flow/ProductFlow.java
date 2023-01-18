@@ -22,7 +22,7 @@ public class ProductFlow {
 	@Autowired
 	BrandService brandService;
 	
-	public void addProduct(ProductForm form) throws ApiException {
+	public void createProduct(ProductForm form) throws ApiException {
 		if(form.getName().isBlank()||form.getBarcode().isBlank()) {
 			throw new ApiException("Please fill all the fields!");
 		}
@@ -34,7 +34,7 @@ public class ProductFlow {
 	}
 	
 	public List<ProductData> getAllProducts() throws ApiException {
-		List<ProductPojo> p = productService.getAll();
+		List<ProductPojo> p = productService.selectAll();
 		List<ProductData> p2 = new ArrayList<ProductData>();
 		for(ProductPojo i: p) {
 			ProductData p3 = convert(i);
@@ -45,13 +45,13 @@ public class ProductFlow {
 	}
 	
 	public ProductData getProductsById(int id) throws ApiException{
-		ProductPojo p = productService.getById(id);
+		ProductPojo p = productService.selectById(id);
 		ProductData p2 = convert(p);
 		return p2;
 	}
 	
 	public List<ProductData> getProductByBrandName(String brandName) throws ApiException{
-		List<ProductPojo> p = productService.getByBrand(brandName);
+		List<ProductPojo> p = productService.selectByBrand(brandName);
 		List<ProductData> p2 = new ArrayList<ProductData>();
 		for(ProductPojo i: p) {
 			p2.add(convert(i));
@@ -60,7 +60,7 @@ public class ProductFlow {
 	}
 	
 	public List<ProductData> getProductsByBrandAndCategory(String brandName, String category) throws ApiException{
-		List<ProductPojo> p = productService.getByBrandAndCategory(brandName,category);
+		List<ProductPojo> p = productService.selectByBrandAndCategory(brandName,category);
 		List<ProductData> p2 = new ArrayList<ProductData>();
 		for(ProductPojo i: p) {
 			p2.add(convert(i));

@@ -27,12 +27,12 @@ public class InventoryApiController {
 	@ApiOperation(value="adds product to inventory")
 	@RequestMapping(path="/api/inventory/add-product",method=RequestMethod.POST)
 	public void addProductToInventory(@RequestBody InventoryForm i) throws ApiException {
-		inventoryFlow.addProduct(i);
+		inventoryFlow.addToInventory(i);
 	}
 	
 	@ApiOperation(value="view inventory")
 	@RequestMapping(path="/api/inventory/get-inventory",method=RequestMethod.GET)
-	public List<InventoryData> getWholeInventoryView() throws ApiException {
+	public List<InventoryData> getWholeInventory() throws ApiException {
 		return inventoryFlow.getInventory();
 	}
 	
@@ -44,7 +44,7 @@ public class InventoryApiController {
 	
 	@ApiOperation(value="edit Inventory")
 	@RequestMapping(path="/api/inventory/{id}", method=RequestMethod.PUT)
-	public void editinventory(@PathVariable int id,@RequestBody InventoryForm i) throws ApiException {
+	public void updateInventory(@PathVariable int id,@RequestBody InventoryForm i) throws ApiException {
 		inventoryFlow.editInventory(id,i);
 	}
 	

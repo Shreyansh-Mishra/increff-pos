@@ -29,7 +29,7 @@ import com.increff.employee.service.OrderService;
 import com.increff.employee.service.ProductService;
 
 @Component
-public class SalesReportFlow {
+public class ReportFlow {
 	@Autowired
 	OrderService orderService;
 	
@@ -43,7 +43,7 @@ public class SalesReportFlow {
 	ProductService productService;
 	
 	public List<DayWiseReportData> getDayWiseReport() {
-		return convert(orderService.getSchedulerData());
+		return convert(orderService.selectSchedulerData());
 	}
 	
 	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(String startDate, String endDate) throws ParseException, ApiException{
@@ -61,7 +61,7 @@ public class SalesReportFlow {
 		HashMap<Integer,List<Double>> map2 = new HashMap<Integer, List<Double>>();
 		
 		List<BrandPojo> brands = brandService.selectAll();
-		List<ProductPojo> products = productService.getAll();
+		List<ProductPojo> products = productService.selectAll();
 		
 		//loop for storing all product ids with respect to brand and category
 		for(BrandPojo brand: brands) {
@@ -74,9 +74,9 @@ public class SalesReportFlow {
 			map.put(brand.getId(), productids);
 		}
 		
-		List<OrderPojo> orders = orderService.getOrdersBetweenDates(from, to);
+		List<OrderPojo> orders = orderService.selectOrdersBetweenDates(from, to);
 		for(OrderPojo order: orders) {
-			List<OrderItemPojo> orderItems = orderService.getItems(order.getId());
+			List<OrderItemPojo> orderItems = orderService.selectItems(order.getId());
 			double revenue = 0;
 			for(OrderItemPojo orderItem: orderItems) {
 				revenue=(orderItem.getSellingPrice()*orderItem.getQuantity());
@@ -126,11 +126,11 @@ public class SalesReportFlow {
 	
 	
 	public List<InventoryReportData> getInventoryReport() throws ApiException{
-		List<InventoryPojo> inventory = inventoryService.getWholeInventory();
+		List<InventoryPojo> inventory = inventoryService.selectInventory();
 		List<InventoryReportData> inventoryReport = new ArrayList<InventoryReportData>();
 		HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
 		for(InventoryPojo item: inventory) {
-			ProductPojo product = productService.getById(item.getId());
+			ProductPojo product = productService.selectById(item.getId());
 			if(map.containsKey(product.getBrand_category())) {
 				map.put(product.getBrand_category(), map.get(product.getBrand_category())+item.getQuantity());
 			}

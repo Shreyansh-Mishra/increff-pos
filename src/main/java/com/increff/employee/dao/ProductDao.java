@@ -56,12 +56,6 @@ public class ProductDao extends AbstractDao {
 		return query.getResultList();
 	}
 	
-	public ProductPojo selectName(String name) {
-		TypedQuery<ProductPojo> query = getQuery(select_name, ProductPojo.class);
-		query.setParameter("name", name);
-		return getSingle(query);
-	}
-	
 	public ProductPojo selectId(int id) {
 		TypedQuery<ProductPojo> query = getQuery(select_id, ProductPojo.class);
 		query.setParameter("id", id);

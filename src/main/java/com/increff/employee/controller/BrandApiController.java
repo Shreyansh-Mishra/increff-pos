@@ -26,7 +26,7 @@ public class BrandApiController {
 	
 	@ApiOperation(value = "Adds a brand")
 	@RequestMapping(path = "/api/brand/add-brand", method = RequestMethod.POST)
-	public void addBrand(@RequestBody BrandForm form) throws ApiException {
+	public void createBrand(@RequestBody BrandForm form) throws ApiException {
 		brandFlow.createBrand(form);
 	}
 	
@@ -47,23 +47,19 @@ public class BrandApiController {
 	public BrandData getBrand(@PathVariable int id) throws ApiException{
 		return brandFlow.getBrandById(id);
 	}
-	
-	@ApiOperation(value= "Get brand by name")
-	@RequestMapping(path= "/api/brand/name/{name}", method = RequestMethod.GET)
-	public List<BrandData> getBrands(@PathVariable String name) throws ApiException{
-		return brandFlow.getBrandsByName(name);
+
+	@ApiOperation(value= "Get categories from brand")
+	@RequestMapping(path= "/api/brand/get-categories/{brandName}", method = RequestMethod.GET)
+	public List<String> getCategoriesFromBrand(@PathVariable String brandName) throws ApiException{
+		return brandFlow.getCategoriesByBrand(brandName);
 	}
-	
+
 	@ApiOperation(value= "Update brand")
 	@RequestMapping(path= "/api/brand/update/{id}", method = RequestMethod.PUT)
 	public void updateBrand(@PathVariable int id, @RequestBody BrandForm b) throws ApiException{
 		brandFlow.updateBrand(id, b);
 	}
 	
-	@ApiOperation(value= "Get categories from brand")
-	@RequestMapping(path= "/api/brand/get-categories/{brandName}", method = RequestMethod.GET)
-	public List<String> getCategoriesFromBrand(@PathVariable String brandName) throws ApiException{
-		return brandFlow.getCategoriesByBrand(brandName);
-	}
+
 	
 }

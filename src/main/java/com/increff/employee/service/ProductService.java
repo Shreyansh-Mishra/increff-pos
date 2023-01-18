@@ -39,13 +39,13 @@ public class ProductService {
 	}
 	
 	@Transactional
-	public List<ProductPojo> getAll() {
+	public List<ProductPojo> selectAll() {
 		List<ProductPojo> p = productDao.selectAll();
 		return p;
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)
-	public List<ProductPojo> getByBrand(String brandName) throws ApiException{
+	public List<ProductPojo> selectByBrand(String brandName) throws ApiException{
 		List<ProductPojo> p2 = productDao.selectBrand(brandName);
 		if(p2.isEmpty()) {
 			throw new ApiException("No product of this Brand available");
@@ -54,36 +54,23 @@ public class ProductService {
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)
-	public ProductPojo getById(int id) throws ApiException {
+	public ProductPojo selectById(int id) throws ApiException {
 		ProductPojo p = productDao.selectId(id);
 		if(p==null)
 			throw new ApiException("The product does not exists");
 		return p;
 	}
+
 	
 	@Transactional(rollbackOn = ApiException.class)
-	public List<ProductPojo> getByCategory(String category) throws ApiException{
-		List<ProductPojo> p2 = productDao.selectCategory(category);
-		if(p2.isEmpty()) {
-			throw new ApiException("No Product of this Category found");
-		}
-		return p2;
-	}
-	
-	@Transactional(rollbackOn = ApiException.class)
-	public List<ProductPojo> getByBrandAndCategory(String brand,String category) throws ApiException{
+	public List<ProductPojo> selectByBrandAndCategory(String brand, String category) throws ApiException{
 		List<ProductPojo> p2 = productDao.selectBrandAndCategory(brand, category);
 		if(p2.isEmpty()) {
 			throw new ApiException("No product of this Brand and Category found!");
 		}
 		return p2;
 	}
-	
-	@Transactional
-	public void deleteProduct(int id) {
-		productDao.delete(id);
-	}
-	
+
 	@Transactional
 	public void update(ProductPojo p,int id) throws ApiException {
 		ProductPojo p2 = productDao.selectBarcode(p.getBarcode());
@@ -109,23 +96,10 @@ public class ProductService {
 	}
 	
 	@Transactional
-	public ProductPojo getByBarcode(String barcode) {
+	public ProductPojo selectByBarcode(String barcode) {
 		return productDao.selectBarcode(barcode);
 	}
 
-	public static String usingRandomUUID() {
-
-	    UUID randomUUID = UUID.randomUUID();
-
-	    return randomUUID.toString().replaceAll("-", "");
-
-	  }
-	
-	public static boolean isNegative(double num) {
-		if(num<0)
-			return true;
-		return false;
-	}
 	
 	protected static void normalize(ProductPojo p) {
 		p.setName(p.getName().toLowerCase().trim());

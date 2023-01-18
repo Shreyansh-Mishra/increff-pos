@@ -46,15 +46,6 @@ public class BrandFlow {
 		return b2;
 	}
 	
-	public List<BrandData> getBrandsByName(String name) throws ApiException{
-		List<BrandPojo> b = brandService.selectByName(name);
-		List<BrandData> b2 = new ArrayList<BrandData>();
-		for(BrandPojo i: b) {
-			b2.add(convert(i));
-		}
-		return b2;
-	}
-	
 	public void updateBrand(int id, BrandForm b) throws ApiException {
 		if(b.getBrand().isBlank()||b.getCategory().isBlank()) {
 			throw new ApiException("Brand or Category cannot be empty!");

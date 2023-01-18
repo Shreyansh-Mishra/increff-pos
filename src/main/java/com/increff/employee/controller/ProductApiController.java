@@ -26,8 +26,8 @@ public class ProductApiController {
 	
 	@ApiOperation("Adds a Product")
 	@RequestMapping(path="/api/product/add-product", method=RequestMethod.POST)
-	public void addProduct(@RequestBody ProductForm p) throws ApiException {
-		productFlow.addProduct(p);
+	public void createProduct(@RequestBody ProductForm p) throws ApiException {
+		productFlow.createProduct(p);
 	}
 	
 	@ApiOperation("Get All Products")
@@ -56,7 +56,7 @@ public class ProductApiController {
 	
 	@ApiOperation("Edit Product")
 	@RequestMapping(path="/api/product/{id}", method=RequestMethod.PUT)
-	public void editProduct(@PathVariable int id, @RequestBody ProductForm p) throws ApiException{
+	public void updateProduct(@PathVariable int id, @RequestBody ProductForm p) throws ApiException{
 		productFlow.updateProduct(id, p);
 	}
 }

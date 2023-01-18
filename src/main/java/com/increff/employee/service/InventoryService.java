@@ -21,7 +21,7 @@ public class InventoryService {
 	
 	
 	@Transactional(rollbackOn = ApiException.class)
-	public void insert(InventoryPojo i) throws ApiException {
+	public void add(InventoryPojo i) throws ApiException {
 		ProductPojo p = checkExisting(i.getBarcode());
 		InventoryPojo i2 = inventoryDao.selectId(p.getId());
 		if(i2!=null) {
@@ -29,17 +29,17 @@ public class InventoryService {
 		}
 		else {
 		i.setId(p.getId());
-		inventoryDao.add(i);
+		inventoryDao.insert(i);
 		}
 	}
 	
 	@Transactional
-	public List<InventoryPojo> getWholeInventory(){
+	public List<InventoryPojo> selectInventory(){
 		return inventoryDao.selectAll();
 	}
 	
 	@Transactional
-	public InventoryPojo getById(int id) {
+	public InventoryPojo selectById(int id) {
 		return inventoryDao.selectId(id);
 	}
 	
@@ -61,11 +61,6 @@ public class InventoryService {
 			throw new ApiException("The Product does not exists");
 		}
 		return p;
-	}
-	
-	@Transactional
-	public List<Object[]> getInventoryReport(){
-		return inventoryDao.selectInventory();
 	}
 	
 	

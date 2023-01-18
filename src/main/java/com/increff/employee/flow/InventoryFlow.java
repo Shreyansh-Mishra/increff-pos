@@ -23,15 +23,15 @@ public class InventoryFlow {
 	InventoryService inventoryService;
 	
 	
-	public void addProduct(InventoryForm form) throws ApiException {
+	public void addToInventory(InventoryForm form) throws ApiException {
 		if(isNegative(form.getQuantity()))
 			throw new ApiException("Quantity needs to be a positive value");
 		InventoryPojo inventoryPojo = convert(form);
-		inventoryService.insert(inventoryPojo);
+		inventoryService.add(inventoryPojo);
 	}
 	
 	public List<InventoryData> getInventory() throws ApiException{
-		List<InventoryPojo> i = inventoryService.getWholeInventory();
+		List<InventoryPojo> i = inventoryService.selectInventory();
 		List<InventoryData> i2 = new ArrayList<InventoryData>();
 		for(InventoryPojo j: i) {
 			i2.add(convert(convert(j),j));
@@ -40,7 +40,7 @@ public class InventoryFlow {
 	}
 	
 	public InventoryData getById(int id) {
-		return convert(inventoryService.getById(id));
+		return convert(inventoryService.selectById(id));
 	}
 	
 	public void editInventory(int id, InventoryForm i) throws ApiException {
@@ -51,7 +51,7 @@ public class InventoryFlow {
 	}
 	
 	public InventoryData convert(InventoryData i, InventoryPojo i2) throws ApiException {
-		ProductPojo p = productService.getById(i2.getId());
+		ProductPojo p = productService.selectById(i2.getId());
 		i.setBarcode(p.getBarcode());
 		i.setName(p.getName());
 		return i;

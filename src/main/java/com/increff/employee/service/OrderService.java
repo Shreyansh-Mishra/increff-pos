@@ -31,13 +31,13 @@ public class OrderService {
 	
 	@Transactional
 	public void add(OrderPojo o) {
-		orderDao.insertOrder(o);
+		orderDao.insert(o);
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public void addItems(List<OrderItemPojo> orderItems,OrderPojo orderPojo) throws ApiException {
 //		orderPojo.setTime(getTimestamp());
-		orderDao.insertOrder(orderPojo);
+		orderDao.insert(orderPojo);
 		for(OrderItemPojo o: orderItems) {
 			if(o.getBarcode().isBlank()||o.getQuantity()==0||o.getSellingPrice()==0) {
 				throw new ApiException("All fields are mandatory, please check again!");
@@ -68,28 +68,14 @@ public class OrderService {
 			orderItemDao.insert(o);
 		}
 	}
-	
-	@Transactional(rollbackOn = ApiException.class)
-	public ProductPojo checkIfExists(String barcode) throws ApiException {
-		ProductPojo p = productDao.selectBarcode(barcode);
-		if(p==null) {
-			throw new ApiException("Product with barcode "+ barcode +" does not exists");
-		}
-		return p;
-	}
-	
+
 	@Transactional
-	public void deleteOrder(int id) {
-		orderDao.delete(id);
-	}
-	
-	@Transactional
-	public List<OrderPojo> getAllOrders(){
+	public List<OrderPojo> selectOrders(){
 		return orderDao.selectAll();
 	}
 	
 	@Transactional
-	public void addToScheduler(SchedulerPojo scheduler, int orderId) {
+	public void insertScheduler(SchedulerPojo scheduler, int orderId) {
 		OrderPojo o = orderDao.selectId(orderId);
 		SchedulerPojo s = schedulerDao.checkExisting(o.getTime());
 		List<OrderItemPojo> items = orderItemDao.selectItems(orderId);
@@ -116,50 +102,38 @@ public class OrderService {
 	}
 	
 	@Transactional
-	public List<SchedulerPojo> getSchedulerData() {
+	public List<SchedulerPojo> selectSchedulerData() {
 		return schedulerDao.select();
 	}
 	
 	@Transactional
-	public OrderPojo getOrderById(int id) {
+	public OrderPojo selectOrderById(int id) {
 		return orderDao.selectId(id);
 	}
 	
 	@Transactional
-	public List<OrderItemPojo> getItems(int id){
+	public List<OrderItemPojo> selectItems(int id){
 		return orderItemDao.selectItems(id);
 	}
+
 	
 	@Transactional
-	public List<Object[]> getReportByBrandAndCategory(Instant startDate, Instant endDate){
-		return orderDao.selectBrandCategorySalesByDate(startDate, endDate);
-	}
-	
-	@Transactional
-	public List<OrderPojo> getOrdersBetweenDates(Instant startDate, Instant endDate){
+	public List<OrderPojo> selectOrdersBetweenDates(Instant startDate, Instant endDate){
 		return orderDao.selectBetweenDates(startDate, endDate);
 	}
 
 	@Transactional
-	public void addInvoice (InvoicePojo i){
+	public void insertInvoice(InvoicePojo i){
 		invoiceDao.insert(i);
 	}
 
 	@Transactional
-	public InvoicePojo getInvoice(int id) throws ApiException {
-		InvoicePojo invoice = invoiceDao.getPath(id);
+	public InvoicePojo selectInvoice(int id) throws ApiException {
+		InvoicePojo invoice = invoiceDao.selectId(id);
 		if(invoice==null){
 			throw new ApiException("Invoice with id "+id+" does not exist");
 		}
 		return invoice;
-	}
-	
-	public static String getTimestamp() {
-		String ts = Instant.now().toString();
-		ts=ts.replace('T', ' ');
-		ts=ts.replace('Z',' ');
-		ts = ts.substring(0, 16);
-		return ts;
 	}
 	
 }

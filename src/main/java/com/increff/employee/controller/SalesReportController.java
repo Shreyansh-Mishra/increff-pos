@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.increff.employee.flow.SalesReportFlow;
+import com.increff.employee.flow.ReportFlow;
 import com.increff.employee.model.DayWiseReportData;
 import com.increff.employee.model.InventoryReportData;
 import com.increff.employee.model.SalesByBrandAndCategoryData;
@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 public class SalesReportController {
 	@Autowired
-	SalesReportFlow salesReportFlow;
+    ReportFlow salesReportFlow;
 	
 	
 	@ApiOperation(value="Scheduler")
