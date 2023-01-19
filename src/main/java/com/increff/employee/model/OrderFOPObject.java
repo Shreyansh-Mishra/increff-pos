@@ -11,7 +11,9 @@ public class OrderFOPObject {
 	private String date;
 	private int orderId;
 	private List<OrderItemData> orderItems;
-	
+
+	private double total;
+
 	@XmlElement(name="orderDate")
 	public String getDate() {
 		return date;
@@ -35,6 +37,13 @@ public class OrderFOPObject {
 	public void setOrderItems(List<OrderItemData> orderItems) {
 		this.orderItems = orderItems;
 	}
-	
-	
+
+	@XmlElement(name="total")
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
 }

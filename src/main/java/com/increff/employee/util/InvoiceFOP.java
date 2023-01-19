@@ -47,8 +47,9 @@ public class InvoiceFOP {
 		List<OrderItemPojo> items = orderService.selectItems(id);
 		OrderFOPObject orderFop = new OrderFOPObject();
 		orderFop.setOrderId(order.getId());
-		orderFop.setDate(order.getTime().toString());
+		orderFop.setDate(order.getTime().toString().split("T")[0]);
 		List<OrderItemData> fopItems = new ArrayList<OrderItemData>();
+		double total = 0;
 		for(OrderItemPojo item: items) {
 			OrderItemData i = new OrderItemData();
 			ProductPojo product = productService.selectById(item.getProductId());
@@ -57,9 +58,12 @@ public class InvoiceFOP {
 			i.setOrderId(item.getOrderId());
 			i.setQuantity(item.getQuantity());
 			i.setSellingPrice(item.getSellingPrice());
+			i.setCost(item.getSellingPrice()*item.getQuantity());
+			total += i.getCost();
 			fopItems.add(i);
 		}
 		orderFop.setOrderItems(fopItems);
+		orderFop.setTotal(total);
 		ByteArrayOutputStream xmlSource = getXMLSource(orderFop);
 		StreamSource streamSource = new StreamSource(new ByteArrayInputStream(xmlSource.toByteArray()));
 		String date = order.getTime().toString();
@@ -94,7 +98,7 @@ public class InvoiceFOP {
         // a user agent is needed for transformation
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
         // Setup output
-        OutputStream out = new java.io.FileOutputStream("C:\\Users\\Shreyansh\\Desktop\\increff\\employee-spring-full\\src\\main\\resources\\com\\increff\\employee\\"+fileName);
+        OutputStream out = new java.io.FileOutputStream("C:\\Users\\Shreyansh\\Desktop\\increff\\employee-spring-full\\src\\main\\resources\\com\\increff\\employee\\invoices\\"+fileName);
 
         try {
             // Construct fop with desired output format
