@@ -17,29 +17,12 @@ public class ProductServiceTest extends AbstractUnitTest{
     @Autowired
     ProductService productService;
 
-    public BrandPojo addBrand(String brandName, String category) throws ApiException {
-        BrandPojo p = new BrandPojo();
-        p.setBrand(brandName);
-        p.setCategory(category);
-        brandService.add(p);
-        return p;
-    }
-
-    public ProductPojo addProduct(BrandPojo brand, String name, String barcode, double mrp) throws ApiException {
-        ProductPojo p = new ProductPojo();
-        p.setBrandName(brand.getBrand());
-        p.setCategory(brand.getCategory());
-        p.setMrp(mrp);
-        p.setName(name);
-        p.setBarcode(barcode);
-        productService.add(p);
-        return p;
-    }
-
     @Test
     public void testAdd() throws ApiException {
-        BrandPojo brand = addBrand("testbrand", "testcategory");
-        addProduct(brand,"testproduct","testbarcode",100);
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandService.add(brand);
+        ProductPojo product = createProduct(brand,"testproduct","testbarcode",100);
+        productService.add(product);
         List<ProductPojo> products = productService.selectAll();
         assertEquals(1, products.size());
         assertEquals("testbarcode", products.get(0).getBarcode());
@@ -51,9 +34,12 @@ public class ProductServiceTest extends AbstractUnitTest{
 
     @Test
     public void testSelectAll() throws ApiException {
-        BrandPojo brand = addBrand("testBrand", "testCategory");
-        ProductPojo product = addProduct(brand,"testproduct1","testbarcode1",100);
-        ProductPojo product2 = addProduct(brand,"testproduct2","testbarcode2",200);
+        BrandPojo brand = createBrand("testBrand", "testCategory");
+        brandService.add(brand);
+        ProductPojo product = createProduct(brand,"testproduct1","testbarcode1",100);
+        productService.add(product);
+        ProductPojo product2 = createProduct(brand,"testproduct2","testbarcode2",200);
+        productService.add(product2);
         List<ProductPojo> products = productService.selectAll();
         assertEquals(2, products.size());
         assertEquals("testbarcode1", products.get(0).getBarcode());
@@ -61,8 +47,10 @@ public class ProductServiceTest extends AbstractUnitTest{
     }
     @Test
     public void testSelectByBrand() throws ApiException {
-        BrandPojo brand = addBrand("testbrand", "testcategory");
-        ProductPojo product = addProduct(brand,"testproduct","testbarcode",100);
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandService.add(brand);
+        ProductPojo product = createProduct(brand,"testproduct","testbarcode",100);
+        productService.add(product);
         List<ProductPojo> products  = productService.selectByBrand("testbrand");
         assertEquals(1, products.size());
         assertEquals("testbarcode", products.get(0).getBarcode());
@@ -74,8 +62,10 @@ public class ProductServiceTest extends AbstractUnitTest{
 
     @Test
     public void testSelectById() throws ApiException {
-        BrandPojo brand = addBrand("testbrand", "testcategory");
-        ProductPojo product = addProduct(brand, "testproduct", "testbarcode",100);
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandService.add(brand);
+        ProductPojo product = createProduct(brand, "testproduct", "testbarcode",100);
+        productService.add(product);
         ProductPojo product2 = productService.selectById(product.getId());
         assertEquals("testbarcode", product2.getBarcode());
         assertEquals("testproduct", product2.getName());
@@ -86,8 +76,10 @@ public class ProductServiceTest extends AbstractUnitTest{
 
     @Test
     public void testSelectByBrandAndCategory() throws ApiException{
-        BrandPojo brand = addBrand("testbrand", "testcategory");
-        ProductPojo product = addProduct(brand, "testproduct", "testbarcode",100);
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandService.add(brand);
+        ProductPojo product = createProduct(brand, "testproduct", "testbarcode",100);
+        productService.add(product);
         List<ProductPojo> products = productService.selectByBrandAndCategory("testbrand", "testcategory");
         assertEquals(1, products.size());
         assertEquals("testbarcode", products.get(0).getBarcode());
@@ -99,11 +91,14 @@ public class ProductServiceTest extends AbstractUnitTest{
 
     @Test
     public void testUpdate() throws ApiException {
-        BrandPojo brand = addBrand("testBrand", "testCategory");
-        ProductPojo product = addProduct(brand, "testproduct", "testbarcode",100);
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandService.add(brand);
+        ProductPojo product = createProduct(brand, "testproduct", "testbarcode",100);
+        productService.add(product);
         ProductPojo product2 = new ProductPojo();
         product2.setId(product.getId());
-        BrandPojo brand2 = addBrand("testbrand2", "testcategory2");
+        BrandPojo brand2 = createBrand("testbrand2", "testcategory2");
+        brandService.add(brand2);
         product2.setBrandName("testbrand2");
         product2.setCategory("testcategory2");
         product2.setMrp(200);
