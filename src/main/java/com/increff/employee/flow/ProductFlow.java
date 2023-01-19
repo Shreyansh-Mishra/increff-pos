@@ -23,7 +23,7 @@ public class ProductFlow {
 	BrandService brandService;
 	
 	public void createProduct(ProductForm form) throws ApiException {
-		if(form.getName().isBlank()||form.getBarcode().isBlank()) {
+		if(form.getName().isEmpty()||form.getBarcode().isEmpty()) {
 			throw new ApiException("Please fill all the fields!");
 		}
 		if(isNegative(form.getMrp())) {
@@ -69,7 +69,7 @@ public class ProductFlow {
 	}
 	
 	public void updateProduct(int id, ProductForm form) throws ApiException {
-		if(form.getName().isBlank()||form.getBarcode().isBlank()) {
+		if(form.getName().isEmpty()||form.getBarcode().isEmpty()) {
 			throw new ApiException("Please fill all the fields!");
 		}
 		if(isNegative(form.getMrp())) {

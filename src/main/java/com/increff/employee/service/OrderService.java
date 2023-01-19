@@ -39,7 +39,7 @@ public class OrderService {
 //		orderPojo.setTime(getTimestamp());
 		orderDao.insert(orderPojo);
 		for(OrderItemPojo o: orderItems) {
-			if(o.getBarcode().isBlank()||o.getQuantity()==0||o.getSellingPrice()==0) {
+			if(o.getBarcode().isEmpty()||o.getQuantity()==0||o.getSellingPrice()==0) {
 				throw new ApiException("All fields are mandatory, please check again!");
 			}
 			ProductPojo p = productDao.selectBarcode(o.getBarcode());

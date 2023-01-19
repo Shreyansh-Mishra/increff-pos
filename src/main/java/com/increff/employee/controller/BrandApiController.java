@@ -59,7 +59,4 @@ public class BrandApiController {
 	public void updateBrand(@PathVariable int id, @RequestBody BrandForm b) throws ApiException{
 		brandFlow.updateBrand(id, b);
 	}
-	
-
-	
 }

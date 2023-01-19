@@ -71,7 +71,7 @@ public class InvoiceFOP {
 		date = date.split("T", 2)[0] + "-" + date.split("T", 2)[1].split(":")[0] + "-" + date.split("T", 2)[1].split(":")[1];
 		String fileName = "Invoice-"+order.getId()+"-"+date+".pdf";
 		generatePdf(streamSource,fileName);
-		return "C:\\Users\\Shreyansh\\Desktop\\increff\\employee-spring-full\\src\\main\\resources\\com\\increff\\employee\\"+fileName;
+		return "C:\\Users\\Shreyansh\\Desktop\\increff\\employee-spring-full\\src\\main\\resources\\com\\increff\\employee\\invoices\\"+fileName;
 	}
 	
 	private static ByteArrayOutputStream getXMLSource(OrderFOPObject orderFop) throws Exception {

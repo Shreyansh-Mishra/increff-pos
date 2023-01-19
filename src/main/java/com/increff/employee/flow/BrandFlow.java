@@ -21,6 +21,7 @@ public class BrandFlow {
 		if(isEmpty(form.getBrand(),form.getCategory())) {
 			throw new ApiException("Brand or Category cannot be empty");
 		}
+		normalize(form);
 		BrandPojo b = convert(form);
 		brandService.add(b);
 	}
@@ -35,7 +36,7 @@ public class BrandFlow {
 	}
 	
 	public BrandData getBrandByNameAndCategory(String name, String category) throws ApiException {
-		BrandPojo b = brandService.selectByNameAndCategory(name, category);
+		BrandPojo b = brandService.selectByNameAndCategory(name.toLowerCase(), category.toLowerCase());
 		BrandData b2 = convert(b);
 		return b2;
 	}
@@ -47,9 +48,10 @@ public class BrandFlow {
 	}
 	
 	public void updateBrand(int id, BrandForm b) throws ApiException {
-		if(b.getBrand().isBlank()||b.getCategory().isBlank()) {
+		if(b.getBrand().isEmpty()||b.getCategory().isEmpty()) {
 			throw new ApiException("Brand or Category cannot be empty!");
 		}
+		normalize(b);
 		BrandPojo b2 = convert(b);
 		brandService.updateBrand(id,b2);
 	}
@@ -79,5 +81,10 @@ public class BrandFlow {
 			return true;
 		}
 		return false;
+	}
+
+	public static void normalize(BrandForm b) {
+		b.setBrand(b.getBrand().toLowerCase().trim());
+		b.setCategory(b.getCategory().toLowerCase().trim());
 	}
 }

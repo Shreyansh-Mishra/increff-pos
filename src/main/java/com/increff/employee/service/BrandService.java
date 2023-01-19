@@ -17,7 +17,6 @@ public class BrandService {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public void add(BrandPojo b) throws ApiException {
-		normalize(b);
 		BrandPojo existing = brandDao.select(b.getBrand(),b.getCategory());
 		if(existing!=null) {
 			throw new ApiException("Brand and Category Already Exists");
@@ -51,15 +50,6 @@ public class BrandService {
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)
-	public List<BrandPojo> selectByName(String name) throws ApiException {
-		List<BrandPojo> b = brandDao.select(name);
-		if(b.isEmpty()) {
-			throw new ApiException("The requested brand does not exists");
-		}
-		return b;
-	}
-	
-	@Transactional(rollbackOn = ApiException.class)
 	public void updateBrand(int id, BrandPojo b) throws ApiException {
 		BrandPojo b2 = checkIfExists(id);
 		BrandPojo b3 = brandDao.select(b.getBrand(), b.getCategory());
@@ -86,12 +76,5 @@ public class BrandService {
 	public List<String> getCategories(String brandName) {
 		return brandDao.selectCategories(brandName);
 	}
-	
-	
-	public static void normalize(BrandPojo b) {
-		b.setBrand(b.getBrand().toLowerCase().trim());
-		b.setCategory(b.getCategory().toLowerCase().trim());
-	}
-	
 	
 }
