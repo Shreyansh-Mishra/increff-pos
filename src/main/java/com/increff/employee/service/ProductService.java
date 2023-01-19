@@ -23,7 +23,6 @@ public class ProductService {
 	
 	@Transactional
 	public void add(ProductPojo p) throws ApiException {
-		normalize(p);
 		ProductPojo p2 = productDao.selectBarcode(p.getBarcode());
 		if(p2!=null) {
 			throw new ApiException("The product already exists");
@@ -46,7 +45,7 @@ public class ProductService {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public List<ProductPojo> selectByBrand(String brandName) throws ApiException{
-		List<ProductPojo> p2 = productDao.selectBrand(brandName);
+		List<ProductPojo> p2 = productDao.selectBrand(brandName.toLowerCase());
 		if(p2.isEmpty()) {
 			throw new ApiException("No product of this Brand available");
 		}
@@ -64,7 +63,7 @@ public class ProductService {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public List<ProductPojo> selectByBrandAndCategory(String brand, String category) throws ApiException{
-		List<ProductPojo> p2 = productDao.selectBrandAndCategory(brand, category);
+		List<ProductPojo> p2 = productDao.selectBrandAndCategory(brand.toLowerCase(), category.toLowerCase());
 		if(p2.isEmpty()) {
 			throw new ApiException("No product of this Brand and Category found!");
 		}
@@ -94,14 +93,5 @@ public class ProductService {
 		p2.setBrand_category(b.getId());
 		productDao.update();
 	}
-	
-	@Transactional
-	public ProductPojo selectByBarcode(String barcode) {
-		return productDao.selectBarcode(barcode);
-	}
 
-	
-	protected static void normalize(ProductPojo p) {
-		p.setName(p.getName().toLowerCase().trim());
-	}
 }

@@ -23,6 +23,7 @@ public class ProductFlow {
 	BrandService brandService;
 	
 	public void createProduct(ProductForm form) throws ApiException {
+		normalize(form);
 		if(form.getName().isEmpty()||form.getBarcode().isEmpty()) {
 			throw new ApiException("Please fill all the fields!");
 		}
@@ -75,6 +76,7 @@ public class ProductFlow {
 		if(isNegative(form.getMrp())) {
 			throw new ApiException("Enter a Valid MRP");
 		}
+		normalize(form);
 		ProductPojo p2 = convert(form);
 		productService.update(p2,id);
 	}
@@ -109,6 +111,13 @@ public class ProductFlow {
 		if(num<=0)
 			return true;
 		return false;
+	}
+
+	protected static void normalize(ProductForm p) {
+		p.setName(p.getName().toLowerCase().trim());
+		p.setBarcode(p.getBarcode().toLowerCase().trim());
+		p.setBrandName(p.getBrandName().toLowerCase().trim());
+		p.setCategory(p.getCategory().toLowerCase().trim());
 	}
 	
 	
