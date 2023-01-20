@@ -1,0 +1,69 @@
+package com.increff.pos.service;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.increff.pos.dao.InventoryDao;
+import com.increff.pos.dao.ProductDao;
+import com.increff.pos.pojo.InventoryPojo;
+import com.increff.pos.pojo.ProductPojo;
+
+@Service
+public class InventoryService {
+	@Autowired
+	private InventoryDao inventoryDao;
+	@Autowired
+	private ProductDao productDao;
+	
+	
+	@Transactional(rollbackOn = ApiException.class)
+	public void add(InventoryPojo i) throws ApiException {
+		ProductPojo p = checkExisting(i.getBarcode());
+		InventoryPojo i2 = inventoryDao.selectId(p.getId());
+		if(i2!=null) {
+			i2.setQuantity(i.getQuantity()+i2.getQuantity());
+		}
+		else {
+		i.setId(p.getId());
+		inventoryDao.insert(i);
+		}
+	}
+	
+	@Transactional
+	public List<InventoryPojo> selectInventory(){
+		return inventoryDao.selectAll();
+	}
+	
+	@Transactional
+	public InventoryPojo selectById(int id) {
+		return inventoryDao.selectId(id);
+	}
+	
+	@Transactional(rollbackOn = ApiException.class)
+	public void update(InventoryPojo i) throws ApiException {
+		ProductPojo p = checkExisting(i.getBarcode());
+		InventoryPojo i2 = inventoryDao.selectId(p.getId());
+		if(i2==null) {
+			throw new ApiException("The Product isn't present in the Inventory");
+		}
+		i2.setQuantity(i.getQuantity());
+		inventoryDao.update(i2);
+	}
+	
+	@Transactional
+	public ProductPojo checkExisting(String barcode) throws ApiException {
+		ProductPojo p = productDao.selectBarcode(barcode);
+		if(p==null) {
+			throw new ApiException("The Product does not exists");
+		}
+		return p;
+	}
+	
+	
+	
+	
+}
