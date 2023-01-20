@@ -29,11 +29,7 @@ public class OrderService {
 	
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 	
-	@Transactional
-	public void add(OrderPojo o) {
-		orderDao.insert(o);
-	}
-	
+
 	@Transactional(rollbackOn = ApiException.class)
 	public void addItems(List<OrderItemPojo> orderItems,OrderPojo orderPojo) throws ApiException {
 //		orderPojo.setTime(getTimestamp());
@@ -119,6 +115,7 @@ public class OrderService {
 	
 	@Transactional
 	public List<OrderPojo> selectOrdersBetweenDates(Instant startDate, Instant endDate){
+		System.out.println(endDate);
 		return orderDao.selectBetweenDates(startDate, endDate);
 	}
 

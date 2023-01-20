@@ -119,7 +119,4 @@ public class ProductFlow {
 		p.setBrandName(p.getBrandName().toLowerCase().trim());
 		p.setCategory(p.getCategory().toLowerCase().trim());
 	}
-	
-	
-	
 }
