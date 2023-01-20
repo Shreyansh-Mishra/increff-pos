@@ -51,7 +51,7 @@ public abstract class AbstractUnitTest {
         return p;
     }
 
-    public InventoryForm createInventoryForm(String brandName, String category, String name, String barcode, double mrp, int quantity) {
+    public InventoryForm createInventoryForm(String barcode, int quantity) {
         InventoryForm p = new InventoryForm();
         p.setBarcode(barcode);
         p.setQuantity(quantity);
