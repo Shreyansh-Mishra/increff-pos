@@ -1,4 +1,4 @@
-package com.increff.pos.flow;
+package com.increff.pos.dto;
 
 import com.increff.pos.model.BrandForm;
 import com.increff.pos.model.InventoryData;

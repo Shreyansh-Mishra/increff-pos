@@ -9,7 +9,7 @@ function addBrand(event){
 	//Set the values to update
 	var $form = $("#brand-form");
 	var json = toJson($form);
-	var url = getBrandUrl()+"/add-brand";
+	var url = getBrandUrl();
 
 	$.ajax({
 	   url: url,
@@ -32,7 +32,7 @@ function addBrand(event){
 
 function updateBrand(id, brandName, category){
 	//Get the ID
-	var url = getBrandUrl() + "/update/" + id;
+	var url = getBrandUrl() + "/" + id;
 	var brandData = {brand: brandName,category: category}
 	console.log(brandData,JSON.stringify(brandData));
 	//Set the values to update
@@ -61,7 +61,7 @@ function updateBrand(id, brandName, category){
 function getBrandList(){
 	//empty all the error present in form
 	$("#brand-form").find(".alert").remove();
-	var url = getBrandUrl()+"/get-brands";
+	var url = getBrandUrl()+"s";
 	$.ajax({
 	   url: url,
 	   type: 'GET',
@@ -74,20 +74,6 @@ function getBrandList(){
 	});
 }
 
-function deleteBrand(id){
-	var url = getBrandUrl() + "/delete/" + id;
-
-	$.ajax({
-	   url: url,
-	   type: 'DELETE',
-	   success: function(data) {
-	   		getBrandList();  
-	   },
-	   error: (response)=>{
-		handleError(response);
-		}
-	});
-}
 
 // FILE UPLOAD METHODS
 var fileData = [];
@@ -126,7 +112,7 @@ function uploadRows(){
 	processCount++;
 	
 	var json = JSON.stringify(row);
-	var url = getBrandUrl()+"/add-brand";
+	var url = getBrandUrl();
 	//Make ajax call
 	$.ajax({
 	   url: url,

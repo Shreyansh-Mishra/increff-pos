@@ -1,4 +1,4 @@
-package com.increff.pos.flow;
+package com.increff.pos.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,13 @@ public class ProductFlow {
 			throw new ApiException("Enter a Valid MRP");
 		}
 		ProductPojo p2 = convert(form);
+		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName(),p2.getCategory());
+		if(b!=null) {
+			p2.setBrand_category(b.getId());
+		}
+		else {
+			throw new ApiException("The entered brand and category combination does not exists");
+		}
 		productService.add(p2);
 	}
 	
@@ -78,6 +85,13 @@ public class ProductFlow {
 		}
 		normalize(form);
 		ProductPojo p2 = convert(form);
+		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName(),p2.getCategory());
+		if(b!=null) {
+			p2.setBrand_category(b.getId());
+		}
+		else {
+			throw new ApiException("The entered brand and category combination does not exists");
+		}
 		productService.update(p2,id);
 	}
 	

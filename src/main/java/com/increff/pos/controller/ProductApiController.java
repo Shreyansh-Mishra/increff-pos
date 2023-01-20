@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.increff.pos.flow.ProductFlow;
+import com.increff.pos.dto.ProductFlow;
 import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
 import com.increff.pos.service.ApiException;
@@ -25,13 +25,13 @@ public class ProductApiController {
 	
 	
 	@ApiOperation("Adds a Product")
-	@RequestMapping(path="/api/product/add-product", method=RequestMethod.POST)
+	@RequestMapping(path="/api/product", method=RequestMethod.POST)
 	public void createProduct(@RequestBody ProductForm p) throws ApiException {
 		productFlow.createProduct(p);
 	}
 	
 	@ApiOperation("Get All Products")
-	@RequestMapping(path="/api/product/get-products", method=RequestMethod.GET)
+	@RequestMapping(path="/api/products", method=RequestMethod.GET)
 	public List<ProductData> getProducts() throws ApiException{
 		return productFlow.getAllProducts();
 	}

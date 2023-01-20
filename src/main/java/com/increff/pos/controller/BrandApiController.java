@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.increff.pos.flow.BrandFlow;
+import com.increff.pos.dto.BrandFlow;
 import com.increff.pos.model.BrandData;
 import com.increff.pos.model.BrandForm;
 import com.increff.pos.service.ApiException;
@@ -25,13 +25,13 @@ public class BrandApiController {
 	
 	
 	@ApiOperation(value = "Adds a brand")
-	@RequestMapping(path = "/api/brand/add-brand", method = RequestMethod.POST)
+	@RequestMapping(path = "/api/brand", method = RequestMethod.POST)
 	public void createBrand(@RequestBody BrandForm form) throws ApiException {
 		brandFlow.createBrand(form);
 	}
 	
 	@ApiOperation(value= "Get all brands")
-	@RequestMapping(path= "/api/brand/get-brands", method = RequestMethod.GET)
+	@RequestMapping(path= "/api/brands", method = RequestMethod.GET)
 	public List<BrandData> getBrands(){
 		return brandFlow.getAllBrands();
 	}
@@ -55,7 +55,7 @@ public class BrandApiController {
 	}
 
 	@ApiOperation(value= "Update brand")
-	@RequestMapping(path= "/api/brand/update/{id}", method = RequestMethod.PUT)
+	@RequestMapping(path= "/api/brand/{id}", method = RequestMethod.PUT)
 	public void updateBrand(@PathVariable int id, @RequestBody BrandForm b) throws ApiException{
 		brandFlow.updateBrand(id, b);
 	}

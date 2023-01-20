@@ -1,4 +1,4 @@
-package com.increff.pos.flow;
+package com.increff.pos.dto;
 
 import java.util.ArrayList;
 import java.util.List;

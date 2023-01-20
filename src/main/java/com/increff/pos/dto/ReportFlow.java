@@ -1,4 +1,4 @@
-package com.increff.pos.flow;
+package com.increff.pos.dto;
 
 import java.math.BigInteger;
 import java.text.ParseException;

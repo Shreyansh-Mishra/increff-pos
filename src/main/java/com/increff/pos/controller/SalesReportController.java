@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.increff.pos.flow.ReportFlow;
+import com.increff.pos.dto.ReportFlow;
 import com.increff.pos.model.DayWiseReportData;
 import com.increff.pos.model.InventoryReportData;
 import com.increff.pos.model.SalesByBrandAndCategoryData;

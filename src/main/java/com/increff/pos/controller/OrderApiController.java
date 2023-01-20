@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.increff.pos.flow.OrderFlow;
+import com.increff.pos.dto.OrderFlow;
 import com.increff.pos.model.OrderData;
 import com.increff.pos.model.OrderForm;
 import com.increff.pos.model.OrderItemData;

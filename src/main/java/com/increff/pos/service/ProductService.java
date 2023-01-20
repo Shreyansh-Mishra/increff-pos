@@ -17,8 +17,6 @@ import com.increff.pos.pojo.ProductPojo;
 public class ProductService {
 	@Autowired
 	private ProductDao productDao;
-	@Autowired
-	private BrandDao brandDao;
 	
 	@Transactional
 	public void add(ProductPojo p) throws ApiException {
@@ -26,14 +24,7 @@ public class ProductService {
 		if(p2!=null) {
 			throw new ApiException("The product already exists");
 		}
-		BrandPojo b = brandDao.select(p.getBrandName(),p.getCategory());
-		if(b!=null) {
-			p.setBrand_category(b.getId());
-			productDao.insert(p);
-		}
-		else {
-			throw new ApiException("The entered brand and category combination does not exists");
-		}
+		productDao.insert(p);
 	}
 	
 	@Transactional
@@ -80,16 +71,10 @@ public class ProductService {
 		if(p2==null) {
 			throw new ApiException("The Product does not exists");
 		}
-		
-		BrandPojo b = brandDao.select(p.getBrandName(),p.getCategory());
-		if(b==null) {
-			throw new ApiException("The Requested Brand and Category combination does not exists");
-		}
 		p2.setBarcode(p.getBarcode());
 		p2.setBrandName(p.getBrandName());
 		p2.setMrp(p.getMrp());
 		p2.setName(p.getName());
-		p2.setBrand_category(b.getId());
 		productDao.update();
 	}
 
