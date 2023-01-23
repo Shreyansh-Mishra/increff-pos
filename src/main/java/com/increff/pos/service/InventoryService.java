@@ -16,20 +16,20 @@ import com.increff.pos.pojo.ProductPojo;
 public class InventoryService {
 	@Autowired
 	private InventoryDao inventoryDao;
-	@Autowired
-	private ProductDao productDao;
 	
 	
 	@Transactional(rollbackOn = ApiException.class)
-	public void add(InventoryPojo i) throws ApiException {
-		ProductPojo p = checkExisting(i.getBarcode());
-		InventoryPojo i2 = inventoryDao.selectId(p.getId());
+	public void add(InventoryPojo inventoryItem) throws ApiException {
+		if(isNegative(inventoryItem.getQuantity()))
+			throw new ApiException("Quantity needs to be a positive value");
+
+		InventoryPojo i2 = inventoryDao.selectId(inventoryItem.getId());
 		if(i2!=null) {
-			i2.setQuantity(i.getQuantity()+i2.getQuantity());
+			i2.setQuantity(inventoryItem.getQuantity()+i2.getQuantity());
+			inventoryDao.update(i2);
 		}
 		else {
-		i.setId(p.getId());
-		inventoryDao.insert(i);
+		inventoryDao.insert(inventoryItem);
 		}
 	}
 	
@@ -39,31 +39,30 @@ public class InventoryService {
 	}
 	
 	@Transactional
-	public InventoryPojo selectById(int id) {
-		return inventoryDao.selectId(id);
+	public InventoryPojo selectById(int id) throws ApiException {
+		InventoryPojo i = inventoryDao.selectId(id);
+		if(i==null)
+			throw new ApiException("The product does not exists in the Inventory");
+		return i;
 	}
 	
 	@Transactional(rollbackOn = ApiException.class)
-	public void update(InventoryPojo i) throws ApiException {
-		ProductPojo p = checkExisting(i.getBarcode());
-		InventoryPojo i2 = inventoryDao.selectId(p.getId());
+	public void update(InventoryPojo inventoryItem) throws ApiException {
+		if(isNegative(inventoryItem.getQuantity()))
+			throw new ApiException("Not enough quantity of product "+inventoryItem.getBarcode()+" in the inventory");
+		InventoryPojo i2 = inventoryDao.selectId(inventoryItem.getId());
 		if(i2==null) {
 			throw new ApiException("The Product isn't present in the Inventory");
 		}
-		i2.setQuantity(i.getQuantity());
+		i2.setQuantity(inventoryItem.getQuantity());
 		inventoryDao.update(i2);
 	}
-	
-	@Transactional
-	public ProductPojo checkExisting(String barcode) throws ApiException {
-		ProductPojo p = productDao.selectBarcode(barcode);
-		if(p==null) {
-			throw new ApiException("The Product does not exists");
-		}
-		return p;
+
+
+	public static boolean isNegative(int a) {
+		if(a<0)
+			return true;
+		return false;
 	}
-	
-	
-	
 	
 }

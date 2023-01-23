@@ -14,19 +14,21 @@ import com.increff.pos.service.ApiException;
 import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.ProductService;
 
+import javax.transaction.Transactional;
+
 @Component
-public class InventoryFlow {
+public class InventoryDto {
 	@Autowired
 	ProductService productService;
 	
 	@Autowired
 	InventoryService inventoryService;
 	
-	
+	@Transactional(rollbackOn = ApiException.class)
 	public void addToInventory(InventoryForm form) throws ApiException {
-		if(isNegative(form.getQuantity()))
-			throw new ApiException("Quantity needs to be a positive value");
 		InventoryPojo inventoryPojo = convert(form);
+		ProductPojo product = productService.selectByBarcode(inventoryPojo.getBarcode().toLowerCase());
+		inventoryPojo.setId(product.getId());
 		inventoryService.add(inventoryPojo);
 	}
 	
@@ -39,14 +41,14 @@ public class InventoryFlow {
 		return i2;
 	}
 	
-	public InventoryData getById(int id) {
+	public InventoryData getById(int id) throws ApiException {
 		return convert(inventoryService.selectById(id));
 	}
 	
 	public void editInventory(int id, InventoryForm i) throws ApiException {
-		if(isNegative(i.getQuantity()))
-			throw new ApiException("Quantity needs to be a positive value");
+
 		InventoryPojo i2 = convert(i);
+		i2.setId(id);
 		inventoryService.update(i2);
 	}
 	
@@ -70,10 +72,5 @@ public class InventoryFlow {
 		i2.setId(i.getId());
 		return i2;
 	}
-	
-	public static boolean isNegative(int a) {
-		if(a<0)
-			return true;
-		return false;
-	}
+
 }

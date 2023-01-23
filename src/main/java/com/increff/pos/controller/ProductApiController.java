@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.increff.pos.dto.ProductFlow;
+import com.increff.pos.dto.ProductDto;
 import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
 import com.increff.pos.service.ApiException;
@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiOperation;
 public class ProductApiController {
 	
 	@Autowired
-	private ProductFlow productFlow;
+	private ProductDto productFlow;
 	
 	
 	@ApiOperation("Adds a Product")

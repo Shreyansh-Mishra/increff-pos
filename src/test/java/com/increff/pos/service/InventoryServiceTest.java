@@ -22,8 +22,10 @@ public class InventoryServiceTest extends AbstractUnitTest{
     public void testAdd() throws ApiException {
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
-        ProductPojo product = createProduct(brand,"testproduct","testbarcode",100);
+        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
         productService.add(product);
+        product.setBrand_category(brandPojo.getId());
         InventoryPojo inventory = createInventory(product, 100);
         inventoryService.add(inventory);
         int id = productService.selectByBrandAndCategory("testbrand", "testcategory").get(0).getId();
@@ -37,7 +39,8 @@ public class InventoryServiceTest extends AbstractUnitTest{
     public void testSelectById() throws ApiException {
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
-        ProductPojo product = createProduct(brand,"testproduct","testbarcode",100);
+        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
         productService.add(product);
         InventoryPojo inventory = createInventory(product, 100);
         inventoryService.add(inventory);
@@ -51,7 +54,8 @@ public class InventoryServiceTest extends AbstractUnitTest{
     public void testUpdate() throws ApiException {
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
-        ProductPojo product = createProduct(brand, "testproduct", "testbarcode", 100);
+        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
         productService.add(product);
         InventoryPojo inventory = createInventory(product, 100);
         inventoryService.add(inventory);

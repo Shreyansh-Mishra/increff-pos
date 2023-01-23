@@ -14,42 +14,33 @@ import com.increff.pos.service.ApiException;
 import com.increff.pos.service.BrandService;
 import com.increff.pos.service.ProductService;
 
+import javax.transaction.Transactional;
+
 @Component
-public class ProductFlow {
+public class ProductDto {
 	@Autowired
 	ProductService productService;
 	
 	@Autowired
 	BrandService brandService;
-	
+
+	@Transactional(rollbackOn = ApiException.class)
 	public void createProduct(ProductForm form) throws ApiException {
-		normalize(form);
-		if(form.getName().isEmpty()||form.getBarcode().isEmpty()) {
-			throw new ApiException("Please fill all the fields!");
-		}
-		if(isNegative(form.getMrp())) {
-			throw new ApiException("Enter a Valid MRP");
-		}
 		ProductPojo p2 = convert(form);
-		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName(),p2.getCategory());
-		if(b!=null) {
-			p2.setBrand_category(b.getId());
-		}
-		else {
-			throw new ApiException("The entered brand and category combination does not exists");
-		}
+		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName().toLowerCase(),p2.getCategory().toLowerCase());
+		p2.setBrand_category(b.getId());
 		productService.add(p2);
 	}
 	
 	public List<ProductData> getAllProducts() throws ApiException {
-		List<ProductPojo> p = productService.selectAll();
-		List<ProductData> p2 = new ArrayList<ProductData>();
-		for(ProductPojo i: p) {
-			ProductData p3 = convert(i);
-			p3 = convert(p3,i);
-			p2.add(p3);
+		List<ProductPojo> products = productService.selectAll();
+		List<ProductData> productList = new ArrayList<ProductData>();
+		for(ProductPojo product: products) {
+			ProductData data = convert(product);
+			data = convert(data,product);
+			productList.add(data);
 		}
-		return p2;
+		return productList;
 	}
 	
 	public ProductData getProductsById(int id) throws ApiException{
@@ -59,39 +50,28 @@ public class ProductFlow {
 	}
 	
 	public List<ProductData> getProductByBrandName(String brandName) throws ApiException{
-		List<ProductPojo> p = productService.selectByBrand(brandName);
-		List<ProductData> p2 = new ArrayList<ProductData>();
-		for(ProductPojo i: p) {
-			p2.add(convert(i));
+		List<ProductPojo> products = productService.selectByBrand(brandName);
+		List<ProductData> productList = new ArrayList<ProductData>();
+		for(ProductPojo product: products) {
+			productList.add(convert(product));
 		}
-		return p2;
+		return productList;
 	}
 	
 	public List<ProductData> getProductsByBrandAndCategory(String brandName, String category) throws ApiException{
-		List<ProductPojo> p = productService.selectByBrandAndCategory(brandName,category);
-		List<ProductData> p2 = new ArrayList<ProductData>();
-		for(ProductPojo i: p) {
-			p2.add(convert(i));
+		List<ProductPojo> products = productService.selectByBrandAndCategory(brandName,category);
+		List<ProductData> productList = new ArrayList<ProductData>();
+		for(ProductPojo product: products) {
+			productList.add(convert(product));
 		}
-		return p2;
+		return productList;
 	}
-	
+
+	@Transactional(rollbackOn = ApiException.class)
 	public void updateProduct(int id, ProductForm form) throws ApiException {
-		if(form.getName().isEmpty()||form.getBarcode().isEmpty()) {
-			throw new ApiException("Please fill all the fields!");
-		}
-		if(isNegative(form.getMrp())) {
-			throw new ApiException("Enter a Valid MRP");
-		}
-		normalize(form);
 		ProductPojo p2 = convert(form);
-		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName(),p2.getCategory());
-		if(b!=null) {
-			p2.setBrand_category(b.getId());
-		}
-		else {
-			throw new ApiException("The entered brand and category combination does not exists");
-		}
+		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName().toLowerCase(),p2.getCategory().toLowerCase());
+		p2.setBrand_category(b.getId());
 		productService.update(p2,id);
 	}
 	
@@ -120,17 +100,6 @@ public class ProductFlow {
 		p.setCategory(b.getCategory());
 		return p;
 	}
-	
-	public static boolean isNegative(double num) {
-		if(num<=0)
-			return true;
-		return false;
-	}
 
-	protected static void normalize(ProductForm p) {
-		p.setName(p.getName().toLowerCase().trim());
-		p.setBarcode(p.getBarcode().toLowerCase().trim());
-		p.setBrandName(p.getBrandName().toLowerCase().trim());
-		p.setCategory(p.getCategory().toLowerCase().trim());
-	}
+
 }

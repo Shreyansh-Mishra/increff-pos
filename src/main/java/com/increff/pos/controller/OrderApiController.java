@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.increff.pos.dto.OrderFlow;
+import com.increff.pos.dto.OrderDto;
 import com.increff.pos.model.OrderData;
 import com.increff.pos.model.OrderForm;
 import com.increff.pos.model.OrderItemData;
@@ -31,31 +31,31 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 @RestController
 public class OrderApiController {
 	@Autowired
-	OrderFlow orderFlow;
+    OrderDto orderDto;
 	
 	@ApiOperation(value = "Create an order")
 	@RequestMapping(path= "/api/order/add-order", method=RequestMethod.POST)
 	public void createOrder(@RequestBody List<OrderForm> o) throws ApiException, Exception {
-		orderFlow.createOrder(o);
+		orderDto.createOrder(o);
 	}
 	
 	@ApiOperation(value = "Get all orders")
 	@RequestMapping(path="/api/order/get-orders", method=RequestMethod.GET)
 	public List<OrderData> getOrders() {
-		return orderFlow.getOrders();
+		return orderDto.getOrders();
 	}
 	
 	@ApiOperation(value = "Get order items")
 	@RequestMapping(path="/api/order/{id}", method=RequestMethod.GET)
 	public List<OrderItemData> getOrderItems(@PathVariable int id) throws ApiException{
-		return orderFlow.getOrderItems(id);
+		return orderDto.getOrderItems(id);
 	}
 
 	@ApiOperation(value = "Get Invoice")
 	@RequestMapping(path="/api/order/invoice/{id}", method=RequestMethod.GET, produces = "application/pdf")
 	public StreamingResponseBody getInvoice(@PathVariable int id, HttpServletResponse response) throws Exception{
 		//get file with the name as id
-		InvoicePojo invoice = orderFlow.getInvoice(id);
+		InvoicePojo invoice = orderDto.getInvoice(id);
 		File file = new File(invoice.getPath());
 
 		response.setContentType("application/pdf");

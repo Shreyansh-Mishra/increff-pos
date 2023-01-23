@@ -13,26 +13,26 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class InventoryFlowTest extends AbstractUnitTest {
+public class InventoryDtoTest extends AbstractUnitTest {
 
     @Autowired
-    BrandFlow brandFlow;
+    BrandDto brandDto;
 
     @Autowired
-    ProductFlow productFlow;
+    ProductDto productFlow;
 
     @Autowired
-    InventoryFlow inventoryFlow;
+    InventoryDto inventoryDto;
 
     @Test
     public void testAddToInventory() throws ApiException {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandFlow.createBrand(brand);
+        brandDto.createBrand(brand);
         ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
         productFlow.createProduct(product);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
-        inventoryFlow.addToInventory(inventoryForm);
-        List<InventoryData> inventoryData = inventoryFlow.getInventory();
+        inventoryDto.addToInventory(inventoryForm);
+        List<InventoryData> inventoryData = inventoryDto.getInventory();
         assertEquals(1,inventoryData.size());
         assertEquals(100,inventoryData.get(0).getQuantity(),0);
     }
@@ -40,28 +40,28 @@ public class InventoryFlowTest extends AbstractUnitTest {
     @Test
     public void testGetById() throws ApiException {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandFlow.createBrand(brand);
+        brandDto.createBrand(brand);
         ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
         productFlow.createProduct(product);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
-        inventoryFlow.addToInventory(inventoryForm);
-        List<InventoryData> inventoryData = inventoryFlow.getInventory();
-        InventoryData inventory = inventoryFlow.getById(inventoryData.get(0).getId());
+        inventoryDto.addToInventory(inventoryForm);
+        List<InventoryData> inventoryData = inventoryDto.getInventory();
+        InventoryData inventory = inventoryDto.getById(inventoryData.get(0).getId());
         assertEquals(100,inventory.getQuantity(),0);
     }
 
     @Test
     public void testEditInventory() throws ApiException{
         BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandFlow.createBrand(brand);
+        brandDto.createBrand(brand);
         ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
         productFlow.createProduct(product);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
-        inventoryFlow.addToInventory(inventoryForm);
-        List<InventoryData> inventoryData = inventoryFlow.getInventory();
+        inventoryDto.addToInventory(inventoryForm);
+        List<InventoryData> inventoryData = inventoryDto.getInventory();
         InventoryForm inventoryForm1 = createInventoryForm(product.getBarcode(), 200);
-        inventoryFlow.editInventory(inventoryData.get(0).getId(), inventoryForm1);
-        InventoryData inventory = inventoryFlow.getById(inventoryData.get(0).getId());
+        inventoryDto.editInventory(inventoryData.get(0).getId(), inventoryForm1);
+        InventoryData inventory = inventoryDto.getById(inventoryData.get(0).getId());
         assertEquals(200,inventory.getQuantity(),0);
     }
 }

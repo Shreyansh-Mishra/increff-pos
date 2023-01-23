@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 
-public class BrandFlowTest extends AbstractUnitTest {
+public class BrandDtoTest extends AbstractUnitTest {
     @Autowired
-    private BrandFlow flow;
+    private BrandDto flow;
 
     @Test
     public void testCreateBrand() throws ApiException {

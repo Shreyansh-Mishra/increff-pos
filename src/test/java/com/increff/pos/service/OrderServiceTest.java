@@ -23,11 +23,12 @@ public class OrderServiceTest extends AbstractUnitTest{
 
     @Test
     public void testAddItems() throws ApiException {
-        BrandPojo brand = createBrand("brand", "category");
+        BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
-        ProductPojo product = createProduct(brand, "name", "barcode", 100);
-        ProductPojo product2 = createProduct(brand, "name2", "barcode2", 200);
+        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
         productService.add(product);
+        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
         productService.add(product2);
         InventoryPojo inventory = createInventory(product, 100);
         InventoryPojo inventory2 = createInventory(product2, 200);
@@ -87,11 +88,13 @@ public class OrderServiceTest extends AbstractUnitTest{
 
     @Test
     public void testSelectItems() throws ApiException {
-        BrandPojo brand = createBrand("brand", "category");
+        BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
-        ProductPojo product = createProduct(brand, "name", "barcode", 100);
-        ProductPojo product2 = createProduct(brand, "name2", "barcode2", 200);
+
+        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
         productService.add(product);
+        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
         productService.add(product2);
         InventoryPojo inventory = createInventory(product, 100);
         InventoryPojo inventory2 = createInventory(product2, 200);
@@ -114,11 +117,13 @@ public class OrderServiceTest extends AbstractUnitTest{
 
     @Test
     public void testSelectOrders () throws ApiException {
-        BrandPojo brand = createBrand("brand", "category");
+        BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
-        ProductPojo product = createProduct(brand, "name", "barcode", 100);
-        ProductPojo product2 = createProduct(brand, "name2", "barcode2", 200);
+
+        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
         productService.add(product);
+        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
         productService.add(product2);
         InventoryPojo inventory = createInventory(product, 100);
         InventoryPojo inventory2 = createInventory(product2, 200);
@@ -148,11 +153,12 @@ public class OrderServiceTest extends AbstractUnitTest{
 
     @Test
     public void testSelectOrderById() throws ApiException {
-        BrandPojo brand = createBrand("brand", "category");
+        BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
-        ProductPojo product = createProduct(brand, "name", "barcode", 100);
-        ProductPojo product2 = createProduct(brand, "name2", "barcode2", 200);
+        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
         productService.add(product);
+        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
         productService.add(product2);
         InventoryPojo inventory = createInventory(product, 100);
         InventoryPojo inventory2 = createInventory(product2, 200);

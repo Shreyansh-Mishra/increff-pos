@@ -38,6 +38,7 @@ public abstract class AbstractUnitTest {
         p.setMrp(mrp);
         p.setName(name);
         p.setBarcode(barcode);
+        p.setBrand_category(brand.getId());
         return p;
     }
 
@@ -62,6 +63,7 @@ public abstract class AbstractUnitTest {
         InventoryPojo i = new InventoryPojo();
         i.setBarcode(product.getBarcode());
         i.setQuantity(quantity);
+        i.setId(product.getId());
         return i;
     }
 

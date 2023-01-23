@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.increff.pos.dto.InventoryFlow;
+import com.increff.pos.dto.InventoryDto;
 import com.increff.pos.model.InventoryData;
 import com.increff.pos.model.InventoryForm;
 import com.increff.pos.service.ApiException;
@@ -22,30 +22,30 @@ import io.swagger.annotations.ApiOperation;
 public class InventoryApiController {
 	
 	@Autowired
-	private InventoryFlow inventoryFlow;
+	private InventoryDto inventoryDto;
 	
 	@ApiOperation(value="adds product to inventory")
 	@RequestMapping(path="/api/inventory/add-product",method=RequestMethod.POST)
 	public void addProductToInventory(@RequestBody InventoryForm i) throws ApiException {
-		inventoryFlow.addToInventory(i);
+		inventoryDto.addToInventory(i);
 	}
 	
 	@ApiOperation(value="view inventory")
 	@RequestMapping(path="/api/inventory/get-inventory",method=RequestMethod.GET)
 	public List<InventoryData> getWholeInventory() throws ApiException {
-		return inventoryFlow.getInventory();
+		return inventoryDto.getInventory();
 	}
 	
 	@ApiOperation(value="Get by id")
 	@RequestMapping(path="/api/inventory/{id}", method=RequestMethod.GET)
-	public InventoryData getItemById(@PathVariable int id) {
-		return inventoryFlow.getById(id);
+	public InventoryData getItemById(@PathVariable int id) throws ApiException {
+		return inventoryDto.getById(id);
 	}
 	
 	@ApiOperation(value="edit Inventory")
 	@RequestMapping(path="/api/inventory/{id}", method=RequestMethod.PUT)
 	public void updateInventory(@PathVariable int id,@RequestBody InventoryForm i) throws ApiException {
-		inventoryFlow.editInventory(id,i);
+		inventoryDto.editInventory(id,i);
 	}
 	
 }

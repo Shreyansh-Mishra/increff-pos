@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.increff.pos.dto.BrandFlow;
+import com.increff.pos.dto.BrandDto;
 import com.increff.pos.model.BrandData;
 import com.increff.pos.model.BrandForm;
 import com.increff.pos.service.ApiException;
@@ -21,42 +21,42 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 public class BrandApiController {
 	@Autowired
-	private BrandFlow brandFlow;
+	private BrandDto brandDto;
 	
 	
 	@ApiOperation(value = "Adds a brand")
 	@RequestMapping(path = "/api/brand", method = RequestMethod.POST)
 	public void createBrand(@RequestBody BrandForm form) throws ApiException {
-		brandFlow.createBrand(form);
+		brandDto.createBrand(form);
 	}
 	
 	@ApiOperation(value= "Get all brands")
 	@RequestMapping(path= "/api/brands", method = RequestMethod.GET)
 	public List<BrandData> getBrands(){
-		return brandFlow.getAllBrands();
+		return brandDto.getAllBrands();
 	}
 	
 	@ApiOperation(value= "Get brand by name and category")
 	@RequestMapping(path= "/api/brand/{name}/{category}", method = RequestMethod.GET)
 	public BrandData getBrand(@PathVariable String name,@PathVariable String category) throws ApiException{
-		return brandFlow.getBrandByNameAndCategory(name, category);
+		return brandDto.getBrandByNameAndCategory(name, category);
 	}
 	
 	@ApiOperation(value= "Get brand by id")
 	@RequestMapping(path= "/api/brand/{id}", method = RequestMethod.GET)
 	public BrandData getBrand(@PathVariable int id) throws ApiException{
-		return brandFlow.getBrandById(id);
+		return brandDto.getBrandById(id);
 	}
 
 	@ApiOperation(value= "Get categories from brand")
 	@RequestMapping(path= "/api/brand/get-categories/{brandName}", method = RequestMethod.GET)
 	public List<String> getCategoriesFromBrand(@PathVariable String brandName) throws ApiException{
-		return brandFlow.getCategoriesByBrand(brandName);
+		return brandDto.getCategoriesByBrand(brandName);
 	}
 
 	@ApiOperation(value= "Update brand")
 	@RequestMapping(path= "/api/brand/{id}", method = RequestMethod.PUT)
 	public void updateBrand(@PathVariable int id, @RequestBody BrandForm b) throws ApiException{
-		brandFlow.updateBrand(id, b);
+		brandDto.updateBrand(id, b);
 	}
 }

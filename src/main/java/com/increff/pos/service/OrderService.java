@@ -14,53 +14,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderService {
 	@Autowired
-	OrderDao orderDao;
+	private OrderDao orderDao;
 	@Autowired
-	InventoryDao inventoryDao;
+	private OrderItemDao orderItemDao;
 	@Autowired
-	ProductDao productDao;
-	@Autowired
-	OrderItemDao orderItemDao;
-	@Autowired
-	SchedulerDao schedulerDao;
+	private SchedulerDao schedulerDao;
 
 	@Autowired
-	InvoiceDao invoiceDao;
-	
-	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
-	
+	private InvoiceDao invoiceDao;
+
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void addItems(List<OrderItemPojo> orderItems,OrderPojo orderPojo) throws ApiException {
-//		orderPojo.setTime(getTimestamp());
 		orderDao.insert(orderPojo);
+		if(orderItems.size()==0)
+			throw new ApiException("Please add atleast 1 item to place your order!");
 		for(OrderItemPojo o: orderItems) {
 			if(o.getBarcode().isEmpty()||o.getQuantity()==0||o.getSellingPrice()==0) {
 				throw new ApiException("All fields are mandatory, please check again!");
 			}
-			ProductPojo p = productDao.selectBarcode(o.getBarcode());
 			if(o.getQuantity()<0) {
 				throw new ApiException("Quantity should be a positive value");
 			}
 			if(o.getSellingPrice()<0) {
 				throw new ApiException("Selling Price needs to be positive");
 			}
-			if(p==null) {
-				throw new ApiException("Product with barcode "+o.getBarcode()+" is not present!");
-			}
-			o.setProductId(p.getId());
-			InventoryPojo i = inventoryDao.selectId(p.getId());
-			if(i==null) {
-				throw new ApiException("The Product "+p.getName() +" isn't present in the Inventory");
-			}
-			int newQuantity = i.getQuantity()-o.getQuantity();
-			if(newQuantity<0) {
-				throw new ApiException("Not Enough quantity of "+p.getName()+" present in the Inventory");
-			}
-			
-			i.setQuantity(newQuantity);
 			o.setOrderId(orderPojo.getId());
-			inventoryDao.update(i);
 			orderItemDao.insert(o);
 		}
 	}

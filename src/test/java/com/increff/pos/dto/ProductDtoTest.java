@@ -11,18 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 
-public class ProductFlowTest extends AbstractUnitTest {
+public class ProductDtoTest extends AbstractUnitTest {
 
     @Autowired
-    BrandFlow brandFlow;
+    BrandDto brandDto;
 
     @Autowired
-    ProductFlow productFlow;
+    ProductDto productFlow;
 
     @Test
     public void testCreateProduct() throws ApiException {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandFlow.createBrand(brand);
+        brandDto.createBrand(brand);
         ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100);
         productFlow.createProduct(form);
         List<ProductData> products = productFlow.getAllProducts();
@@ -35,7 +35,7 @@ public class ProductFlowTest extends AbstractUnitTest {
     @Test
     public void testProductsById() throws ApiException {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandFlow.createBrand(brand);
+        brandDto.createBrand(brand);
         ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100);
         productFlow.createProduct(form);
         List<ProductData> products = productFlow.getAllProducts();
@@ -48,7 +48,7 @@ public class ProductFlowTest extends AbstractUnitTest {
     @Test
     public void testGetProductByBrandName() throws ApiException {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandFlow.createBrand(brand);
+        brandDto.createBrand(brand);
         ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100);
         productFlow.createProduct(form);
         List<ProductData> products = productFlow.getProductByBrandName("testBrand");
@@ -61,7 +61,7 @@ public class ProductFlowTest extends AbstractUnitTest {
     @Test
     public void testGetProductsByBrandAndCategory() throws ApiException {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandFlow.createBrand(brand);
+        brandDto.createBrand(brand);
         ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100);
         productFlow.createProduct(form);
         List<ProductData> products = productFlow.getProductsByBrandAndCategory("testBrand","testCategory");
@@ -74,7 +74,7 @@ public class ProductFlowTest extends AbstractUnitTest {
     @Test
     public void testUpdateProduct() throws ApiException {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandFlow.createBrand(brand);
+        brandDto.createBrand(brand);
         ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100);
         productFlow.createProduct(form);
         List<ProductData> products = productFlow.getAllProducts();

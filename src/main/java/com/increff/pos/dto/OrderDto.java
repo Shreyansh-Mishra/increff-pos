@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.increff.pos.pojo.*;
+import com.increff.pos.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,26 +16,42 @@ import com.increff.pos.service.OrderService;
 import com.increff.pos.service.ProductService;
 import com.increff.pos.util.InvoiceFOP;
 
+import javax.transaction.Transactional;
+
 @Component
-public class OrderFlow {
+public class OrderDto {
+
+	@Autowired
+	private InventoryService inventoryService;
+	@Autowired
+	private ProductService productService;
 	
 	@Autowired
-	ProductService productService;
+	private OrderService orderService;
 	
 	@Autowired
-	OrderService orderService;
-	
-	@Autowired
-	InvoiceFOP invoiceFop;
-	
+	private InvoiceFOP invoiceFop;
+
+	@Transactional(rollbackOn = ApiException.class)
 	public void createOrder(List<OrderForm> o) throws ApiException, Exception {
-		if(o.size()==0) {
-			throw new ApiException("Please add atleast 1 item to place your order!");
-		}
 		List<OrderItemPojo> o2 = convert(o);
+		for(OrderItemPojo item: o2){
+			ProductPojo p = productService.selectByBarcode(item.getBarcode());
+			InventoryPojo i = new InventoryPojo();
+			InventoryPojo i2 = inventoryService.selectById(p.getId());
+			i.setBarcode(p.getBarcode());
+			int newQuantity = i2.getQuantity()-item.getQuantity();
+			i.setQuantity(newQuantity);
+			i.setId(p.getId());
+			i.setBarcode(p.getBarcode());
+			inventoryService.update(i);
+			item.setProductId(p.getId());
+		}
+
 		OrderPojo order = new OrderPojo();
 		SchedulerPojo scheduler = new SchedulerPojo();
 		orderService.addItems(o2,order);
+
 		orderService.insertScheduler(scheduler, order.getId());
 		String path = invoiceFop.generatePdf(order.getId());
 		InvoicePojo invoice = convert(order.getId(), path);
@@ -67,7 +84,6 @@ public class OrderFlow {
 	
 	public static OrderData convert(OrderPojo order) {
 		OrderData data = new OrderData();
-		
 		String time = order.getTime().toString();
 		data.setId(order.getId());
 		data.setTime(time);

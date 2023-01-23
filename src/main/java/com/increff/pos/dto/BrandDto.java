@@ -13,15 +13,11 @@ import com.increff.pos.service.ApiException;
 import com.increff.pos.service.BrandService;
 
 @Component
-public class BrandFlow {
+public class BrandDto {
 	@Autowired
 	BrandService brandService;
 	
 	public void createBrand(BrandForm form) throws ApiException {
-		if(isEmpty(form.getBrand(),form.getCategory())) {
-			throw new ApiException("Brand or Category cannot be empty");
-		}
-		normalize(form);
 		BrandPojo b = convert(form);
 		brandService.add(b);
 	}
@@ -48,10 +44,6 @@ public class BrandFlow {
 	}
 	
 	public void updateBrand(int id, BrandForm b) throws ApiException {
-		if(b.getBrand().isEmpty()||b.getCategory().isEmpty()) {
-			throw new ApiException("Brand or Category cannot be empty!");
-		}
-		normalize(b);
 		BrandPojo b2 = convert(b);
 		brandService.updateBrand(id,b2);
 	}
@@ -59,7 +51,6 @@ public class BrandFlow {
 	public List<String> getCategoriesByBrand(String brandName) {
 		return brandService.getCategories(brandName);
 	}
-	
 	
 	private static BrandPojo convert(BrandForm f) {
 		BrandPojo b = new BrandPojo();
@@ -74,17 +65,5 @@ public class BrandFlow {
 		b2.setCategory(b.getCategory());
 		b2.setId(b.getId());
 		return b2;
-	}
-	
-	public static boolean isEmpty(String a, String b) {
-		if(a.isEmpty()||b.isEmpty()) {
-			return true;
-		}
-		return false;
-	}
-
-	public static void normalize(BrandForm b) {
-		b.setBrand(b.getBrand().toLowerCase().trim());
-		b.setCategory(b.getCategory().toLowerCase().trim());
 	}
 }
