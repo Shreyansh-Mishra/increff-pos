@@ -4,17 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.increff.pos.pojo.*;
-import com.increff.pos.service.InventoryService;
+import com.increff.pos.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.increff.pos.model.OrderData;
 import com.increff.pos.model.OrderForm;
 import com.increff.pos.model.OrderItemData;
-import com.increff.pos.service.ApiException;
-import com.increff.pos.service.OrderService;
-import com.increff.pos.service.ProductService;
 import com.increff.pos.util.InvoiceFOP;
 
 import javax.transaction.Transactional;
@@ -33,6 +29,9 @@ public class OrderDto {
 	@Autowired
 	private InvoiceFOP invoiceFop;
 
+	@Autowired
+	private OrderItemsService orderItemsService;
+
 	@Transactional(rollbackOn = ApiException.class)
 	public void createOrder(List<OrderForm> o) throws ApiException, Exception {
 		List<OrderItemPojo> o2 = convert(o);
@@ -49,7 +48,8 @@ public class OrderDto {
 			item.setProductId(p.getId());
 		}
 		OrderPojo order = new OrderPojo();
-		orderService.addItems(o2,order);
+		orderService.addOrder(order);
+		orderItemsService.addItems(o2,order.getId());
 		String path = invoiceFop.generatePdf(order.getId());
 		InvoicePojo invoice = convert(order.getId(), path);
 		orderService.insertInvoice(invoice);
@@ -66,7 +66,7 @@ public class OrderDto {
 	}
 	
 	public List<OrderItemData> getOrderItems(int id) throws ApiException{
-		List<OrderItemPojo> items = orderService.selectItems(id);
+		List<OrderItemPojo> items = orderItemsService.selectItems(id);
 		List<OrderItemData> orderItems = new ArrayList<OrderItemData>();
 		for(OrderItemPojo i: items) {
 			OrderItemData o = convert(i);

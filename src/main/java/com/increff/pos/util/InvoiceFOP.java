@@ -18,6 +18,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
+import com.increff.pos.service.OrderItemsService;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -41,10 +42,13 @@ public class InvoiceFOP {
 	
 	@Autowired
 	ProductService productService;
+
+	@Autowired
+	OrderItemsService orderItemsService;
 	
 	public String generatePdf(int id) throws Exception {
 		OrderPojo order = orderService.selectOrderById(id);
-		List<OrderItemPojo> items = orderService.selectItems(id);
+		List<OrderItemPojo> items = orderItemsService.selectItems(id);
 		OrderFOPObject orderFop = new OrderFOPObject();
 		orderFop.setOrderId(order.getId());
 		orderFop.setDate(order.getTime().toString().split("T")[0]);

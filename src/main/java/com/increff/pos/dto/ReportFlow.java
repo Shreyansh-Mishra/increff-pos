@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
+import com.increff.pos.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -23,11 +24,6 @@ import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.pojo.SchedulerPojo;
-import com.increff.pos.service.ApiException;
-import com.increff.pos.service.BrandService;
-import com.increff.pos.service.InventoryService;
-import com.increff.pos.service.OrderService;
-import com.increff.pos.service.ProductService;
 
 @Component
 public class ReportFlow {
@@ -43,10 +39,16 @@ public class ReportFlow {
 	@Autowired
 	ProductService productService;
 
+	@Autowired
+	OrderItemsService orderItemsService;
+
+	@Autowired
+	private SchedulerService schedulerService;
+
 	//schedule at 12:05 am everyday
 
 	public List<DayWiseReportData> getDayWiseReport() {
-		return convert(orderService.selectSchedulerData());
+		return convert(schedulerService.selectSchedulerData());
 	}
 	
 	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(String startDate, String endDate) throws ParseException, ApiException{
@@ -79,7 +81,7 @@ public class ReportFlow {
 		
 		List<OrderPojo> orders = orderService.selectOrdersBetweenDates(from, to);
 		for(OrderPojo order: orders) {
-			List<OrderItemPojo> orderItems = orderService.selectItems(order.getId());
+			List<OrderItemPojo> orderItems = orderItemsService.selectItems(order.getId());
 			double revenue = 0;
 			for(OrderItemPojo orderItem: orderItems) {
 				revenue=(orderItem.getSellingPrice()*orderItem.getQuantity());
