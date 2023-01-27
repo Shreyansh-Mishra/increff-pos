@@ -12,7 +12,6 @@ import java.util.TimeZone;
 
 import com.increff.pos.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.increff.pos.model.DayWiseReportData;
@@ -26,7 +25,7 @@ import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.pojo.SchedulerPojo;
 
 @Component
-public class ReportFlow {
+public class ReportDto {
 	@Autowired
 	OrderService orderService;
 	

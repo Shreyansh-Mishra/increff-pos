@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.increff.pos.dto.ReportFlow;
+import com.increff.pos.dto.ReportDto;
 import com.increff.pos.model.DayWiseReportData;
 import com.increff.pos.model.InventoryReportData;
 import com.increff.pos.model.SalesByBrandAndCategoryData;
@@ -22,24 +22,24 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 public class SalesReportController {
 	@Autowired
-    ReportFlow salesReportFlow;
+    ReportDto salesReportDto;
 	
 	
 	@ApiOperation(value="Scheduler")
 	@RequestMapping(path="/api/report/get-sales-report", method=RequestMethod.GET)
 	public List<DayWiseReportData> getDayByDayReport() throws ParseException{
-		return salesReportFlow.getDayWiseReport();
+		return salesReportDto.getDayWiseReport();
 	}
 	
 	@ApiOperation(value="Get Sales Report")
 	@RequestMapping(path="/api/report/get-sales-report/{startDate}/{endDate}",method=RequestMethod.GET)
 	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, ApiException{
-		return salesReportFlow.getSalesByBrandAndCategory(startDate, endDate);
+		return salesReportDto.getSalesByBrandAndCategory(startDate, endDate);
 	}
 	
 	@ApiOperation(value="Get Inventory Report")
 	@RequestMapping(path="/api/report/get-inventory-report",method=RequestMethod.GET)
 	public List<InventoryReportData> getInventoryReport() throws ApiException {
-		return salesReportFlow.getInventoryReport();
+		return salesReportDto.getInventoryReport();
 	}
 }
