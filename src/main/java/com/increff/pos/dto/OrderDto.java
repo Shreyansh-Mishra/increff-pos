@@ -6,6 +6,7 @@ import java.util.List;
 import com.increff.pos.pojo.*;
 import com.increff.pos.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.increff.pos.model.OrderData;
@@ -47,16 +48,13 @@ public class OrderDto {
 			inventoryService.update(i);
 			item.setProductId(p.getId());
 		}
-
 		OrderPojo order = new OrderPojo();
-		SchedulerPojo scheduler = new SchedulerPojo();
 		orderService.addItems(o2,order);
-
-		orderService.insertScheduler(scheduler, order.getId());
 		String path = invoiceFop.generatePdf(order.getId());
 		InvoicePojo invoice = convert(order.getId(), path);
 		orderService.insertInvoice(invoice);
 	}
+
 	
 	public List<OrderData> getOrders(){
 		List<OrderPojo> orders = orderService.selectOrders();

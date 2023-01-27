@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.increff.pos.model.DayWiseReportData;
@@ -41,7 +42,9 @@ public class ReportFlow {
 	
 	@Autowired
 	ProductService productService;
-	
+
+	//schedule at 12:05 am everyday
+
 	public List<DayWiseReportData> getDayWiseReport() {
 		return convert(orderService.selectSchedulerData());
 	}

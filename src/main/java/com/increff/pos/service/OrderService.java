@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import com.increff.pos.dao.*;
 import com.increff.pos.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -48,32 +49,28 @@ public class OrderService {
 	public List<OrderPojo> selectOrders(){
 		return orderDao.selectAll();
 	}
-	
+
+	//trigger automatically at 00:05 AM everyday
+	@Scheduled(cron = "0 5 0 * * *")
 	@Transactional
-	public void insertScheduler(SchedulerPojo scheduler, int orderId) {
-		OrderPojo o = orderDao.selectId(orderId);
-		SchedulerPojo s = schedulerDao.checkExisting(o.getTime());
-		List<OrderItemPojo> items = orderItemDao.selectItems(orderId);
+	public void insertScheduler() {
+		SchedulerPojo scheduler = new SchedulerPojo();
+		Instant instant = Instant.now();
+		List<OrderPojo> o = orderDao.selectByDate(instant);
 		double revenue = 0;
 		int itemcount = 0;
-		for(OrderItemPojo item: items) {
-			revenue+=(item.getSellingPrice()*item.getQuantity());
-			itemcount += item.getQuantity();
+		for(OrderPojo order: o){
+			List<OrderItemPojo> items = orderItemDao.selectItems(order.getId());
+			for(OrderItemPojo item: items){
+				revenue += item.getSellingPrice()*item.getQuantity();
+				itemcount++;
+			}
 		}
-		if(s==null) {
-			SchedulerPojo s2 = new SchedulerPojo();
-			s2.setDate(o.getTime());
-			s2.setInvoiced_items_count(items.size());
-			s2.setInvoiced_orders_count(1);
-			s2.setRevenue(revenue);
-			schedulerDao.insert(s2);
-		}
-		else {
-			s.setInvoiced_items_count(s.getInvoiced_items_count()+itemcount);
-			s.setInvoiced_orders_count(s.getInvoiced_orders_count()+1);
-			s.setRevenue(s.getRevenue()+revenue);
-			schedulerDao.update(s);
-		}
+		scheduler.setRevenue(revenue);
+		scheduler.setInvoiced_items_count(itemcount);
+		scheduler.setInvoiced_orders_count(o.size());
+		scheduler.setDate(instant);
+		schedulerDao.insert(scheduler);
 	}
 	
 	@Transactional

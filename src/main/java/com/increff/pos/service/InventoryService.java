@@ -49,7 +49,7 @@ public class InventoryService {
 	@Transactional(rollbackOn = ApiException.class)
 	public void update(InventoryPojo inventoryItem) throws ApiException {
 		if(isNegative(inventoryItem.getQuantity()))
-			throw new ApiException("Not enough quantity of product "+inventoryItem.getBarcode()+" in the inventory");
+			throw new ApiException("Enter a valid quantity for product with barcode "+inventoryItem.getBarcode());
 		InventoryPojo i2 = inventoryDao.selectId(inventoryItem.getId());
 		if(i2==null) {
 			throw new ApiException("The Product isn't present in the Inventory");
