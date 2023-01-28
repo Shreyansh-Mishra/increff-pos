@@ -146,7 +146,17 @@ function displayBrandList(data){
 	let j=1;
 	for(var i in data){
 		var e = data[i];
-
+		//get role from div with class get-role which contains a span inside it with role
+		var role = $('.get-role').find('span').text();
+		console.log(role);
+		if(role=='operator'){
+			var row = '<tr>'
+			+ '<td>' + j + '</td>'
+			+ '<td>' + e.brand + '</td>'
+			+ '<td>'  + e.category + '</td>'
+			+ '</tr>';	
+		}
+		else{
 		var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayEditBrand(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 		+ '<td>' + j + '</td>'
@@ -154,6 +164,7 @@ function displayBrandList(data){
 		+ '<td>'  + e.category + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
+		}
         $tbody.append(row);
 		j++;	
 	}

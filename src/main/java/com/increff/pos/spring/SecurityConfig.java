@@ -2,6 +2,7 @@ package com.increff.pos.spring;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,10 +27,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/**")//
 				.antMatchers("/ui/**")//
 				.and().authorizeRequests()//
-				.antMatchers("/api/brand/**").permitAll()//
-				.antMatchers("/api/product/**").permitAll()//
-				.antMatchers("/api/inventory/**").permitAll()//
-				.antMatchers("/api/order/**").permitAll()//
+				.antMatchers(HttpMethod.GET,"/api/brand/**").hasAnyAuthority("supervisor", "operator")//
+				.antMatchers(HttpMethod.POST, "/api/brand/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.PUT, "/api/brand/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.DELETE, "/api/brand/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.GET,"/api/product/**").hasAnyAuthority("supervisor","operator")//
+				.antMatchers(HttpMethod.POST, "/api/product/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.PUT, "/api/product/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.DELETE, "/api/product/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.GET, "/api/inventory/**").permitAll()//
+				.antMatchers(HttpMethod.POST, "/api/inventory/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.PUT, "/api/inventory/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.DELETE, "/api/inventory/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.GET, "/api/order/**").hasAnyAuthority("supervisor","operator")//
+				.antMatchers(HttpMethod.POST, "/api/order/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.PUT, "/api/order/**").hasAnyAuthority("supervisor")//
+				.antMatchers(HttpMethod.DELETE, "/api/order/**").hasAnyAuthority("supervisor")//
 				.antMatchers("/api/report/**").permitAll()//
 				.antMatchers("/api/admin/**").permitAll()//
 				.antMatchers("/api/**").hasAnyAuthority("supervisor", "operator")//

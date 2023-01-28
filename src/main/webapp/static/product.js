@@ -144,17 +144,32 @@ function displayProductList(data){
 	let j=1;
 	for(var i in data){
 		var e = data[i];
+		var role = $('.get-role').find('span').text();
+
 		var buttonHtml = ` <button class="btn btn-link btn-sm btn-rounded" onclick="displayEditProduct(${e.id},'${e.brandName}','${e.category}')">edit</button>`
-		var row = '<tr>'
-		+ '<td>' + j + '</td>'
-		+ '<td>' + e.name + '</td>'
-		+ '<td align="right">'  + Math.round((e.mrp + Number.EPSILON) * 100) / 100 + '</td>'
-        + '<td>'  + e.barcode + '</td>'
-        + '<td>'  + e.brandName + '</td>'
-		+ '<td>'  + e.category + '</td>'
-		+ '<td>' + buttonHtml + '</td>'
-		+ '</tr>';
-        $tbody.append(row);
+		var row;
+		if(role=='supervisor'){
+			row = '<tr>'
+			+ '<td>' + j + '</td>'
+			+ '<td>' + e.name + '</td>'
+			+ '<td align="right">'  + Math.round((e.mrp + Number.EPSILON) * 100) / 100 + '</td>'
+			+ '<td>'  + e.barcode + '</td>'
+			+ '<td>'  + e.brandName + '</td>'
+			+ '<td>'  + e.category + '</td>'
+			+ '<td>' + buttonHtml + '</td>'
+			+ '</tr>';
+		}
+		else{
+			row = '<tr>'
+			+ '<td>' + j + '</td>'
+			+ '<td>' + e.name + '</td>'
+			+ '<td align="right">'  + Math.round((e.mrp + Number.EPSILON) * 100) / 100 + '</td>'
+			+ '<td>'  + e.barcode + '</td>'
+			+ '<td>'  + e.brandName + '</td>'
+			+ '<td>'  + e.category + '</td>'
+			+ '</tr>';
+		}
+		$tbody.append(row);
 		j++;
 	}
 	paginate();

@@ -14,8 +14,8 @@
 <div class="container">
  
  <!-- Top row with form-->
- <div class="row">
-	 <div class="col-7 overflow-hidden" >
+ <div th:switch="${info.getRole()}" class="row">
+	 <div th:case="'supervisor'" class="col-7 overflow-hidden" >
 			<form class="bg-white rounded p-3" id="brand-form">
 				<div class="row" >
 				<div class="col form-outline mb-4 mr-2">
@@ -31,38 +31,28 @@
 			  <button type="button" class="btn btn-primary btn-sm col form-outline mb-4 ml-1" style="width:10%;" id="upload-data" >Upload</button>
 			</div>
 			</form>
+	 </div>
+	 <div th:case="'operator'">
+
 	 </div>	
 </div>
  <!-- Table -->
  <div class="col-12">
 	<table class="table table-hover shadow-4-strong rounded-5 mb-2" id="dtBasicExample">
-	  <thead>
-	    <tr>
+	  <thead th:switch="${info.getRole()}">
+	    <tr th:case="'supervisor'">
 	      <th scope="col">S.No.</th>
 	      <th scope="col">Brand Name</th>
 	      <th scope="col">Category</th>
 	      <th scope="col">Actions</th>
 	    </tr>
+		<tr th:case="'operator'">
+	      <th scope="col">S.No.</th>
+	      <th scope="col">Brand Name</th>
+	      <th scope="col">Category</th>
+	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <td>1</td>
-	      <td>Romil Jain</td>
-	      <td>30</td>
-	      <td>Edit | Delete</td>
-	    </tr>
-	    <tr>
-	      <td>2</td>
-	      <td>Rajul Jain</td>
-	      <td>31</td>
-	      <td>Edit | Delete</td>
-	    </tr>
-	    <tr>
-	      <td>3</td>
-	      <td>Anaisha Jain</td>
-	      <td>7</td>
-	      <td>Edit | Delete</td>
-	    </tr>
 	  </tbody>
 	</table>
 
@@ -145,7 +135,9 @@
 
 <footer th:replace="snippets.html :: name_footer"></footer>
 
-<script th:src="@{/static/brand.js}"/></script>
+<script th:inline="javascript" th:src="@{/static/brand.js}"/></script>
+
+<div hidden class="get-role"><span th:text="${info.getRole()}"></span></div>
 
 </body>	
 

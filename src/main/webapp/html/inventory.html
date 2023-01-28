@@ -10,14 +10,16 @@
 <br>
 <div class="container">
  <!-- Top row with form-->
- <div class="row">
-	 <div class="col-12">
+ <div th:switch="${info.getRole()}" class="row">
+	 <div th:case="'supervisor'" class="col-12">
 			<form class="form-inline" id="inventory-form">
 			  <button type="button" class="btn btn-primary" id="upload-data">Upload Inventory Details</button>
 			</form>
 	 </div>	
-</div> 
+</div>
+<div th:switch="'operator'">
 
+</div> 
 <br>
 
 <div class="row">
@@ -25,37 +27,22 @@
  <!-- Table -->
  <div class="col-12">
 	<table class="table table-hover shadow-4-strong rounded-5 mb-2" id="dtBasicExample">
-	  <thead>
-	    <tr>
+	  <thead th:switch="${info.getRole()}">
+	    <tr th:case="'supervisor'">
 	      <th scope="col">S.No.</th>
 		  <th scope="col">Product Name</th>
 	      <th scope="col">Barcode</th>
 	      <th scope="col">Quantity</th>
 	      <th scope="col">Actions</th>
 	    </tr>
+		<tr th:case="'operator'">
+			<th scope="col">S.No.</th>
+			<th scope="col">Product Name</th>
+			<th scope="col">Barcode</th>
+			<th scope="col">Quantity</th>
+		  </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <td>1</td>
-	      <td>Romil Jain</td>
-	      <td>30</td>
-		  <td>30</td>
-	      <td>Edit | Delete</td>
-	    </tr>
-	    <tr>
-	      <td>2</td>
-	      <td>Rajul Jain</td>
-	      <td>31</td>
-		  <td>30</td>
-	      <td>Edit | Delete</td>
-	    </tr>
-	    <tr>
-	      <td>3</td>
-	      <td>Anaisha Jain</td>
-	      <td>7</td>
-		  <td>30</td>
-	      <td>Edit | Delete</td>
-	    </tr>
 	  </tbody>
 	</table>
 
@@ -129,6 +116,7 @@
 </div> <!-- Container end-->
 
 <footer th:replace="snippets.html :: name_footer"></footer>
+<div hidden class="get-role"><span th:text="${info.getRole()}"></span></div>
 
 <script th:src="@{/static/inventory.js}"/></script>
 

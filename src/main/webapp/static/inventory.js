@@ -162,14 +162,26 @@ function displayInventoryList(data){
 	for(var i in data){
 		var e = data[i];
 		console.log(e);
+		var role = $('.get-role').find('span').text();
 		var buttonHtml = ` <button class="btn btn-link btn-sm btn-rounded" onclick="displayEditInventory(${e.id},'${e.barcode}')">edit</button>`
-		var row = '<tr>'
+		var row;
+		if(role == "supervisor"){
+			row = '<tr>'
 		+ '<td>' + j + '</td>'
 		+ '<td>' + e.name + '</td>'
 		+ '<td>' + e.barcode + '</td>'
 		+ '<td>'  + e.quantity + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
+		}
+		else{
+			row = '<tr>'
+		+ '<td>' + j + '</td>'
+		+ '<td>' + e.name + '</td>'
+		+ '<td>' + e.barcode + '</td>'
+		+ '<td>'  + e.quantity + '</td>'
+		+ '</tr>';
+		}
         $tbody.append(row);
 		j++;	
 	}
