@@ -14,7 +14,7 @@ function addProduct(event){
 	//Set the values to update
 	var $form = $("#product-form");
 	var json = toJson($form);
-	var url = getProductUrl()+"/add-product";
+	var url = getProductUrl();
 
 	$.ajax({
 	   url: url,
@@ -59,7 +59,7 @@ function updateProduct(id,brand,category,name,mrp,barcode){
 
 
 function getProductList(){
-	var url = getProductUrl()+"/get-products";
+	var url = getProductUrl()+"s";
 	$.ajax({
 	   url: url,
 	   type: 'GET',
@@ -72,19 +72,6 @@ function getProductList(){
 	});
 }
 
-function deleteProduct(id){
-	var url = getProductUrl() + "/delete-product/" + id;
-	$.ajax({
-	   url: url,
-	   type: 'DELETE',
-	   success: function(data) {
-	   		getProductList();  
-	   },
-	   error: (response)=>{
-		handleError(response);
-	   }
-	});
-}
 
 // FILE UPLOAD METHODS
 var fileData = [];
@@ -123,7 +110,7 @@ function uploadRows(){
 	processCount++;
 	
 	var json = JSON.stringify(row);
-	var url = getProductUrl()+"/add-product";
+	var url = getProductUrl();
 	//Make ajax call
 	$.ajax({
 	   url: url,
@@ -305,7 +292,7 @@ function populateCategoryDropdown(){
 }
 
 function populateBrandDropDown(){
-    var url = getBrandUrl()+"/get-brands";
+    var url = getBrandUrl()+"s";
     $.ajax({
         url: url,
         type: 'GET',
