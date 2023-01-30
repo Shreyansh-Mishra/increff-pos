@@ -54,5 +54,10 @@ public class OrderService {
 		}
 		return invoice;
 	}
+
+	@Transactional(rollbackOn = ApiException.class)
+	public List<OrderPojo> selectByDate(Instant instant){
+		return orderDao.selectByDate(instant);
+	}
 	
 }

@@ -12,6 +12,7 @@ import java.util.TimeZone;
 
 import com.increff.pos.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.increff.pos.model.DayWiseReportData;
@@ -23,6 +24,8 @@ import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.OrderPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.pojo.SchedulerPojo;
+
+import javax.transaction.Transactional;
 
 @Component
 public class ReportDto {
@@ -45,6 +48,29 @@ public class ReportDto {
 	private SchedulerService schedulerService;
 
 	//schedule at 12:05 am everyday
+
+	//set cron timezone to utc
+	@Scheduled(cron = "0 1 0 * * *" , zone = "UTC")
+	@Transactional
+	public void updateScheduler(){
+		SchedulerPojo scheduler = new SchedulerPojo();
+		Instant instant = Instant.now().minusSeconds(86400);
+		List<OrderPojo> o = orderService.selectByDate(instant);
+		double revenue = 0;
+		int itemcount = 0;
+		for(OrderPojo order: o){
+			List<OrderItemPojo> items = orderItemsService.selectItems(order.getId());
+			for(OrderItemPojo item: items){
+				revenue += item.getSellingPrice()*item.getQuantity();
+				itemcount++;
+			}
+		}
+		scheduler.setRevenue(revenue);
+		scheduler.setInvoiced_items_count(itemcount);
+		scheduler.setInvoiced_orders_count(o.size());
+		scheduler.setDate(instant);
+		schedulerService.insertScheduler(scheduler);
+	}
 
 	public List<DayWiseReportData> getDayWiseReport() {
 		return convert(schedulerService.selectSchedulerData());

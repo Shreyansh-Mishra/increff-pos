@@ -5,13 +5,14 @@ import java.util.List;
 
 import com.increff.pos.pojo.*;
 import com.increff.pos.service.*;
+import org.example.dto.InvoiceDto;
+import org.example.model.OrderFOPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.increff.pos.model.OrderData;
 import com.increff.pos.model.OrderForm;
 import com.increff.pos.model.OrderItemData;
-import com.increff.pos.util.InvoiceFOP;
 
 import javax.transaction.Transactional;
 
@@ -25,12 +26,13 @@ public class OrderDto {
 	
 	@Autowired
 	private OrderService orderService;
-	
-	@Autowired
-	private InvoiceFOP invoiceFop;
+
 
 	@Autowired
 	private OrderItemsService orderItemsService;
+
+	@Autowired
+	private InvoiceDto invoiceDto;
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void createOrder(List<OrderForm> o) throws ApiException, Exception {
@@ -50,11 +52,44 @@ public class OrderDto {
 		OrderPojo order = new OrderPojo();
 		orderService.addOrder(order);
 		orderItemsService.addItems(o2,order.getId());
-		String path = invoiceFop.generatePdf(order.getId());
-		InvoicePojo invoice = convert(order.getId(), path);
+		String pdf = generateInvoice(order.getId());
+		//decode the pdf from the base64 string
+		byte[] decodedBytes = java.util.Base64.getDecoder().decode(pdf);
+		String date = order.getTime().toString();
+		date = date.split("T", 2)[0] + "-" + date.split("T", 2)[1].split(":")[0] + "-" + date.split("T", 2)[1].split(":")[1];
+		String fileName = "Invoice-"+order.getId()+"-"+date+".pdf";
+		//write the decoded bytes to a file in the resources folder
+		java.nio.file.Path path = java.nio.file.Paths.get("C:\\Users\\Shreyansh\\Desktop\\increff\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName);
+		java.nio.file.Files.write(path, decodedBytes);
+		String path2 = "C:\\Users\\Shreyansh\\Desktop\\increff\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName;
+		InvoicePojo invoice = convert(order.getId(), path2);
 		orderService.insertInvoice(invoice);
 	}
 
+	public String generateInvoice(int orderId) throws Exception {
+		OrderPojo order = orderService.selectOrderById(orderId);
+		List<OrderItemPojo> items = orderItemsService.selectItems(orderId);
+		OrderFOPObject orderFop = new OrderFOPObject();
+		orderFop.setOrderId(order.getId());
+		orderFop.setDate(order.getTime().toString().split("T")[0]);
+		List<org.example.model.OrderItemData> fopItems = new ArrayList<org.example.model.OrderItemData>();
+		double total = 0;
+		for(OrderItemPojo item: items) {
+			org.example.model.OrderItemData i = new org.example.model.OrderItemData();
+			ProductPojo product = productService.selectById(item.getProductId());
+			i.setItemName(product.getName());
+			i.setBarcode(product.getBarcode());
+			i.setOrderId(item.getOrderId());
+			i.setQuantity(item.getQuantity());
+			i.setSellingPrice(item.getSellingPrice());
+			i.setCost(item.getSellingPrice()*item.getQuantity());
+			total += i.getCost();
+			fopItems.add(i);
+		}
+		orderFop.setOrderItems(fopItems);
+		orderFop.setTotal(total);
+		return invoiceDto.generateInvoice(orderFop);
+	}
 	
 	public List<OrderData> getOrders(){
 		List<OrderPojo> orders = orderService.selectOrders();
