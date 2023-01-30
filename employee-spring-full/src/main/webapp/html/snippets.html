@@ -40,10 +40,10 @@
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
-    <i class="fas fa-bars"></i>
+    <i class="fas fa-bars" style="font-size: 1.5rem;"></i>
     </button>
     
-  <div class="collapse navbar-collapse" id="navbarNav">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <a class="navbar-brand mt-1 mt-lg-0" th:href="@{/}">
       <img th:src="@{/static/increff-logo1.png}" alt="" loading="lazy" height="40">
     </a>
@@ -59,7 +59,7 @@
     
     <ul class="navbar-nav ml-auto">
        <li class="nav-item">
-        <a class="btn btn-primary mr-1" th:href="@{/site/login}">Login</a>
+        <a class="btn btn-primary mr-1 mb-1" th:href="@{/site/login}">Login</a>
       </li>
       <li class="nav-item">
         <a class="btn btn-primary" th:href="@{/site/signup}">Signup</a>
@@ -81,17 +81,17 @@
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
-      <i class="fas fa-bars"></i>
+      <i class="fas fa-bars" style="font-size: 1.5rem;"></i>
     </button>
     
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
     
       <a class="navbar-brand mt-1 mt-lg-0" th:href="@{/}">
         <img th:src="@{/static/increff-logo1.png}" class="d-inline-block align-top" alt="Increff Logo" loading="lazy" height="40">
       </a>
   
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item selected">
+        <li class="nav-item">
           <a class="nav-link" th:href="@{/ui/home}">Home</a>
         </li>
         <li class="nav-item">

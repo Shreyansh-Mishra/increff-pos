@@ -65,3 +65,12 @@ function writeFileData(arr){
 }
 
 
+$(document).ready(function() {
+    var currentPage = window.location.pathname;
+    $('.nav-item a[href="' + currentPage + '"]').parent().addClass('selected');
+  
+    $('.nav-item').click(function() {
+      $('.nav-item').removeClass('selected');
+      $(this).addClass('selected');
+    });
+  });

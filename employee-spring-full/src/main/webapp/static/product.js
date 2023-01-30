@@ -137,6 +137,10 @@ function downloadErrors(){
 
 //UI DISPLAY METHODS
 
+function roundToTwo(num) {    
+	return +(Math.round(num + "e+2") + "e-2");
+  }
+
 function displayProductList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
 	$('#dtBasicExample').DataTable().destroy();
@@ -152,10 +156,10 @@ function displayProductList(data){
 			row = '<tr>'
 			+ '<td>' + j + '</td>'
 			+ '<td>' + e.name + '</td>'
-			+ '<td align="right">'  + Math.round((e.mrp + Number.EPSILON) * 100) / 100 + '</td>'
 			+ '<td>'  + e.barcode + '</td>'
 			+ '<td>'  + e.brandName + '</td>'
 			+ '<td>'  + e.category + '</td>'
+			+ '<td align="right">'  + roundToTwo(e.mrp).toFixed(2) + '</td>'
 			+ '<td>' + buttonHtml + '</td>'
 			+ '</tr>';
 		}
@@ -163,10 +167,10 @@ function displayProductList(data){
 			row = '<tr>'
 			+ '<td>' + j + '</td>'
 			+ '<td>' + e.name + '</td>'
-			+ '<td align="right">'  + Math.round((e.mrp + Number.EPSILON) * 100) / 100 + '</td>'
 			+ '<td>'  + e.barcode + '</td>'
 			+ '<td>'  + e.brandName + '</td>'
 			+ '<td>'  + e.category + '</td>'
+			+ '<td align="right">'  + roundToTwo(e.mrp).toFixed(2) + '</td>'
 			+ '</tr>';
 		}
 		$tbody.append(row);

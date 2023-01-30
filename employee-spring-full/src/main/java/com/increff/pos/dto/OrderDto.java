@@ -34,6 +34,9 @@ public class OrderDto {
 	@Autowired
 	private InvoiceDto invoiceDto;
 
+	@Autowired
+	private InvoiceService invoiceService;
+
 	@Transactional(rollbackOn = ApiException.class)
 	public void createOrder(List<OrderForm> o) throws ApiException, Exception {
 		List<OrderItemPojo> o2 = convert(o);
@@ -63,7 +66,7 @@ public class OrderDto {
 		java.nio.file.Files.write(path, decodedBytes);
 		String path2 = "C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName;
 		InvoicePojo invoice = convert(order.getId(), path2);
-		orderService.insertInvoice(invoice);
+		invoiceService.insertInvoice(invoice);
 	}
 
 	public String generateInvoice(int orderId) throws Exception {
@@ -111,7 +114,7 @@ public class OrderDto {
 	}
 
 	public InvoicePojo getInvoice(int id) throws ApiException{
-		InvoicePojo invoice = orderService.selectInvoice(id);
+		InvoicePojo invoice = invoiceService.selectInvoice(id);
 		return invoice;
 	}
 	

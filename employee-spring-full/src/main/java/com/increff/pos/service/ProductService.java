@@ -96,7 +96,7 @@ public class ProductService {
 			throw new ApiException("The Product does not exists");
 		}
 		p2.setBarcode(product.getBarcode());
-		p2.setBrandName(product.getBrandName());
+		p2.setBrand_category(product.getBrand_category());
 		p2.setMrp(product.getMrp());
 		p2.setName(product.getName());
 		productDao.update();

@@ -195,14 +195,7 @@ public class ReportDto {
 		return data;
 	}
 	
-	public static InventoryReportData convertToInventoryData(Object[] row) {
-		InventoryReportData data = new InventoryReportData();
-		data.setBrand(row[0].toString());
-		data.setCategory(row[1].toString());
-		data.setQuantity((int)row[2]);
-		return data;
-	}
-	
+
 	public static List<DayWiseReportData> convert(List<SchedulerPojo> days) {
 		List<DayWiseReportData> data = new ArrayList<DayWiseReportData>();
 		for(SchedulerPojo day: days) {
@@ -215,15 +208,4 @@ public class ReportDto {
 		}
 		return data;
 	}
-	
-	public static SalesByBrandAndCategoryData convertData(Object[] sale) {
-		SalesByBrandAndCategoryData data = new SalesByBrandAndCategoryData();
-		data.setBrand(sale[0].toString());
-		data.setCategory(sale[1].toString());
-		data.setQuantity(((BigInteger)sale[2]).intValue());
-		data.setRevenue(((double)sale[3]));
-		return data;
-	}
-	
-	
 }

@@ -34,3 +34,11 @@ body {
 li{
 	color: black !important;
 }
+
+.nav-item:hover{
+	background-color: rgba(0, 123, 255, 0.1);
+}
+
+.nav-item.selected {
+	background-color: rgba(0, 123, 255, 0.1);
+  }

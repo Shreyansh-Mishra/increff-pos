@@ -47,6 +47,14 @@ function filterByDate(){
     console.log(json);
     var startDate = new Date(json['startDate']);
     var endDate = new Date(json['endDate']);
+	if(startDate > endDate){
+		Swal.fire({
+			icon: 'error',
+			title: 'Error',
+			text: 'Start date cannot be greater than end date',
+		});
+	}
+	else{
     var url = getReportUrl()+"/get-sales-report";
 	$.ajax({
 	   url: url,
@@ -71,6 +79,7 @@ function filterByDate(){
 		handleError(response);
 	   }
 	});
+	}
 }
 
 
@@ -78,6 +87,9 @@ function filterByDate(){
 //INITIALIZATION CODE
 function init(){
     $('#get-report').click(filterByDate);
+	$("#endDate").prop("max", function(){
+        return new Date().toJSON().split('T')[0];
+    });
 }
 
 

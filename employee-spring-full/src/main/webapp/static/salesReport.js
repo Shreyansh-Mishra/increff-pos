@@ -112,6 +112,9 @@ function filterByDate(){
 //INITIALIZATION CODE
 function init(){
     $('#get-sales-report').click(getSalesReportList);
+    $("#endDate").prop("max", function(){
+        return new Date().toJSON().split('T')[0];
+    });
 }
 
 

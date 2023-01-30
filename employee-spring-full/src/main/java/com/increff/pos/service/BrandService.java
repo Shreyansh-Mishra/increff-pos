@@ -12,11 +12,11 @@ import com.increff.pos.dao.BrandDao;
 import com.increff.pos.pojo.BrandPojo;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
 public class BrandService {
 	@Autowired
 	private BrandDao brandDao;
-	
-	@Transactional(rollbackOn = ApiException.class)
+
 	public void add(BrandPojo brand) throws ApiException {
 		if(isEmpty(brand.getBrand(),brand.getCategory())) {
 			throw new ApiException("Brand or Category cannot be empty");
@@ -31,12 +31,10 @@ public class BrandService {
 		}
 	}
 	
-	@Transactional
 	public List<BrandPojo> selectAll(){
 		return brandDao.selectAll();
 	}
 	
-	@Transactional(rollbackOn = ApiException.class)
 	public BrandPojo selectByNameAndCategory(String name, String category) throws ApiException {
 		BrandPojo b = brandDao.select(name, category);
 		if(b==null) {
@@ -45,12 +43,10 @@ public class BrandService {
 		return b;
 	}
 	
-	@Transactional(rollbackOn = ApiException.class)
 	public BrandPojo selectById(int id) throws ApiException {
 		return checkIfExists(id);
 	}
 	
-	@Transactional(rollbackOn = ApiException.class)
 	public void updateBrand(int id, BrandPojo brand) throws ApiException {
 		if(brand.getBrand().isEmpty()||brand.getCategory().isEmpty()) {
 			throw new ApiException("Brand or Category cannot be empty!");
@@ -68,7 +64,6 @@ public class BrandService {
 		}
 	}
 	
-	@Transactional(rollbackOn = ApiException.class)
 	public BrandPojo checkIfExists(int id) throws ApiException {
 		BrandPojo b = brandDao.select(id);
 		if(b==null) {
@@ -77,7 +72,6 @@ public class BrandService {
 		return b;
 	}
 	
-	@Transactional(rollbackOn = ApiException.class)
 	public List<String> getCategories(String brandName) {
 		return brandDao.selectCategories(brandName);
 	}

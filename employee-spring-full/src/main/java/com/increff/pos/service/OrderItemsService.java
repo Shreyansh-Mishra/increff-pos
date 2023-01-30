@@ -9,11 +9,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
 public class OrderItemsService {
     @Autowired
     private OrderItemDao orderItemDao;
 
-    @Transactional(rollbackOn = ApiException.class)
     public void addItems(List<OrderItemPojo> orderItems, int id) throws ApiException {
         if(orderItems.size()==0)
             throw new ApiException("Please add atleast 1 item to place your order!");
@@ -32,7 +32,6 @@ public class OrderItemsService {
         }
     }
 
-    @Transactional
     public List<OrderItemPojo> selectItems(int id){
         return orderItemDao.selectItems(id);
     }

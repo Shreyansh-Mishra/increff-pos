@@ -6,13 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="employee-spring-full (1)" />
         <module name="invoice-pdf" />
-        <module name="employee-spring-full (2)" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="employee-spring-full" target="1.8" />
+      <module name="employee-spring-full (1)" target="1.8" />
+      <module name="employee-spring-full (2)" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
