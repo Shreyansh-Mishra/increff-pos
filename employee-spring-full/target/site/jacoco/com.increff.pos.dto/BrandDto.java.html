@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BrandDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">employee-spring</a> &gt; <a href="index.source.html" class="el_package">com.increff.pos.dto</a> &gt; <span class="el_source">BrandDto.java</span></div><h1>BrandDto.java</h1><pre class="source lang-java linenums">package com.increff.pos.dto;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.increff.pos.model.BrandData;
+import com.increff.pos.model.BrandForm;
+import com.increff.pos.pojo.BrandPojo;
+import com.increff.pos.service.ApiException;
+import com.increff.pos.service.BrandService;
+
+@Component
+<span class="fc" id="L16">public class BrandDto {</span>
+	@Autowired
+	BrandService brandService;
+	
+	public void createBrand(BrandForm form) throws ApiException {
+<span class="fc" id="L21">		BrandPojo b = convert(form);</span>
+<span class="fc" id="L22">		brandService.add(b);</span>
+<span class="fc" id="L23">	}</span>
+	
+	public List&lt;BrandData&gt; getAllBrands() {
+<span class="fc" id="L26">		List&lt;BrandPojo&gt; b = brandService.selectAll();</span>
+<span class="fc" id="L27">		List&lt;BrandData&gt; b2 = new ArrayList&lt;BrandData&gt;();</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">		for(BrandPojo i: b) {</span>
+<span class="fc" id="L29">			b2.add(convert(i));</span>
+<span class="fc" id="L30">		}</span>
+<span class="fc" id="L31">		return b2;</span>
+	}
+	
+	public BrandData getBrandByNameAndCategory(String name, String category) throws ApiException {
+<span class="fc" id="L35">		BrandPojo b = brandService.selectByNameAndCategory(name.toLowerCase(), category.toLowerCase());</span>
+<span class="fc" id="L36">		BrandData b2 = convert(b);</span>
+<span class="fc" id="L37">		return b2;</span>
+	}
+	
+	public BrandData getBrandById(int id) throws ApiException {
+<span class="fc" id="L41">		BrandPojo b = brandService.selectById(id);</span>
+<span class="fc" id="L42">		BrandData b2 = convert(b);</span>
+<span class="fc" id="L43">		return b2;</span>
+	}
+	
+	public void updateBrand(int id, BrandForm b) throws ApiException {
+<span class="fc" id="L47">		BrandPojo b2 = convert(b);</span>
+<span class="fc" id="L48">		brandService.updateBrand(id,b2);</span>
+<span class="fc" id="L49">	}</span>
+	
+	public List&lt;String&gt; getCategoriesByBrand(String brandName) {
+<span class="fc" id="L52">		return brandService.getCategories(brandName);</span>
+	}
+	
+	private static BrandPojo convert(BrandForm f) {
+<span class="fc" id="L56">		BrandPojo b = new BrandPojo();</span>
+<span class="fc" id="L57">		b.setBrand(f.getBrand());</span>
+<span class="fc" id="L58">		b.setCategory(f.getCategory());</span>
+<span class="fc" id="L59">		return b;</span>
+	}
+	
+	private static BrandData convert(BrandPojo b) {
+<span class="fc" id="L63">		BrandData b2 = new BrandData();</span>
+<span class="fc" id="L64">		b2.setBrand(b.getBrand());</span>
+<span class="fc" id="L65">		b2.setCategory(b.getCategory());</span>
+<span class="fc" id="L66">		b2.setId(b.getId());</span>
+<span class="fc" id="L67">		return b2;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

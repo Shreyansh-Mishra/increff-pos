@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReportDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">employee-spring</a> &gt; <a href="index.source.html" class="el_package">com.increff.pos.dto</a> &gt; <span class="el_source">ReportDto.java</span></div><h1>ReportDto.java</h1><pre class="source lang-java linenums">package com.increff.pos.dto;
+
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TimeZone;
+
+import com.increff.pos.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import com.increff.pos.model.DayWiseReportData;
+import com.increff.pos.model.InventoryReportData;
+import com.increff.pos.model.SalesByBrandAndCategoryData;
+import com.increff.pos.pojo.BrandPojo;
+import com.increff.pos.pojo.InventoryPojo;
+import com.increff.pos.pojo.OrderItemPojo;
+import com.increff.pos.pojo.OrderPojo;
+import com.increff.pos.pojo.ProductPojo;
+import com.increff.pos.pojo.SchedulerPojo;
+
+import javax.transaction.Transactional;
+
+@Component
+<span class="fc" id="L31">public class ReportDto {</span>
+	@Autowired
+	OrderService orderService;
+	
+	@Autowired
+	InventoryService inventoryService;
+	
+	@Autowired
+	BrandService brandService;
+	
+	@Autowired
+	ProductService productService;
+
+	@Autowired
+	OrderItemsService orderItemsService;
+
+	@Autowired
+	private SchedulerService schedulerService;
+
+	//schedule at 12:05 am everyday
+
+	//set cron timezone to utc
+	@Scheduled(cron = &quot;0 1 0 * * *&quot; , zone = &quot;UTC&quot;)
+	@Transactional
+	public void updateScheduler(){
+<span class="nc" id="L56">		SchedulerPojo scheduler = new SchedulerPojo();</span>
+<span class="nc" id="L57">		Instant instant = Instant.now().minusSeconds(86400);</span>
+<span class="nc" id="L58">		List&lt;OrderPojo&gt; o = orderService.selectByDate(instant);</span>
+<span class="nc" id="L59">		double revenue = 0;</span>
+<span class="nc" id="L60">		int itemcount = 0;</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">		for(OrderPojo order: o){</span>
+<span class="nc" id="L62">			List&lt;OrderItemPojo&gt; items = orderItemsService.selectItems(order.getId());</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">			for(OrderItemPojo item: items){</span>
+<span class="nc" id="L64">				revenue += item.getSellingPrice()*item.getQuantity();</span>
+<span class="nc" id="L65">				itemcount++;</span>
+<span class="nc" id="L66">			}</span>
+<span class="nc" id="L67">		}</span>
+<span class="nc" id="L68">		scheduler.setRevenue(revenue);</span>
+<span class="nc" id="L69">		scheduler.setInvoiced_items_count(itemcount);</span>
+<span class="nc" id="L70">		scheduler.setInvoiced_orders_count(o.size());</span>
+<span class="nc" id="L71">		scheduler.setDate(instant);</span>
+<span class="nc" id="L72">		schedulerService.insertScheduler(scheduler);</span>
+<span class="nc" id="L73">	}</span>
+
+	public List&lt;DayWiseReportData&gt; getDayWiseReport() {
+<span class="nc" id="L76">		return convert(schedulerService.selectSchedulerData());</span>
+	}
+	
+	public List&lt;SalesByBrandAndCategoryData&gt; getSalesByBrandAndCategory(String startDate, String endDate) throws ParseException, ApiException{
+<span class="nc" id="L80">		SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-mm-dd&quot;);</span>
+<span class="nc" id="L81">        sdf.setTimeZone(TimeZone.getTimeZone(&quot;utc&quot;));</span>
+<span class="nc" id="L82">        Date date = sdf.parse(startDate);</span>
+<span class="nc" id="L83">        Date date2 = sdf.parse(endDate);</span>
+<span class="nc" id="L84">        Instant from = date.toInstant();</span>
+<span class="nc" id="L85">		Instant to = date2.toInstant();</span>
+		
+		//map of brand id and list&lt;product id&gt;
+<span class="nc" id="L88">		HashMap&lt;Integer,List&lt;Integer&gt;&gt; map=new HashMap&lt;Integer,List&lt;Integer&gt;&gt;();</span>
+		
+		//map of product id and revenue
+<span class="nc" id="L91">		HashMap&lt;Integer,List&lt;Double&gt;&gt; map2 = new HashMap&lt;Integer, List&lt;Double&gt;&gt;();</span>
+		
+<span class="nc" id="L93">		List&lt;BrandPojo&gt; brands = brandService.selectAll();</span>
+<span class="nc" id="L94">		List&lt;ProductPojo&gt; products = productService.selectAll();</span>
+		
+		//loop for storing all product ids with respect to brand and category
+<span class="nc bnc" id="L97" title="All 2 branches missed.">		for(BrandPojo brand: brands) {</span>
+<span class="nc" id="L98">			List&lt;Integer&gt; productids = new ArrayList&lt;Integer&gt;();</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">			for(ProductPojo product: products) {</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">				if(product.getBrand_category()==brand.getId()) {</span>
+<span class="nc" id="L101">					productids.add(product.getId());</span>
+				}
+<span class="nc" id="L103">			}</span>
+<span class="nc" id="L104">			map.put(brand.getId(), productids);</span>
+<span class="nc" id="L105">		}</span>
+		
+<span class="nc" id="L107">		List&lt;OrderPojo&gt; orders = orderService.selectOrdersBetweenDates(from, to);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">		for(OrderPojo order: orders) {</span>
+<span class="nc" id="L109">			List&lt;OrderItemPojo&gt; orderItems = orderItemsService.selectItems(order.getId());</span>
+<span class="nc" id="L110">			double revenue = 0;</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">			for(OrderItemPojo orderItem: orderItems) {</span>
+<span class="nc" id="L112">				revenue=(orderItem.getSellingPrice()*orderItem.getQuantity());</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">				if(map2.containsKey(orderItem.getProductId())) {</span>
+<span class="nc" id="L114">					List&lt;Double&gt; pr= map2.get(orderItem.getProductId());</span>
+<span class="nc" id="L115">					List&lt;Double&gt; newpr = new ArrayList&lt;Double&gt;();</span>
+<span class="nc" id="L116">					newpr.add(pr.get(0)+revenue);</span>
+<span class="nc" id="L117">					newpr.add(pr.get(1)+orderItem.getQuantity());</span>
+<span class="nc" id="L118">					map2.put(orderItem.getProductId(), newpr);</span>
+<span class="nc" id="L119">				}</span>
+				else {
+<span class="nc" id="L121">					List&lt;Double&gt; newpr = new ArrayList&lt;Double&gt;();</span>
+<span class="nc" id="L122">					newpr.add(revenue);</span>
+<span class="nc" id="L123">					newpr.add((double)orderItem.getQuantity());</span>
+<span class="nc" id="L124">					map2.put(orderItem.getProductId(), newpr);</span>
+				}
+<span class="nc" id="L126">			}</span>
+<span class="nc" id="L127">		}</span>
+<span class="nc" id="L128">		System.out.println(&quot;here&quot;);</span>
+		
+		//map of brand id and revenue
+<span class="nc" id="L131">		HashMap&lt;Integer,List&lt;Double&gt;&gt; map3 = new HashMap&lt;Integer, List&lt;Double&gt;&gt;();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">		for(Integer key: map.keySet()) {</span>
+<span class="nc" id="L133">			List&lt;Integer&gt; prod = map.get(key);</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">			for(int p: prod) {</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">				if(map2.containsKey(p)) {</span>
+<span class="nc" id="L136">					double newRevenue=0;</span>
+<span class="nc" id="L137">					double newQuantity=0;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">					if(map3.containsKey(key)) {</span>
+<span class="nc" id="L139">						newRevenue = map3.get(key).get(0)+map2.get(p).get(0);</span>
+<span class="nc" id="L140">						newQuantity = map3.get(key).get(1)+map2.get(p).get(1);</span>
+					}
+					else {
+<span class="nc" id="L143">						newRevenue = map2.get(p).get(0);</span>
+<span class="nc" id="L144">						newQuantity = map2.get(p).get(1);</span>
+					}
+<span class="nc" id="L146">					List&lt;Double&gt; newData = new ArrayList&lt;Double&gt;();</span>
+<span class="nc" id="L147">					newData.add(newRevenue);</span>
+<span class="nc" id="L148">					newData.add(newQuantity);</span>
+<span class="nc" id="L149">					map3.put(key, newData);</span>
+				}
+<span class="nc" id="L151">			}</span>
+<span class="nc" id="L152">		}</span>
+<span class="nc" id="L153">		List&lt;SalesByBrandAndCategoryData&gt; data = convert(map3);</span>
+<span class="nc" id="L154">		return data;</span>
+	}
+	
+	
+	public List&lt;InventoryReportData&gt; getInventoryReport() throws ApiException{
+<span class="nc" id="L159">		List&lt;InventoryPojo&gt; inventory = inventoryService.selectInventory();</span>
+<span class="nc" id="L160">		List&lt;InventoryReportData&gt; inventoryReport = new ArrayList&lt;InventoryReportData&gt;();</span>
+<span class="nc" id="L161">		HashMap&lt;Integer,Integer&gt; map = new HashMap&lt;Integer,Integer&gt;();</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">		for(InventoryPojo item: inventory) {</span>
+<span class="nc" id="L163">			ProductPojo product = productService.selectById(item.getId());</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">			if(map.containsKey(product.getBrand_category())) {</span>
+<span class="nc" id="L165">				map.put(product.getBrand_category(), map.get(product.getBrand_category())+item.getQuantity());</span>
+			}
+			else {
+<span class="nc" id="L168">				map.put(product.getBrand_category(), item.getQuantity());</span>
+			}
+<span class="nc" id="L170">		}</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">		for(int key: map.keySet()) {</span>
+<span class="nc" id="L172">			BrandPojo brand = brandService.selectById(key);</span>
+<span class="nc" id="L173">			InventoryReportData data = new InventoryReportData();</span>
+<span class="nc" id="L174">			data.setQuantity(map.get(key));</span>
+<span class="nc" id="L175">			data.setBrand(brand.getBrand());</span>
+<span class="nc" id="L176">			data.setCategory(brand.getCategory());</span>
+<span class="nc" id="L177">			inventoryReport.add(data);</span>
+<span class="nc" id="L178">		}</span>
+<span class="nc" id="L179">		return inventoryReport;</span>
+	}
+	
+	public List&lt;SalesByBrandAndCategoryData&gt; convert(HashMap&lt;Integer,List&lt;Double&gt;&gt; m) throws ApiException{
+<span class="nc" id="L183">		List&lt;SalesByBrandAndCategoryData&gt; data = new ArrayList&lt;SalesByBrandAndCategoryData&gt;();</span>
+<span class="nc" id="L184">		System.out.println(&quot;here3&quot;);</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">		for(int key: m.keySet()) {</span>
+<span class="nc" id="L186">			SalesByBrandAndCategoryData d = new SalesByBrandAndCategoryData();</span>
+<span class="nc" id="L187">			BrandPojo brand = brandService.selectById(key);</span>
+<span class="nc" id="L188">			d.setRevenue(m.get(key).get(0));</span>
+<span class="nc" id="L189">			d.setBrand(brand.getBrand());</span>
+<span class="nc" id="L190">			d.setCategory(brand.getCategory());</span>
+<span class="nc" id="L191">			d.setQuantity((m.get(key).get(1)).intValue());</span>
+<span class="nc" id="L192">			data.add(d);</span>
+<span class="nc" id="L193">		}</span>
+<span class="nc" id="L194">		System.out.println(&quot;here4&quot;);</span>
+<span class="nc" id="L195">		return data;</span>
+	}
+	
+
+	public static List&lt;DayWiseReportData&gt; convert(List&lt;SchedulerPojo&gt; days) {
+<span class="nc" id="L200">		List&lt;DayWiseReportData&gt; data = new ArrayList&lt;DayWiseReportData&gt;();</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">		for(SchedulerPojo day: days) {</span>
+<span class="nc" id="L202">			DayWiseReportData d = new DayWiseReportData();</span>
+<span class="nc" id="L203">			d.setDate(day.getDate().toString());</span>
+<span class="nc" id="L204">			d.setInvoiced_items_count(day.getInvoiced_items_count());</span>
+<span class="nc" id="L205">			d.setInvoiced_orders_count(day.getInvoiced_orders_count());</span>
+<span class="nc" id="L206">			d.setTotal_revenue(day.getRevenue());</span>
+<span class="nc" id="L207">			data.add(d);</span>
+<span class="nc" id="L208">		}</span>
+<span class="nc" id="L209">		return data;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
