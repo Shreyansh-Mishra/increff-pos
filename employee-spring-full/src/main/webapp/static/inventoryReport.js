@@ -10,6 +10,7 @@ function getReportList(){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
+			jsontocsv(data);
 	   		displayReportList(data);  
 	   },
 	   error: (response)=>{
@@ -55,10 +56,29 @@ function filterByDate(){
 }
 
 
+let csv = '';
+
+function jsontocsv(data){
+	const keys = Object.keys(data[0]);
+	csv += keys.join(',') + '\n';
+	data.forEach(item=>{
+		csv += Object.values(item).join(',') + '\n';
+	})
+}
+
+function downloadCSV(){
+	var hiddenElement = document.createElement('a');
+	hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+	hiddenElement.target = '_blank';
+	hiddenElement.download = 'inventory_report.csv';
+	hiddenElement.click();
+}
+
 
 //INITIALIZATION CODE
 function init(){
     $('#get-report').click(filterByDate);
+	$('#download-report').click(downloadCSV);
 }
 
 

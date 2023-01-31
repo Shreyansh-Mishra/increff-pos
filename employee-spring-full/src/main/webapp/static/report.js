@@ -10,12 +10,31 @@ function getReportList(){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayReportList(data);  
+			jsontocsv(data);
+			displayReportList(data);  
 	   },
 	   error: (response)=>{
 		handleError(response);
 	   }
 	});
+}
+
+let csv = '';
+
+function jsontocsv(data){
+	const keys = Object.keys(data[0]);
+	csv += keys.join(',') + '\n';
+	data.forEach(item=>{
+		csv += Object.values(item).join(',') + '\n';
+	})
+}
+
+function downloadCSV(){
+	var hiddenElement = document.createElement('a');
+	hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+	hiddenElement.target = '_blank';
+	hiddenElement.download = 'daywise_report.csv';
+	hiddenElement.click();
 }
 
 
@@ -73,6 +92,7 @@ function filterByDate(){
                     filteredData.push(obj)
                 }
             }
+			jsontocsv(filteredData);
             displayReportList(filteredData);
 	   },
 	   error: (response)=>{
@@ -90,6 +110,7 @@ function init(){
 	$("#endDate").prop("max", function(){
         return new Date().toJSON().split('T')[0];
     });
+	$('#download-report').click(downloadCSV);
 }
 
 
@@ -100,4 +121,4 @@ function paginate(id) {
 }
 
 $(document).ready(init);
-$(document).ready(getReportList)
+$(document).ready(getReportList);

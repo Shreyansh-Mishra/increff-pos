@@ -74,3 +74,12 @@ $(document).ready(function() {
       $(this).addClass('selected');
     });
   });
+
+$('.nav-item.dropdown').hover(function() {
+    $(this).find('.dropdown-menu').addClass('show');
+}, function() {
+    var $dropdown = $(this).find('.dropdown-menu');
+    setTimeout(function() {
+      $dropdown.removeClass('show');
+    }, 250);
+  });

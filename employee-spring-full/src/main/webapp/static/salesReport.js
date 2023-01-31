@@ -41,7 +41,7 @@ function getSalesReportList(){
             }
             data = filteredData;
         }
-        
+        jsontocsv(data);
         displaySalesReportList(data);
               
 	   },
@@ -72,6 +72,25 @@ function displaySalesReportList(data){
 		j++;	
 	}
 	paginate("#dtBasicExample");
+}
+
+
+let csv = '';
+
+function jsontocsv(data){
+	const keys = Object.keys(data[0]);
+	csv += keys.join(',') + '\n';
+	data.forEach(item=>{
+		csv += Object.values(item).join(',') + '\n';
+	})
+}
+
+function downloadCSV(){
+	var hiddenElement = document.createElement('a');
+	hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+	hiddenElement.target = '_blank';
+	hiddenElement.download = 'sales_report.csv';
+	hiddenElement.click();
 }
 
 function filterByDate(){
@@ -115,6 +134,7 @@ function init(){
     $("#endDate").prop("max", function(){
         return new Date().toJSON().split('T')[0];
     });
+    $("#download-report").click(downloadCSV);
 }
 
 

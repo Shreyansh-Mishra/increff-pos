@@ -17,7 +17,7 @@ public class OrderDao extends AbstractDao {
 	private String select_id = "select o from OrderPojo o where id=:id";
 	private String select_date = "select o from OrderPojo o where date(time) between date(:startDate) and date(:endDate)";
 
-	private String select_by_date = "select o from OrderPojo o where date(time)=date(:instant)";
+	private String select_by_date = "select o from OrderPojo o where trunc(time)=trunc(:instant)";
 
 	public void insert(OrderPojo o) {
 		em().persist(o);
