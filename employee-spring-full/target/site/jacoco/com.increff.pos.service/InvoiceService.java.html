@@ -15,16 +15,16 @@ import javax.transaction.Transactional;
 
     @Transactional
     public void insertInvoice(InvoicePojo i){
-<span class="nc" id="L18">        invoiceDao.insert(i);</span>
-<span class="nc" id="L19">    }</span>
+<span class="fc" id="L18">        invoiceDao.insert(i);</span>
+<span class="fc" id="L19">    }</span>
 
     @Transactional(rollbackOn = ApiException.class)
     public InvoicePojo selectInvoice(int id) throws ApiException {
-<span class="nc" id="L23">        InvoicePojo invoice = invoiceDao.selectId(id);</span>
-<span class="nc bnc" id="L24" title="All 2 branches missed.">        if(invoice==null){</span>
+<span class="fc" id="L23">        InvoicePojo invoice = invoiceDao.selectId(id);</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">        if(invoice==null){</span>
 <span class="nc" id="L25">            throw new ApiException(&quot;Invoice with id &quot;+id+&quot; does not exist&quot;);</span>
         }
-<span class="nc" id="L27">        return invoice;</span>
+<span class="fc" id="L27">        return invoice;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

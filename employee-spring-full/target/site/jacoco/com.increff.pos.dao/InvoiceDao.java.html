@@ -9,13 +9,13 @@ import javax.persistence.TypedQuery;
 <span class="fc" id="L9">public class InvoiceDao extends AbstractDao{</span>
 <span class="fc" id="L10">    String select_id = &quot;select i from InvoicePojo i where i.id=:id&quot;;</span>
     public void insert(InvoicePojo i){
-<span class="nc" id="L12">        em().persist(i);</span>
-<span class="nc" id="L13">    }</span>
+<span class="fc" id="L12">        em().persist(i);</span>
+<span class="fc" id="L13">    }</span>
 
     public InvoicePojo selectId(int id){
-<span class="nc" id="L16">        TypedQuery&lt;InvoicePojo&gt; query = getQuery(select_id, InvoicePojo.class);</span>
-<span class="nc" id="L17">        query.setParameter(&quot;id&quot;, id);</span>
-<span class="nc" id="L18">        return getSingle(query);</span>
+<span class="fc" id="L16">        TypedQuery&lt;InvoicePojo&gt; query = getQuery(select_id, InvoicePojo.class);</span>
+<span class="fc" id="L17">        query.setParameter(&quot;id&quot;, id);</span>
+<span class="fc" id="L18">        return getSingle(query);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

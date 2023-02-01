@@ -18,75 +18,70 @@ import com.increff.pos.pojo.BrandPojo;
 	private BrandDao brandDao;
 
 	public void add(BrandPojo brand) throws ApiException {
-<span class="pc bpc" id="L21" title="1 of 2 branches missed.">		if(isEmpty(brand.getBrand(),brand.getCategory())) {</span>
-<span class="nc" id="L22">			throw new ApiException(&quot;Brand or Category cannot be empty&quot;);</span>
-		}
-<span class="fc" id="L24">		normalize(brand);</span>
-<span class="fc" id="L25">		BrandPojo isExists = brandDao.select(brand.getBrand(),brand.getCategory());</span>
-<span class="pc bpc" id="L26" title="1 of 2 branches missed.">		if(isExists!=null) {</span>
-<span class="nc" id="L27">			throw new ApiException(&quot;Brand and Category Already Exists&quot;);</span>
+<span class="fc" id="L21">		isEmpty(brand.getBrand(),brand.getCategory());</span>
+<span class="fc" id="L22">		normalize(brand);</span>
+<span class="fc" id="L23">		BrandPojo isExists = brandDao.select(brand.getBrand(),brand.getCategory());</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">		if(isExists!=null) {</span>
+<span class="fc" id="L25">			throw new ApiException(&quot;Brand and Category Already Exists&quot;);</span>
 		}
 		else {
-<span class="fc" id="L30">			brandDao.insert(brand);</span>
+<span class="fc" id="L28">			brandDao.insert(brand);</span>
 		}
-<span class="fc" id="L32">	}</span>
+<span class="fc" id="L30">	}</span>
 	
 	public List&lt;BrandPojo&gt; selectAll(){
-<span class="fc" id="L35">		return brandDao.selectAll();</span>
+<span class="fc" id="L33">		return brandDao.selectAll();</span>
 	}
 	
 	public BrandPojo selectByNameAndCategory(String name, String category) throws ApiException {
-<span class="fc" id="L39">		BrandPojo b = brandDao.select(name, category);</span>
-<span class="pc bpc" id="L40" title="1 of 2 branches missed.">		if(b==null) {</span>
-<span class="nc" id="L41">			throw new ApiException(&quot;The requested brand and category combination does not exists&quot;);</span>
+<span class="fc" id="L37">		BrandPojo b = brandDao.select(name, category.toLowerCase());</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">		if(b==null) {</span>
+<span class="fc" id="L39">			throw new ApiException(&quot;The requested brand and category combination does not exists&quot;);</span>
 		}
-<span class="fc" id="L43">		return b;</span>
+<span class="fc" id="L41">		return b;</span>
 	}
 	
 	public BrandPojo selectById(int id) throws ApiException {
-<span class="fc" id="L47">		return checkIfExists(id);</span>
+<span class="fc" id="L45">		return checkIfExists(id);</span>
 	}
 	
 	public void updateBrand(int id, BrandPojo brand) throws ApiException {
-<span class="pc bpc" id="L51" title="2 of 4 branches missed.">		if(brand.getBrand().isEmpty()||brand.getCategory().isEmpty()) {</span>
-<span class="nc" id="L52">			throw new ApiException(&quot;Brand or Category cannot be empty!&quot;);</span>
-		}
-<span class="fc" id="L54">		normalize(brand);</span>
-<span class="fc" id="L55">		BrandPojo newBrand = checkIfExists(id);</span>
-<span class="fc" id="L56">		BrandPojo isExist = brandDao.select(brand.getBrand(), brand.getCategory());</span>
-<span class="pc bpc" id="L57" title="1 of 2 branches missed.">		if(isExist==null) {</span>
-<span class="fc" id="L58">			newBrand.setBrand(brand.getBrand());</span>
-<span class="fc" id="L59">			newBrand.setCategory(brand.getCategory());</span>
-<span class="fc" id="L60">			brandDao.update(newBrand);</span>
+<span class="fc" id="L49">		isEmpty(brand.getBrand(),brand.getCategory());</span>
+<span class="fc" id="L50">		normalize(brand);</span>
+<span class="fc" id="L51">		BrandPojo newBrand = checkIfExists(id);</span>
+<span class="fc" id="L52">		BrandPojo isExist = brandDao.select(brand.getBrand(), brand.getCategory());</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">		if(isExist==null) {</span>
+<span class="fc" id="L54">			newBrand.setBrand(brand.getBrand());</span>
+<span class="fc" id="L55">			newBrand.setCategory(brand.getCategory());</span>
+<span class="fc" id="L56">			brandDao.update(newBrand);</span>
 		}
 		else {
-<span class="nc" id="L63">			throw new ApiException(&quot;The brand and category already exists!&quot;);</span>
+<span class="fc" id="L59">			throw new ApiException(&quot;The Brand and Category already exists!&quot;);</span>
 		}
-<span class="fc" id="L65">	}</span>
+<span class="fc" id="L61">	}</span>
 	
 	public BrandPojo checkIfExists(int id) throws ApiException {
-<span class="fc" id="L68">		BrandPojo b = brandDao.select(id);</span>
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">		if(b==null) {</span>
-<span class="nc" id="L70">			throw new ApiException(&quot;The requested brand does not exists&quot;);</span>
+<span class="fc" id="L64">		BrandPojo b = brandDao.select(id);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">		if(b==null) {</span>
+<span class="fc" id="L66">			throw new ApiException(&quot;The requested brand does not exists&quot;);</span>
 		}
-<span class="fc" id="L72">		return b;</span>
+<span class="fc" id="L68">		return b;</span>
 	}
 	
 	public List&lt;String&gt; getCategories(String brandName) {
-<span class="fc" id="L76">		return brandDao.selectCategories(brandName);</span>
+<span class="fc" id="L72">		return brandDao.selectCategories(brandName);</span>
 	}
 
-	public static boolean isEmpty(String a, String b) {
-<span class="pc bpc" id="L80" title="2 of 4 branches missed.">		if(a.isEmpty()||b.isEmpty()) {</span>
-<span class="nc" id="L81">			return true;</span>
+	public static void isEmpty(String a, String b) throws ApiException {
+<span class="pc bpc" id="L76" title="1 of 4 branches missed.">		if(a.isEmpty()||b.isEmpty()) {</span>
+<span class="fc" id="L77">			throw new ApiException(&quot;Brand or Category cannot be empty!&quot;);</span>
 		}
-<span class="fc" id="L83">		return false;</span>
-	}
+<span class="fc" id="L79">	}</span>
 
 	public static void normalize(BrandPojo b) {
-<span class="fc" id="L87">		b.setBrand(b.getBrand().toLowerCase().trim());</span>
-<span class="fc" id="L88">		b.setCategory(b.getCategory().toLowerCase().trim());</span>
-<span class="fc" id="L89">	}</span>
+<span class="fc" id="L82">		b.setBrand(b.getBrand().toLowerCase().trim());</span>
+<span class="fc" id="L83">		b.setCategory(b.getCategory().toLowerCase().trim());</span>
+<span class="fc" id="L84">	}</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

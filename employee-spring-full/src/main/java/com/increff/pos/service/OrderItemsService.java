@@ -18,10 +18,7 @@ public class OrderItemsService {
         if(orderItems.size()==0)
             throw new ApiException("Please add atleast 1 item to place your order!");
         for(OrderItemPojo o: orderItems) {
-            if(o.getBarcode().isEmpty()||o.getQuantity()==0||o.getSellingPrice()==0) {
-                throw new ApiException("All fields are mandatory, please check again!");
-            }
-            if(o.getQuantity()<0) {
+            if(o.getQuantity()<=0) {
                 throw new ApiException("Quantity should be a positive value");
             }
             if(o.getSellingPrice()<0) {

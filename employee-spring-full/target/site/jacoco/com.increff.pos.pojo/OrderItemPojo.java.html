@@ -10,17 +10,17 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 @Getter
-<span class="nc" id="L13">@Setter</span>
+<span class="pc" id="L13">@Setter</span>
 @Entity
 <span class="fc" id="L15">public class OrderItemPojo {</span>
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 <span class="nc" id="L18">	private int id;</span>
-<span class="nc" id="L19">	private int orderId;</span>
-<span class="nc" id="L20">	private int productId;</span>
-<span class="nc" id="L21">	private int quantity;</span>
-<span class="nc" id="L22">	private double sellingPrice;</span>
+<span class="fc" id="L19">	private int orderId;</span>
+<span class="fc" id="L20">	private int productId;</span>
+<span class="fc" id="L21">	private int quantity;</span>
+<span class="fc" id="L22">	private double sellingPrice;</span>
 	@Transient
-<span class="nc" id="L24">	private String barcode;</span>
+<span class="fc" id="L24">	private String barcode;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

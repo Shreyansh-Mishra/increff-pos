@@ -4,10 +4,13 @@ import com.increff.pos.pojo.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.ParseException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class OrderServiceTest extends AbstractUnitTest{
     @Autowired
@@ -25,31 +28,55 @@ public class OrderServiceTest extends AbstractUnitTest{
     @Autowired
     private OrderItemsService orderItemsService;
 
-    @Test
-    public void testAddItems() throws ApiException {
-        BrandPojo brand = createBrand("testbrand", "testcategory");
+    public BrandPojo insertBrand(String brandName, String category) throws ApiException {
+        BrandPojo brand = createBrand(brandName, category);
         brandService.add(brand);
-        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
-        productService.add(product);
-        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
-        productService.add(product2);
-        InventoryPojo inventory = createInventory(product, 100);
-        InventoryPojo inventory2 = createInventory(product2, 200);
+        return brandService.selectByNameAndCategory(brandName, category);
+    }
+
+    public ProductPojo insertProduct(BrandPojo brand, String productName, String barcode, double mrp) throws ApiException {
+        ProductPojo productPojo = createProduct(brand, productName, barcode, mrp);
+        productService.add(productPojo);
+        return productService.selectByBarcode(barcode);
+    }
+
+
+    public void insertInventory(ProductPojo product, int quantity) throws ApiException {
+        InventoryPojo inventory = createInventory(product, quantity);
         inventoryService.add(inventory);
-        inventoryService.add(inventory2);
-        OrderPojo order = createOrder();
+    }
 
+    @Test
+    public void testAddOrder() throws ApiException {
+        Instant instant = Instant.now();
+        OrderPojo order = new OrderPojo();
         orderService.addOrder(order);
-        OrderPojo or = orderService.selectOrders().get(0);
+        List<OrderPojo> orders = orderService.selectOrders();
+        assertEquals(1, orders.size());
+        assertEquals(instant.truncatedTo(ChronoUnit.SECONDS), orders.get(0).getTime().truncatedTo(ChronoUnit.SECONDS));
+    }
 
+    @Test
+    public void testSelectOrdersBetweenDates() throws ApiException, ParseException {
+        BrandPojo brand = insertBrand("testbrand", "testcategory");
+        ProductPojo product = insertProduct(brand, "name", "barcode", 100);
+        ProductPojo product2 = insertProduct(brand, "name2", "barcode2", 200);
+        insertInventory(product, 100);
+        insertInventory(product2, 200);
+
+        OrderPojo order = createOrder();
+        orderService.addOrder(order);
         List<OrderItemPojo> orderItems =  new ArrayList<OrderItemPojo>();
-        OrderItemPojo item1 = createOrderItem(product,or, 10, 100);
+        OrderItemPojo item1 = createOrderItem(product,order, 10, 100);
         orderItems.add(item1);
-        OrderItemPojo item2 = createOrderItem(product2,or, 20, 200);
+        OrderItemPojo item2 = createOrderItem(product2,order, 20, 200);
         orderItems.add(item2);
-        orderItemsService.addItems(orderItems, or.getId());
-        List<OrderItemPojo> items = orderItemsService.selectItems(or.getId());
+        orderItemsService.addItems(orderItems, order.getId());
+        Instant from = Instant.now().minus(1, ChronoUnit.DAYS);
+        Instant to = Instant.now().plus(1, ChronoUnit.DAYS);
+        List<OrderPojo> order2 = orderService.selectOrdersBetweenDates(from, to);
+        assertEquals(1, order2.size());
+        List<OrderItemPojo> items = orderItemsService.selectItems(order2.get(0).getId());
         assertEquals(2, items.size());
         assertEquals(10, items.get(0).getQuantity());
         assertEquals(20, items.get(1).getQuantity());
@@ -57,91 +84,14 @@ public class OrderServiceTest extends AbstractUnitTest{
         assertEquals(200, items.get(1).getSellingPrice(), 0.001);
     }
 
-//    @Test
-//    public void testSelectOrdersBetweenDates() throws ApiException, ParseException {
-//        BrandPojo brand = createBrand("brand", "category");
-//        brandService.add(brand);
-//        ProductPojo product = createProduct(brand, "name", "barcode", 100);
-//        ProductPojo product2 = createProduct(brand, "name2", "barcode2", 200);
-//        productService.add(product);
-//        productService.add(product2);
-//        InventoryPojo inventory = createInventory(product, 100);
-//        InventoryPojo inventory2 = createInventory(product2, 200);
-//        inventoryService.add(inventory);
-//        inventoryService.add(inventory2);
-//        OrderPojo order = createOrder();
-//        List<OrderItemPojo> orderItems =  new ArrayList<OrderItemPojo>();
-//        OrderItemPojo item1 = createOrderItem(product,order, 10, 100);
-//        orderItems.add(item1);
-//        OrderItemPojo item2 = createOrderItem(product2,order, 20, 200);
-//        orderItems.add(item2);
-//        orderService.addItems(orderItems, order);
-//        SimpleDateFormat sdf2 = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-//        sdf.setTimeZone(TimeZone.getTimeZone("utc"));
-//        String date1 = sdf.format(sdf2.parse(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)).toString()));
-//        String date2 = sdf.format(sdf2.parse(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)).toString()));
-//        Instant from = sdf.parse(date1).toInstant();
-//        Instant to = sdf.parse(date2).toInstant();
-//        System.out.println("from:"+from);
-//        List<OrderPojo> order2 = orderService.selectOrdersBetweenDates(from, to);
-//        assertEquals(1, order2.size());
-//        List<OrderItemPojo> items = orderService.selectItems(order2.get(0).getId());
-//        assertEquals(2, items.size());
-//        assertEquals(10, items.get(0).getQuantity());
-//        assertEquals(20, items.get(1).getQuantity());
-//        assertEquals(100, items.get(0).getSellingPrice(), 0.001);
-//        assertEquals(200, items.get(1).getSellingPrice(), 0.001);
-//    }
-
-    @Test
-    public void testSelectItems() throws ApiException {
-        BrandPojo brand = createBrand("testbrand", "testcategory");
-        brandService.add(brand);
-
-        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
-        productService.add(product);
-        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
-        productService.add(product2);
-        InventoryPojo inventory = createInventory(product, 100);
-        InventoryPojo inventory2 = createInventory(product2, 200);
-        inventoryService.add(inventory);
-        inventoryService.add(inventory2);
-        OrderPojo order = createOrder();
-        List<OrderItemPojo> orderItems =  new ArrayList<OrderItemPojo>();
-
-        orderService.addOrder(order);
-        OrderPojo or = orderService.selectOrders().get(0);
-
-        OrderItemPojo item1 = createOrderItem(product,or, 10, 100);
-        orderItems.add(item1);
-        OrderItemPojo item2 = createOrderItem(product2,or, 20, 200);
-        orderItems.add(item2);
-
-        orderItemsService.addItems(orderItems, or.getId());
-        List<OrderItemPojo> items = orderItemsService.selectItems(or.getId());
-        assertEquals(2, items.size());
-        assertEquals(10, items.get(0).getQuantity());
-        assertEquals(20, items.get(1).getQuantity());
-        assertEquals(100, items.get(0).getSellingPrice(), 0.001);
-        assertEquals(200, items.get(1).getSellingPrice(), 0.001);
-    }
 
     @Test
     public void testSelectOrders () throws ApiException {
-        BrandPojo brand = createBrand("testbrand", "testcategory");
-        brandService.add(brand);
-
-        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
-        productService.add(product);
-        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
-        productService.add(product2);
-        InventoryPojo inventory = createInventory(product, 100);
-        InventoryPojo inventory2 = createInventory(product2, 200);
-        inventoryService.add(inventory);
-        inventoryService.add(inventory2);
+        BrandPojo brand = insertBrand("testbrand", "testcategory");
+        ProductPojo product = insertProduct(brand, "name", "barcode", 100);
+        ProductPojo product2 = insertProduct(brand, "name2", "barcode2", 200);
+        insertInventory(product, 100);
+        insertInventory(product2, 200);
         OrderPojo order = createOrder();
         orderService.addOrder(order);
         OrderPojo or = orderService.selectOrders().get(0);
@@ -170,17 +120,11 @@ public class OrderServiceTest extends AbstractUnitTest{
 
     @Test
     public void testSelectOrderById() throws ApiException {
-        BrandPojo brand = createBrand("testbrand", "testcategory");
-        brandService.add(brand);
-        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
-        productService.add(product);
-        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
-        productService.add(product2);
-        InventoryPojo inventory = createInventory(product, 100);
-        InventoryPojo inventory2 = createInventory(product2, 200);
-        inventoryService.add(inventory);
-        inventoryService.add(inventory2);
+        BrandPojo brand = insertBrand("testbrand", "testcategory");
+        ProductPojo product = insertProduct(brand, "name", "barcode", 100);
+        ProductPojo product2 = insertProduct(brand, "name2", "barcode2", 200);
+        insertInventory(product, 100);
+        insertInventory(product2, 200);
         OrderPojo order = createOrder();
         orderService.addOrder(order);
         OrderPojo or = orderService.selectOrders().get(0);
@@ -207,21 +151,21 @@ public class OrderServiceTest extends AbstractUnitTest{
         assertEquals(1, items.size());
         assertEquals(20, items.get(0).getQuantity());
         assertEquals(200, items.get(0).getSellingPrice(), 0.001);
+        try{
+            orderService.selectOrderById(100);
+            fail();
+        } catch (ApiException e) {
+            assertEquals("Order with id 100 does not exist", e.getMessage());
+        }
     }
 
     @Test
     public void testSelectByDate() throws ApiException {
-        BrandPojo brand = createBrand("testbrand", "testcategory");
-        brandService.add(brand);
-        BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
-        productService.add(product);
-        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
-        productService.add(product2);
-        InventoryPojo inventory = createInventory(product, 100);
-        InventoryPojo inventory2 = createInventory(product2, 200);
-        inventoryService.add(inventory);
-        inventoryService.add(inventory2);
+        BrandPojo brand = insertBrand("testbrand", "testcategory");
+        ProductPojo product = insertProduct(brand, "name", "barcode", 100);
+        ProductPojo product2 = insertProduct(brand, "name2", "barcode2", 200);
+        insertInventory(product, 100);
+        insertInventory(product2, 200);
         OrderPojo order = createOrder();
         orderService.addOrder(order);
         OrderPojo or = orderService.selectOrders().get(0);

@@ -13,16 +13,14 @@ import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
 public class InventoryService {
 	@Autowired
 	private InventoryDao inventoryDao;
 	
-	
-	@Transactional(rollbackOn = ApiException.class)
-	public void add(InventoryPojo inventoryItem) throws ApiException {
-		if(isNegative(inventoryItem.getQuantity()))
-			throw new ApiException("Quantity needs to be a positive value");
 
+	public void add(InventoryPojo inventoryItem) throws ApiException {
+		isNegative(inventoryItem.getQuantity(), inventoryItem.getBarcode());
 		InventoryPojo i2 = inventoryDao.selectId(inventoryItem.getId());
 		if(i2!=null) {
 			i2.setQuantity(inventoryItem.getQuantity()+i2.getQuantity());
@@ -33,12 +31,10 @@ public class InventoryService {
 		}
 	}
 	
-	@Transactional
 	public List<InventoryPojo> selectInventory(){
 		return inventoryDao.selectAll();
 	}
 	
-	@Transactional
 	public InventoryPojo selectById(int id) throws ApiException {
 		InventoryPojo i = inventoryDao.selectId(id);
 		if(i==null)
@@ -46,23 +42,15 @@ public class InventoryService {
 		return i;
 	}
 	
-	@Transactional(rollbackOn = ApiException.class)
 	public void update(InventoryPojo inventoryItem) throws ApiException {
-		if(isNegative(inventoryItem.getQuantity()))
-			throw new ApiException("Enter a valid quantity for product with barcode "+inventoryItem.getBarcode());
-		InventoryPojo i2 = inventoryDao.selectId(inventoryItem.getId());
-		if(i2==null) {
-			throw new ApiException("The Product isn't present in the Inventory");
-		}
+		isNegative(inventoryItem.getQuantity(), inventoryItem.getBarcode());
+		InventoryPojo i2 = this.selectById(inventoryItem.getId());
 		i2.setQuantity(inventoryItem.getQuantity());
 		inventoryDao.update(i2);
 	}
-
-
-	public static boolean isNegative(int a) {
-		if(a<0)
-			return true;
-		return false;
+	public static void isNegative(int a, String barcode) throws ApiException {
+		if(a<=0)
+			throw new ApiException("Enter a valid quantity for product with barcode "+barcode);
 	}
-	
+
 }

@@ -15,25 +15,22 @@ import java.util.List;
     private OrderItemDao orderItemDao;
 
     public void addItems(List&lt;OrderItemPojo&gt; orderItems, int id) throws ApiException {
-<span class="nc bnc" id="L18" title="All 2 branches missed.">        if(orderItems.size()==0)</span>
-<span class="nc" id="L19">            throw new ApiException(&quot;Please add atleast 1 item to place your order!&quot;);</span>
-<span class="nc bnc" id="L20" title="All 2 branches missed.">        for(OrderItemPojo o: orderItems) {</span>
-<span class="nc bnc" id="L21" title="All 6 branches missed.">            if(o.getBarcode().isEmpty()||o.getQuantity()==0||o.getSellingPrice()==0) {</span>
-<span class="nc" id="L22">                throw new ApiException(&quot;All fields are mandatory, please check again!&quot;);</span>
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        if(orderItems.size()==0)</span>
+<span class="fc" id="L19">            throw new ApiException(&quot;Please add atleast 1 item to place your order!&quot;);</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        for(OrderItemPojo o: orderItems) {</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">            if(o.getQuantity()&lt;=0) {</span>
+<span class="fc" id="L22">                throw new ApiException(&quot;Quantity should be a positive value&quot;);</span>
             }
-<span class="nc bnc" id="L24" title="All 2 branches missed.">            if(o.getQuantity()&lt;0) {</span>
-<span class="nc" id="L25">                throw new ApiException(&quot;Quantity should be a positive value&quot;);</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">            if(o.getSellingPrice()&lt;0) {</span>
+<span class="fc" id="L25">                throw new ApiException(&quot;Selling Price needs to be positive&quot;);</span>
             }
-<span class="nc bnc" id="L27" title="All 2 branches missed.">            if(o.getSellingPrice()&lt;0) {</span>
-<span class="nc" id="L28">                throw new ApiException(&quot;Selling Price needs to be positive&quot;);</span>
-            }
-<span class="nc" id="L30">            o.setOrderId(id);</span>
-<span class="nc" id="L31">            orderItemDao.insert(o);</span>
-<span class="nc" id="L32">        }</span>
-<span class="nc" id="L33">    }</span>
+<span class="fc" id="L27">            o.setOrderId(id);</span>
+<span class="fc" id="L28">            orderItemDao.insert(o);</span>
+<span class="fc" id="L29">        }</span>
+<span class="fc" id="L30">    }</span>
 
     public List&lt;OrderItemPojo&gt; selectItems(int id){
-<span class="nc" id="L36">        return orderItemDao.selectItems(id);</span>
+<span class="fc" id="L33">        return orderItemDao.selectItems(id);</span>
     }
 
 

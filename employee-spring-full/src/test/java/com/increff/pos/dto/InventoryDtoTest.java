@@ -19,7 +19,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
     BrandDto brandDto;
 
     @Autowired
-    ProductDto productFlow;
+    ProductDto productDto;
 
     @Autowired
     InventoryDto inventoryDto;
@@ -29,7 +29,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
         brandDto.createBrand(brand);
         ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
-        productFlow.createProduct(product);
+        productDto.createProduct(product);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
         inventoryDto.addToInventory(inventoryForm);
         List<InventoryData> inventoryData = inventoryDto.getInventory();
@@ -42,7 +42,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
         brandDto.createBrand(brand);
         ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
-        productFlow.createProduct(product);
+        productDto.createProduct(product);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
         inventoryDto.addToInventory(inventoryForm);
         List<InventoryData> inventoryData = inventoryDto.getInventory();
@@ -55,7 +55,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
         brandDto.createBrand(brand);
         ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
-        productFlow.createProduct(product);
+        productDto.createProduct(product);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
         inventoryDto.addToInventory(inventoryForm);
         List<InventoryData> inventoryData = inventoryDto.getInventory();

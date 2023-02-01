@@ -17,7 +17,7 @@
 	 <div class="col-12">
 			<form class="form-inline md-form" id="report-form">
                 <div class="container">
-                    <div class="row">
+                    <div class="row mb-2">
                         <div class="col form-outline mr-3">
                             <input name="startDate" id="startDate" type="date"  class="form-control">
                             <label class="form-label" for="startDate">Start Date</label>
@@ -27,15 +27,22 @@
                             <label class="form-label" for="endDate">End Date</label>
                         </div>
                         <div class="col form-outline mr-3">
-                            <input name="brand" id="startDate" type="text"  class="form-control">
-                            <label class="form-label" for="startDate">Brand Name</label>
+                            <select id="inputBrand" name="brand" class="form-select col mr-2" aria-placeholder="Please Choose Brand">
+                                <option value="placeholder" disabled selected>Choose Brand</option>
+                            </select>
                         </div>
                         <div class="col form-outline mr-3" >
-                            <input type="text" name="category" id="endDate" class="form-control">
-                            <label class="form-label" for="endDate">Category</label>
+                            <select id="inputCategory" name="category" aria-placeholder="Please Choose Category" class="form-select col mr-2">
+                                <option value="placeholder" disabled selected>Choose Category</option>
+                            </select>
                         </div>
                         <div class="col">
                             <button type="button" class="btn btn-primary" id="get-sales-report">Get Report</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-primary" id="download-report">Download Report</button>
                         </div>
                     </div>
                 </div>

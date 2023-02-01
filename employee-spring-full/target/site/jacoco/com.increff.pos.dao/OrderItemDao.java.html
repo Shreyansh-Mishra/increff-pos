@@ -14,8 +14,8 @@ import com.increff.pos.pojo.OrderItemPojo;
 <span class="fc" id="L14">	private String select_items = &quot;select o from OrderItemPojo o where orderId=:id&quot;;</span>
 	
 	public void insert(OrderItemPojo oi) {
-<span class="nc" id="L17">		em().persist(oi);</span>
-<span class="nc" id="L18">	}</span>
+<span class="fc" id="L17">		em().persist(oi);</span>
+<span class="fc" id="L18">	}</span>
 	
 	public OrderItemPojo selectId(int id) {
 <span class="nc" id="L21">		TypedQuery&lt;OrderItemPojo&gt; query = getQuery(select_id, OrderItemPojo.class);</span>
@@ -24,9 +24,9 @@ import com.increff.pos.pojo.OrderItemPojo;
 	}
 	
 	public List&lt;OrderItemPojo&gt; selectItems(int id){
-<span class="nc" id="L27">		TypedQuery&lt;OrderItemPojo&gt; query = getQuery(select_items, OrderItemPojo.class);</span>
-<span class="nc" id="L28">		query.setParameter(&quot;id&quot;, id);</span>
-<span class="nc" id="L29">		return query.getResultList();</span>
+<span class="fc" id="L27">		TypedQuery&lt;OrderItemPojo&gt; query = getQuery(select_items, OrderItemPojo.class);</span>
+<span class="fc" id="L28">		query.setParameter(&quot;id&quot;, id);</span>
+<span class="fc" id="L29">		return query.getResultList();</span>
 	}
 	
 	public void update(OrderItemPojo o) {

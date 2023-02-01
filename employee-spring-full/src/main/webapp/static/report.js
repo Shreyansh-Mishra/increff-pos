@@ -22,6 +22,15 @@ function getReportList(){
 let csv = '';
 
 function jsontocsv(data){
+	if(data.length==0){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'No data found!',
+        })
+        return;
+    }
+    csv = '';
 	const keys = Object.keys(data[0]);
 	csv += keys.join(',') + '\n';
 	data.forEach(item=>{

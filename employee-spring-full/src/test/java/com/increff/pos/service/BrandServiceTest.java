@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class BrandServiceTest extends AbstractUnitTest{
     @Autowired
@@ -58,6 +59,11 @@ public class BrandServiceTest extends AbstractUnitTest{
         brand = service.selectByNameAndCategory("testbrand2","testcategory2");
         assertEquals("testbrand2",brand.getBrand());
         assertEquals("testcategory2",brand.getCategory());
+        try{
+            service.selectByNameAndCategory("testbrand2","testcategory");
+        } catch (ApiException e) {
+            assertEquals("The requested brand and category combination does not exists",e.getMessage());
+        }
     }
 
     @Test
@@ -98,6 +104,11 @@ public class BrandServiceTest extends AbstractUnitTest{
         assertEquals(brand.getId(),b2.getId());
         assertEquals(brand.getBrand().toLowerCase(),b2.getBrand());
         assertEquals(brand.getCategory().toLowerCase(),b2.getCategory());
+        try{
+            service.checkIfExists(brand.getId()+1);
+        } catch (ApiException e) {
+            assertEquals("The requested brand does not exists",e.getMessage());
+        }
     }
 
     @Test
@@ -114,5 +125,56 @@ public class BrandServiceTest extends AbstractUnitTest{
         assertEquals(2,categories.size());
         assertEquals("testcategory",categories.get(0));
         assertEquals("testcategory2",categories.get(1));
+    }
+
+    @Test
+    public void testAddDuplicate() throws ApiException {
+        BrandPojo brand = new BrandPojo();
+        brand.setBrand("testBrand");
+        brand.setCategory("testCategory");
+        service.add(brand);
+        BrandPojo brand2 = new BrandPojo();
+        brand2.setBrand("testBrand");
+        brand2.setCategory("testCategory");
+        try {
+            service.add(brand2);
+            fail();
+        } catch (ApiException e) {
+            assertEquals("Brand and Category Already Exists",e.getMessage());
+        }
+    }
+
+    @Test
+    public void testIsEmpty() throws ApiException {
+        BrandPojo brand = new BrandPojo();
+        brand.setBrand("testBrand");
+        brand.setCategory("");
+        try{
+            service.add(brand);
+            fail();
+        } catch (ApiException e) {
+            assertEquals("Brand or Category cannot be empty!",e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateDuplicate() throws ApiException {
+        BrandPojo brand = new BrandPojo();
+        brand.setBrand("testBrand");
+        brand.setCategory("testCategory");
+        service.add(brand);
+        BrandPojo brand2 = new BrandPojo();
+        brand2.setBrand("testBrand2");
+        brand2.setCategory("testCategory2");
+        service.add(brand2);
+        BrandPojo brand3 = new BrandPojo();
+        brand3.setBrand("testBrand2");
+        brand3.setCategory("testCategory2");
+        try{
+            service.updateBrand(brand.getId(),brand3);
+            fail();
+        } catch (ApiException e) {
+            assertEquals("The Brand and Category already exists!",e.getMessage());
+        }
     }
 }

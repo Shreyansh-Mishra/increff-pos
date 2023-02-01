@@ -38,7 +38,7 @@ public class OrderDto {
 	private InvoiceService invoiceService;
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void createOrder(List<OrderForm> o) throws ApiException, Exception {
+	public void createOrder(List<OrderForm> o) throws Exception {
 		List<OrderItemPojo> o2 = convert(o);
 		for(OrderItemPojo item: o2){
 			ProductPojo p = productService.selectByBarcode(item.getBarcode());

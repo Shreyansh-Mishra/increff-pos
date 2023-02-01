@@ -19,13 +19,13 @@ import javax.persistence.PrePersist;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-<span class="nc" id="L22">	private int id;</span>
-<span class="nc" id="L23">	private Instant time;</span>
+<span class="fc" id="L22">	private int id;</span>
+<span class="fc" id="L23">	private Instant time;</span>
 	@PrePersist
 	protected void onCreate() {
-<span class="nc" id="L26">		Instant it = Instant.now();</span>
-<span class="nc" id="L27">		time = it;</span>
-<span class="nc" id="L28">	}</span>
+<span class="fc" id="L26">		Instant it = Instant.now();</span>
+<span class="fc" id="L27">		time = it;</span>
+<span class="fc" id="L28">	}</span>
 	
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

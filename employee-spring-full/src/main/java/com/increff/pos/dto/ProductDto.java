@@ -49,7 +49,7 @@ public class ProductDto {
 		return p2;
 	}
 	
-	public List<ProductData> getProductByBrandName(String brandName) throws ApiException{
+	public List<ProductData> getProductByBrandName(String brandName){
 		List<ProductPojo> products = productService.selectByBrand(brandName);
 		List<ProductData> productList = new ArrayList<ProductData>();
 		for(ProductPojo product: products) {
@@ -58,7 +58,7 @@ public class ProductDto {
 		return productList;
 	}
 	
-	public List<ProductData> getProductsByBrandAndCategory(String brandName, String category) throws ApiException{
+	public List<ProductData> getProductsByBrandAndCategory(String brandName, String category){
 		List<ProductPojo> products = productService.selectByBrandAndCategory(brandName,category);
 		List<ProductData> productList = new ArrayList<ProductData>();
 		for(ProductPojo product: products) {

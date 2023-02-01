@@ -8,6 +8,32 @@ function getSalesReportList(){
     $form = $('#report-form');
     var json = toJson($form);
     json=JSON.parse(json);
+    console.log(json);
+    //check if brand and category exists as keys in json
+    if(!('brand' in json)){
+        json['brand']='placeholder';
+    }
+    if(!('category' in json)){
+        json['category']='placeholder';
+    }
+    if(json['startDate']=='' || json['endDate']=='' || json['brand']=='placeholder' || json['category']=='placeholder'){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please fill all the fields!',
+        })
+        return;
+    }
+    var startDate = new Date(json['startDate']);
+    var endDate = new Date(json['endDate']);
+    if(startDate > endDate){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Start date cannot be greater than end date',
+        });
+        return;
+    }
 	var url = getSalesReportUrl()+"/get-sales-report"+"/"+json['startDate']+"/"+json['endDate'];
 	$.ajax({
 	   url: url,
@@ -41,7 +67,7 @@ function getSalesReportList(){
             }
             data = filteredData;
         }
-        
+        jsontocsv(data);
         displaySalesReportList(data);
               
 	   },
@@ -74,6 +100,34 @@ function displaySalesReportList(data){
 	paginate("#dtBasicExample");
 }
 
+
+let csv = '';
+
+function jsontocsv(data){
+    if(data.length==0){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'No data found!',
+        })
+        return;
+    }
+    csv = '';
+	const keys = Object.keys(data[0]);
+	csv += keys.join(',') + '\n';
+	data.forEach(item=>{
+		csv += Object.values(item).join(',') + '\n';
+	})
+}
+
+function downloadCSV(){
+	var hiddenElement = document.createElement('a');
+	hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+	hiddenElement.target = '_blank';
+	hiddenElement.download = 'sales_report.csv';
+	hiddenElement.click();
+}
+
 function filterByDate(){
     var $form = $('#report-form');
     var json = toJson($form);
@@ -81,6 +135,14 @@ function filterByDate(){
     console.log(json);
     var startDate = new Date(json['startDate']);
     var endDate = new Date(json['endDate']);
+    if(startDate > endDate){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Start date cannot be greater than end date!',
+        })
+    }
+    else{
     var url = getSalesReportUrl()+"/get-sales-report";
 	$.ajax({
 	   url: url,
@@ -105,6 +167,51 @@ function filterByDate(){
 		handleError(response);
 	   }
 	});
+    }
+}
+
+function getBrandUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/brand";
+}
+
+function populateBrandDropDown(){
+    var url = getBrandUrl()+"s";
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(data) {
+            var $select = $('#inputBrand');
+            $select.empty();
+			$select.append('<option value="all">' + 'All' + '</option>');
+            for(var i in data){
+                var e = data[i];
+                var option = '<option value="' + e.brand + '">' + e.brand + '</option>';
+                $select.append(option);
+            }
+        },
+        error: handleError
+    });
+}
+
+function populateCategoryDropdown(){
+    var url = getBrandUrl() + "/get-categories/"+document.getElementById("inputBrand").value;
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(data) {
+            var $select = $('#inputCategory');
+            $select.empty();
+			$select.append('<option value="all">' + 'All' + '</option>');
+            $select.removeAttr('disabled');
+            for(var i in data){
+                var e = data[i];
+                var option = '<option value="' + e + '">' + e + '</option>';
+                $select.append(option);
+            }
+        },
+        error: handleError
+    });
 }
 
 
@@ -115,6 +222,12 @@ function init(){
     $("#endDate").prop("max", function(){
         return new Date().toJSON().split('T')[0];
     });
+    $("#download-report").click(downloadCSV);
+    $('#inputBrand').on('click', populateCategoryDropdown);
+    $('#inputBrand').on('click', (e)=>{
+        if(e.target.value == "placeholder")
+            populateBrandDropDown();
+    });
 }
 
 
@@ -123,5 +236,8 @@ function paginate(id) {
 	$(id).DataTable();
 	$('.dataTables_length').addClass('bs-select');
 }
+
+
+// $(document).ready(populateBrandDropDown);
 
 $(document).ready(init);

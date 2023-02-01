@@ -29,7 +29,7 @@
 
 </head>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="name_site_navbar">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" th:fragment="name_site_navbar">
   <div class="container-fluid">
     <button
       class="navbar-toggler"
@@ -44,7 +44,7 @@
     </button>
     
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <a class="navbar-brand mt-1 mt-lg-0" th:href="@{/}">
+    <a class="navbar-brand mt-1 mt-lg-0" th:href="@{/site/login}">
       <img th:src="@{/static/increff-logo1.png}" alt="" loading="lazy" height="40">
     </a>
 
@@ -70,7 +70,7 @@
   </div>
 </nav>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="name_app_navbar">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" th:fragment="name_app_navbar">
   <div class="container-fluid">
     <button
       class="navbar-toggler"
@@ -86,7 +86,7 @@
     
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
     
-      <a class="navbar-brand mt-1 mt-lg-0" th:href="@{/}">
+      <a class="navbar-brand mt-1 mt-lg-0" th:href="@{/ui/home}">
         <img th:src="@{/static/increff-logo1.png}" class="d-inline-block align-top" alt="Increff Logo" loading="lazy" height="40">
       </a>
   
@@ -106,14 +106,15 @@
         <li class="nav-item">
           <a class="nav-link" th:href="@{/ui/orders}">Orders</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/ui/day-report}">Day Wise Report</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/ui/sales-report}">Sales Report</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/ui/inventory-report}">Inventory Report</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Reports
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" th:href="@{/ui/day-report}">Day Wise Report</a>
+            <a class="dropdown-item" th:href="@{/ui/sales-report}">Sales Report</a>
+            <a class="dropdown-item" th:href="@{/ui/inventory-report}">Inventory Report</a>
+          </div>
         </li>
       </ul>
     </div>

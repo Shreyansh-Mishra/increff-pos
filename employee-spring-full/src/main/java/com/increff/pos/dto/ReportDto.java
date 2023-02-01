@@ -47,7 +47,7 @@ public class ReportDto {
 	@Autowired
 	private SchedulerService schedulerService;
 
-	//schedule at 12:05 am everyday
+	//schedule at 12:01 am everyday
 
 	//set cron timezone to utc
 	@Scheduled(cron = "0 1 0 * * *" , zone = "UTC")
@@ -77,10 +77,13 @@ public class ReportDto {
 	}
 	
 	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(String startDate, String endDate) throws ParseException, ApiException{
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("utc"));
-        Date date = sdf.parse(startDate);
+		sdf.setLenient(false);
+        System.out.println(endDate);
+		Date date = sdf.parse(startDate);
         Date date2 = sdf.parse(endDate);
+		System.out.println("date2: "+date2);
         Instant from = date.toInstant();
 		Instant to = date2.toInstant();
 		
@@ -105,6 +108,7 @@ public class ReportDto {
 		}
 		
 		List<OrderPojo> orders = orderService.selectOrdersBetweenDates(from, to);
+		System.out.println("Order:"+orders.size()+"from: "+ from +"to: "+ to);
 		for(OrderPojo order: orders) {
 			List<OrderItemPojo> orderItems = orderItemsService.selectItems(order.getId());
 			double revenue = 0;

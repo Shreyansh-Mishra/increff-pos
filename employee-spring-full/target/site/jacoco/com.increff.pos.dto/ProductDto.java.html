@@ -49,7 +49,7 @@ import javax.transaction.Transactional;
 <span class="fc" id="L49">		return p2;</span>
 	}
 	
-	public List&lt;ProductData&gt; getProductByBrandName(String brandName) throws ApiException{
+	public List&lt;ProductData&gt; getProductByBrandName(String brandName){
 <span class="fc" id="L53">		List&lt;ProductPojo&gt; products = productService.selectByBrand(brandName);</span>
 <span class="fc" id="L54">		List&lt;ProductData&gt; productList = new ArrayList&lt;ProductData&gt;();</span>
 <span class="fc bfc" id="L55" title="All 2 branches covered.">		for(ProductPojo product: products) {</span>
@@ -58,7 +58,7 @@ import javax.transaction.Transactional;
 <span class="fc" id="L58">		return productList;</span>
 	}
 	
-	public List&lt;ProductData&gt; getProductsByBrandAndCategory(String brandName, String category) throws ApiException{
+	public List&lt;ProductData&gt; getProductsByBrandAndCategory(String brandName, String category){
 <span class="fc" id="L62">		List&lt;ProductPojo&gt; products = productService.selectByBrandAndCategory(brandName,category);</span>
 <span class="fc" id="L63">		List&lt;ProductData&gt; productList = new ArrayList&lt;ProductData&gt;();</span>
 <span class="fc bfc" id="L64" title="All 2 branches covered.">		for(ProductPojo product: products) {</span>

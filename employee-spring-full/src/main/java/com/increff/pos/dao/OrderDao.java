@@ -15,8 +15,7 @@ public class OrderDao extends AbstractDao {
 	private String delete_id = "delete from OrderPojo o where id=:id";
 	private String select_all = "select o from OrderPojo o order by o.id DESC";
 	private String select_id = "select o from OrderPojo o where id=:id";
-	private String select_date = "select o from OrderPojo o where date(time) between date(:startDate) and date(:endDate)";
-
+	private String select_date = "select o from OrderPojo o where trunc(time) between trunc(:startDate) and trunc(:endDate)";
 	private String select_by_date = "select o from OrderPojo o where trunc(time)=trunc(:instant)";
 
 	public void insert(OrderPojo o) {

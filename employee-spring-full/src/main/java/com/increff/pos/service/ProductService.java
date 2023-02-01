@@ -15,18 +15,14 @@ import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.ProductPojo;
 
 @Service
+@Transactional(rollbackOn = ApiException.class)
 public class ProductService {
 	@Autowired
 	private ProductDao productDao;
-	
-	@Transactional(rollbackOn = ApiException.class)
+
 	public void add(ProductPojo product) throws ApiException {
-		if(product.getName().isEmpty()||product.getBarcode().isEmpty()) {
-			throw new ApiException("Please fill all the fields!");
-		}
-		if(isNegative(product.getMrp())) {
-			throw new ApiException("Enter a Valid MRP");
-		}
+		isEmpty(product.getName(),product.getBarcode());
+		isNegative(product.getMrp());
 		normalize(product);
 		ProductPojo p2 = productDao.selectBarcode(product.getBarcode());
 		if(p2!=null) {
@@ -36,65 +32,47 @@ public class ProductService {
 		productDao.insert(product);
 	}
 	
-	@Transactional
 	public List<ProductPojo> selectAll() {
 		List<ProductPojo> p = productDao.selectAll();
 		return p;
 	}
 	
-	@Transactional(rollbackOn = ApiException.class)
-	public List<ProductPojo> selectByBrand(String brandName) throws ApiException{
+	public List<ProductPojo> selectByBrand(String brandName){
 		List<ProductPojo> p2 = productDao.selectBrand(brandName.toLowerCase());
-		if(p2.isEmpty()) {
-			throw new ApiException("No product of this Brand available");
-		}
 		return p2;
 	}
 	
-	@Transactional(rollbackOn = ApiException.class)
 	public ProductPojo selectById(int id) throws ApiException {
 		ProductPojo p = productDao.selectId(id);
 		if(p==null)
-			throw new ApiException("The product does not exists");
+			throw new ApiException("The product with id "+ id +" does not exists");
 		return p;
 	}
 
 	
-	@Transactional(rollbackOn = ApiException.class)
-	public List<ProductPojo> selectByBrandAndCategory(String brand, String category) throws ApiException{
+	public List<ProductPojo> selectByBrandAndCategory(String brand, String category){
 		List<ProductPojo> p2 = productDao.selectBrandAndCategory(brand.toLowerCase(), category.toLowerCase());
-		if(p2.isEmpty()) {
-			throw new ApiException("No product of this Brand and Category found!");
-		}
 		return p2;
 	}
 
-	@Transactional(rollbackOn = ApiException.class)
 	public ProductPojo selectByBarcode(String barcode) throws ApiException {
-		ProductPojo p = productDao.selectBarcode(barcode);
+		isEmpty(barcode,barcode);
+		ProductPojo p = productDao.selectBarcode(barcode.trim().toLowerCase());
 		if(p==null)
 			throw new ApiException("The product with barcode "+ barcode +" does not exists");
 		return p;
 	}
 
-	@Transactional
+
 	public void update(ProductPojo product,int id) throws ApiException {
-		if(product.getName().isEmpty()||product.getBarcode().isEmpty()) {
-			throw new ApiException("Please fill all the fields!");
-		}
-		if(isNegative(product.getMrp())) {
-			throw new ApiException("Enter a Valid MRP");
-		}
+		isEmpty(product.getName(),product.getBarcode());
+		isNegative(product.getMrp());
 		normalize(product);
 		ProductPojo p2 = productDao.selectBarcode(product.getBarcode());
 		if(p2!=null && p2.getId()!=id) {
 			throw new ApiException("A Product already exists with the same barcode!");
 		}
-		
-		p2 = productDao.selectId(id);
-		if(p2==null) {
-			throw new ApiException("The Product does not exists");
-		}
+		p2 = this.selectById(id);
 		p2.setBarcode(product.getBarcode());
 		p2.setBrand_category(product.getBrand_category());
 		p2.setMrp(product.getMrp());
@@ -102,10 +80,14 @@ public class ProductService {
 		productDao.update();
 	}
 
-	public static boolean isNegative(double num) {
+	public static void isNegative(double num) throws ApiException {
 		if(num<=0)
-			return true;
-		return false;
+			throw new ApiException("Enter a Valid MRP");
+	}
+
+	public static void isEmpty(String a, String b) throws ApiException {
+		if(a.isEmpty()||b.isEmpty())
+			throw new ApiException("Please fill all the fields!");
 	}
 
 	protected static void normalize(ProductPojo p) {

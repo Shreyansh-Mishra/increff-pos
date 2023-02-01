@@ -15,42 +15,41 @@ import com.increff.pos.pojo.OrderPojo;
 <span class="fc" id="L15">	private String delete_id = &quot;delete from OrderPojo o where id=:id&quot;;</span>
 <span class="fc" id="L16">	private String select_all = &quot;select o from OrderPojo o order by o.id DESC&quot;;</span>
 <span class="fc" id="L17">	private String select_id = &quot;select o from OrderPojo o where id=:id&quot;;</span>
-<span class="fc" id="L18">	private String select_date = &quot;select o from OrderPojo o where date(time) between date(:startDate) and date(:endDate)&quot;;</span>
-
-<span class="fc" id="L20">	private String select_by_date = &quot;select o from OrderPojo o where date(time)=date(:instant)&quot;;</span>
+<span class="fc" id="L18">	private String select_date = &quot;select o from OrderPojo o where trunc(time) between trunc(:startDate) and trunc(:endDate)&quot;;</span>
+<span class="fc" id="L19">	private String select_by_date = &quot;select o from OrderPojo o where trunc(time)=trunc(:instant)&quot;;</span>
 
 	public void insert(OrderPojo o) {
-<span class="nc" id="L23">		em().persist(o);</span>
-<span class="nc" id="L24">	}</span>
+<span class="fc" id="L22">		em().persist(o);</span>
+<span class="fc" id="L23">	}</span>
 	
 	public int delete(int id) {
-<span class="nc" id="L27">		Query query = em().createQuery(delete_id);</span>
-<span class="nc" id="L28">		query.setParameter(&quot;id&quot;, id);</span>
-<span class="nc" id="L29">		return query.executeUpdate();</span>
+<span class="nc" id="L26">		Query query = em().createQuery(delete_id);</span>
+<span class="nc" id="L27">		query.setParameter(&quot;id&quot;, id);</span>
+<span class="nc" id="L28">		return query.executeUpdate();</span>
 	}
 	
 	public List&lt;OrderPojo&gt; selectAll(){
-<span class="nc" id="L33">		TypedQuery&lt;OrderPojo&gt; query = getQuery(select_all, OrderPojo.class);</span>
-<span class="nc" id="L34">		return query.getResultList();</span>
+<span class="fc" id="L32">		TypedQuery&lt;OrderPojo&gt; query = getQuery(select_all, OrderPojo.class);</span>
+<span class="fc" id="L33">		return query.getResultList();</span>
 	}
 	
 	public OrderPojo selectId(int id){
-<span class="nc" id="L38">		TypedQuery&lt;OrderPojo&gt; query = getQuery(select_id, OrderPojo.class);</span>
-<span class="nc" id="L39">		query.setParameter(&quot;id&quot;, id);</span>
-<span class="nc" id="L40">		return getSingle(query);</span>
+<span class="fc" id="L37">		TypedQuery&lt;OrderPojo&gt; query = getQuery(select_id, OrderPojo.class);</span>
+<span class="fc" id="L38">		query.setParameter(&quot;id&quot;, id);</span>
+<span class="fc" id="L39">		return getSingle(query);</span>
 	}
 	
 	public List&lt;OrderPojo&gt; selectBetweenDates(Instant startDate, Instant endDate){
-<span class="nc" id="L44">		TypedQuery&lt;OrderPojo&gt; query = getQuery(select_date, OrderPojo.class);</span>
-<span class="nc" id="L45">		query.setParameter(&quot;startDate&quot;, startDate);</span>
-<span class="nc" id="L46">		query.setParameter(&quot;endDate&quot;, endDate);</span>
-<span class="nc" id="L47">		return query.getResultList();</span>
+<span class="fc" id="L43">		TypedQuery&lt;OrderPojo&gt; query = getQuery(select_date, OrderPojo.class);</span>
+<span class="fc" id="L44">		query.setParameter(&quot;startDate&quot;, startDate);</span>
+<span class="fc" id="L45">		query.setParameter(&quot;endDate&quot;, endDate);</span>
+<span class="fc" id="L46">		return query.getResultList();</span>
 	}
 
 	public List&lt;OrderPojo&gt; selectByDate(Instant date){
-<span class="nc" id="L51">		TypedQuery&lt;OrderPojo&gt; query = getQuery(select_by_date, OrderPojo.class);</span>
-<span class="nc" id="L52">		query.setParameter(&quot;instant&quot;, date);</span>
-<span class="nc" id="L53">		return query.getResultList();</span>
+<span class="fc" id="L50">		TypedQuery&lt;OrderPojo&gt; query = getQuery(select_by_date, OrderPojo.class);</span>
+<span class="fc" id="L51">		query.setParameter(&quot;instant&quot;, date);</span>
+<span class="fc" id="L52">		return query.getResultList();</span>
 	}
 
 }

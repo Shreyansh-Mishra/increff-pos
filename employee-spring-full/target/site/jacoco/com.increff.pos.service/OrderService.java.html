@@ -19,24 +19,27 @@ import org.springframework.stereotype.Service;
 	private OrderDao orderDao;
 
 	public void addOrder(OrderPojo orderPojo) throws ApiException {
-<span class="nc" id="L22">		orderDao.insert(orderPojo);</span>
-<span class="nc" id="L23">	}</span>
+<span class="fc" id="L22">		orderDao.insert(orderPojo);</span>
+<span class="fc" id="L23">	}</span>
 
 	public List&lt;OrderPojo&gt; selectOrders(){
-<span class="nc" id="L26">		return orderDao.selectAll();</span>
+<span class="fc" id="L26">		return orderDao.selectAll();</span>
 	}
 
-	public OrderPojo selectOrderById(int id) {
-<span class="nc" id="L30">		return orderDao.selectId(id);</span>
+	public OrderPojo selectOrderById(int id) throws ApiException {
+<span class="fc" id="L30">		OrderPojo order = orderDao.selectId(id);</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">		if(order == null) {</span>
+<span class="fc" id="L32">			throw new ApiException(&quot;Order with id &quot; + id + &quot; does not exist&quot;);</span>
+		}
+<span class="fc" id="L34">		return order;</span>
 	}
 	
 	public List&lt;OrderPojo&gt; selectOrdersBetweenDates(Instant startDate, Instant endDate){
-<span class="nc" id="L34">		System.out.println(endDate);</span>
-<span class="nc" id="L35">		return orderDao.selectBetweenDates(startDate, endDate);</span>
+<span class="fc" id="L38">		return orderDao.selectBetweenDates(startDate, endDate);</span>
 	}
 
 	public List&lt;OrderPojo&gt; selectByDate(Instant instant){
-<span class="nc" id="L39">		return orderDao.selectByDate(instant);</span>
+<span class="fc" id="L42">		return orderDao.selectByDate(instant);</span>
 	}
 	
 }

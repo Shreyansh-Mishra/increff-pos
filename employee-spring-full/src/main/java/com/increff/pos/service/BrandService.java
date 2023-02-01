@@ -18,9 +18,7 @@ public class BrandService {
 	private BrandDao brandDao;
 
 	public void add(BrandPojo brand) throws ApiException {
-		if(isEmpty(brand.getBrand(),brand.getCategory())) {
-			throw new ApiException("Brand or Category cannot be empty");
-		}
+		isEmpty(brand.getBrand(),brand.getCategory());
 		normalize(brand);
 		BrandPojo isExists = brandDao.select(brand.getBrand(),brand.getCategory());
 		if(isExists!=null) {
@@ -36,7 +34,7 @@ public class BrandService {
 	}
 	
 	public BrandPojo selectByNameAndCategory(String name, String category) throws ApiException {
-		BrandPojo b = brandDao.select(name, category);
+		BrandPojo b = brandDao.select(name, category.toLowerCase());
 		if(b==null) {
 			throw new ApiException("The requested brand and category combination does not exists");
 		}
@@ -48,9 +46,7 @@ public class BrandService {
 	}
 	
 	public void updateBrand(int id, BrandPojo brand) throws ApiException {
-		if(brand.getBrand().isEmpty()||brand.getCategory().isEmpty()) {
-			throw new ApiException("Brand or Category cannot be empty!");
-		}
+		isEmpty(brand.getBrand(),brand.getCategory());
 		normalize(brand);
 		BrandPojo newBrand = checkIfExists(id);
 		BrandPojo isExist = brandDao.select(brand.getBrand(), brand.getCategory());
@@ -60,7 +56,7 @@ public class BrandService {
 			brandDao.update(newBrand);
 		}
 		else {
-			throw new ApiException("The brand and category already exists!");
+			throw new ApiException("The Brand and Category already exists!");
 		}
 	}
 	
@@ -76,11 +72,10 @@ public class BrandService {
 		return brandDao.selectCategories(brandName);
 	}
 
-	public static boolean isEmpty(String a, String b) {
+	public static void isEmpty(String a, String b) throws ApiException {
 		if(a.isEmpty()||b.isEmpty()) {
-			return true;
+			throw new ApiException("Brand or Category cannot be empty!");
 		}
-		return false;
 	}
 
 	public static void normalize(BrandPojo b) {

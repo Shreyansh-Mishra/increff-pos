@@ -13,57 +13,45 @@ import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
 
 @Service
-<span class="fc" id="L16">public class InventoryService {</span>
+@Transactional(rollbackOn = ApiException.class)
+<span class="fc" id="L17">public class InventoryService {</span>
 	@Autowired
 	private InventoryDao inventoryDao;
 	
-	
-	@Transactional(rollbackOn = ApiException.class)
-	public void add(InventoryPojo inventoryItem) throws ApiException {
-<span class="pc bpc" id="L23" title="1 of 2 branches missed.">		if(isNegative(inventoryItem.getQuantity()))</span>
-<span class="nc" id="L24">			throw new ApiException(&quot;Quantity needs to be a positive value&quot;);</span>
 
-<span class="fc" id="L26">		InventoryPojo i2 = inventoryDao.selectId(inventoryItem.getId());</span>
-<span class="pc bpc" id="L27" title="1 of 2 branches missed.">		if(i2!=null) {</span>
-<span class="nc" id="L28">			i2.setQuantity(inventoryItem.getQuantity()+i2.getQuantity());</span>
-<span class="nc" id="L29">			inventoryDao.update(i2);</span>
+	public void add(InventoryPojo inventoryItem) throws ApiException {
+<span class="fc" id="L23">		isNegative(inventoryItem.getQuantity(), inventoryItem.getBarcode());</span>
+<span class="fc" id="L24">		InventoryPojo i2 = inventoryDao.selectId(inventoryItem.getId());</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">		if(i2!=null) {</span>
+<span class="fc" id="L26">			i2.setQuantity(inventoryItem.getQuantity()+i2.getQuantity());</span>
+<span class="fc" id="L27">			inventoryDao.update(i2);</span>
 		}
 		else {
-<span class="fc" id="L32">		inventoryDao.insert(inventoryItem);</span>
+<span class="fc" id="L30">		inventoryDao.insert(inventoryItem);</span>
 		}
-<span class="fc" id="L34">	}</span>
+<span class="fc" id="L32">	}</span>
 	
-	@Transactional
 	public List&lt;InventoryPojo&gt; selectInventory(){
-<span class="fc" id="L38">		return inventoryDao.selectAll();</span>
+<span class="fc" id="L35">		return inventoryDao.selectAll();</span>
 	}
 	
-	@Transactional
 	public InventoryPojo selectById(int id) throws ApiException {
-<span class="fc" id="L43">		InventoryPojo i = inventoryDao.selectId(id);</span>
-<span class="pc bpc" id="L44" title="1 of 2 branches missed.">		if(i==null)</span>
-<span class="nc" id="L45">			throw new ApiException(&quot;The product does not exists in the Inventory&quot;);</span>
-<span class="fc" id="L46">		return i;</span>
+<span class="fc" id="L39">		InventoryPojo i = inventoryDao.selectId(id);</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">		if(i==null)</span>
+<span class="fc" id="L41">			throw new ApiException(&quot;The product does not exists in the Inventory&quot;);</span>
+<span class="fc" id="L42">		return i;</span>
 	}
 	
-	@Transactional(rollbackOn = ApiException.class)
 	public void update(InventoryPojo inventoryItem) throws ApiException {
-<span class="pc bpc" id="L51" title="1 of 2 branches missed.">		if(isNegative(inventoryItem.getQuantity()))</span>
-<span class="nc" id="L52">			throw new ApiException(&quot;Enter a valid quantity for product with barcode &quot;+inventoryItem.getBarcode());</span>
-<span class="fc" id="L53">		InventoryPojo i2 = inventoryDao.selectId(inventoryItem.getId());</span>
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">		if(i2==null) {</span>
-<span class="nc" id="L55">			throw new ApiException(&quot;The Product isn't present in the Inventory&quot;);</span>
-		}
-<span class="fc" id="L57">		i2.setQuantity(inventoryItem.getQuantity());</span>
-<span class="fc" id="L58">		inventoryDao.update(i2);</span>
-<span class="fc" id="L59">	}</span>
+<span class="fc" id="L46">		isNegative(inventoryItem.getQuantity(), inventoryItem.getBarcode());</span>
+<span class="fc" id="L47">		InventoryPojo i2 = this.selectById(inventoryItem.getId());</span>
+<span class="fc" id="L48">		i2.setQuantity(inventoryItem.getQuantity());</span>
+<span class="fc" id="L49">		inventoryDao.update(i2);</span>
+<span class="fc" id="L50">	}</span>
+	public static void isNegative(int a, String barcode) throws ApiException {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">		if(a&lt;=0)</span>
+<span class="fc" id="L53">			throw new ApiException(&quot;Enter a valid quantity for product with barcode &quot;+barcode);</span>
+<span class="fc" id="L54">	}</span>
 
-
-	public static boolean isNegative(int a) {
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">		if(a&lt;0)</span>
-<span class="nc" id="L64">			return true;</span>
-<span class="fc" id="L65">		return false;</span>
-	}
-	
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

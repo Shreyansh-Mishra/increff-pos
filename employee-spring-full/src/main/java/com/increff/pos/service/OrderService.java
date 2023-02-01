@@ -26,12 +26,15 @@ public class OrderService {
 		return orderDao.selectAll();
 	}
 
-	public OrderPojo selectOrderById(int id) {
-		return orderDao.selectId(id);
+	public OrderPojo selectOrderById(int id) throws ApiException {
+		OrderPojo order = orderDao.selectId(id);
+		if(order == null) {
+			throw new ApiException("Order with id " + id + " does not exist");
+		}
+		return order;
 	}
 	
 	public List<OrderPojo> selectOrdersBetweenDates(Instant startDate, Instant endDate){
-		System.out.println(endDate);
 		return orderDao.selectBetweenDates(startDate, endDate);
 	}
 

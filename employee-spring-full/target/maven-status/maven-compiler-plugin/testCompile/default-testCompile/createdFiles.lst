@@ -1,10 +1,13 @@
-com\increff\pos\service\QaConfig.class
+com\increff\pos\dto\OrderDtoTest.class
 com\increff\pos\service\BrandServiceTest.class
+com\increff\pos\service\OrderItemsServiceTest.class
 com\increff\pos\dto\InventoryDtoTest.class
 com\increff\pos\service\InventoryServiceTest.class
 com\increff\pos\dto\ProductDtoTest.class
+com\increff\pos\dto\BrandDtoTest.class
+com\increff\pos\service\QaConfig.class
+com\increff\pos\service\OrderServiceTest.class
 com\increff\pos\service\SampleTest.class
 com\increff\pos\service\ProductServiceTest.class
 com\increff\pos\service\AboutAppServiceTest.class
-com\increff\pos\dto\BrandDtoTest.class
 com\increff\pos\service\AbstractUnitTest.class
