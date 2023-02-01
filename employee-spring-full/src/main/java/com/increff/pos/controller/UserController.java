@@ -1,12 +1,14 @@
 package com.increff.pos.controller;
 
-import java.util.ArrayList;
-import java.util.Objects;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.increff.pos.dto.UserDto;
+import com.increff.pos.model.UserForm;
+import com.increff.pos.pojo.UserPojo;
+import com.increff.pos.util.SecurityUtil;
+import com.increff.pos.util.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,49 +21,45 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.increff.pos.model.InfoData;
 import com.increff.pos.model.LoginForm;
-import com.increff.pos.pojo.UserPojo;
 import com.increff.pos.service.ApiException;
-import com.increff.pos.service.UserService;
-import com.increff.pos.util.SecurityUtil;
-import com.increff.pos.util.UserPrincipal;
 
 import io.swagger.annotations.ApiOperation;
 
+import java.util.ArrayList;
+
 @Controller
-public class LoginController {
+public class UserController {
 
 	@Autowired
-	private UserService service;
-	@Autowired
-	private InfoData info;
+	private UserDto userDto;
 	
 	@ApiOperation(value = "Logs in a user")
 	@RequestMapping(path = "/session/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ModelAndView login(HttpServletRequest req, LoginForm f) throws ApiException {
-		UserPojo p = service.get(f.getEmail());
-		boolean authenticated = (p != null && Objects.equals(p.getPassword(), f.getPassword()));
-		if (!authenticated) {
-			info.setMessage("Invalid username or password");
+		UserPojo user = userDto.login(f);
+		if(user==null){
 			return new ModelAndView("redirect:/site/login");
 		}
-
 		// Create authentication object
-		Authentication authentication = convert(p);
+		Authentication authentication = convert(user);
 		// Create new session
 		HttpSession session = req.getSession(true);
 		// Attach Spring SecurityContext to this new session
 		SecurityUtil.createContext(session);
 		// Attach Authentication object to the Security Context
 		SecurityUtil.setAuthentication(authentication);
-
 		return new ModelAndView("redirect:/ui/home");
-
 	}
 
 	@RequestMapping(path = "/session/logout", method = RequestMethod.GET)
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
-		request.getSession().invalidate();
-		return new ModelAndView("redirect:/site/logout");
+		return userDto.logout(request);
+	}
+
+	@ApiOperation(value = "Adds a user")
+	@RequestMapping(path = "/session/signup", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public ModelAndView addUser(HttpServletRequest req, UserForm form) throws ApiException {
+	    return userDto.signup(form);
 	}
 
 	private static Authentication convert(UserPojo p) {
@@ -81,5 +79,6 @@ public class LoginController {
 				authorities);
 		return token;
 	}
+
 
 }

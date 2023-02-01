@@ -28,18 +28,13 @@ public class UserService {
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public UserPojo get(String email) throws ApiException {
+	public UserPojo select(String email) throws ApiException {
 		return dao.select(email);
 	}
 
 	@Transactional
-	public List<UserPojo> getAll() {
+	public List<UserPojo> selectAll() {
 		return dao.selectAll();
-	}
-
-	@Transactional
-	public void delete(int id) {
-		dao.delete(id);
 	}
 
 	protected static void normalize(UserPojo p) {

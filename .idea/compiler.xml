@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="invoice-pdf" />
+        <module name="employee-spring-full" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

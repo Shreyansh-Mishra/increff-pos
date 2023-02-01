@@ -6,6 +6,7 @@ C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\util\UserPrincipal.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\service\ApiException.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\service\ProductService.java
+C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\UserController.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\SalesReportController.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\dto\InventoryDto.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\spring\SpringConfig.java
@@ -28,6 +29,7 @@ C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\service\AboutAppService.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\model\InventoryForm.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\service\InventoryService.java
+C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\dto\UserDto.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\model\BrandForm.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\dao\UserDao.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\dto\ProductDto.java
@@ -36,12 +38,10 @@ C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\AppRestControllerAdvice.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\util\IOUtil.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\spring\SecurityConfig.java
-C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\AdminApiController.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\InventoryApiController.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\AboutApiController.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\service\UserService.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\AppUiController.java
-C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\LoginController.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\model\AboutAppData.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\pojo\ProductPojo.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\service\InvoiceService.java

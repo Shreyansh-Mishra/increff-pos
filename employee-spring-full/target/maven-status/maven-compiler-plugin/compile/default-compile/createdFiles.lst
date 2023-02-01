@@ -1,7 +1,7 @@
 com\increff\pos\model\DayWiseReportData.class
 com\increff\pos\service\ApiException.class
+com\increff\pos\controller\UserController.class
 com\increff\pos\dao\InventoryDao.class
-com\increff\pos\controller\AdminApiController.class
 com\increff\pos\util\CookieUtil.class
 com\increff\pos\pojo\InventoryPojo.class
 com\increff\pos\model\SalesByBrandAndCategoryData.class
@@ -55,7 +55,6 @@ com\increff\pos\controller\AppUiController.class
 com\increff\pos\dao\ProductDao.class
 com\increff\pos\model\MessageData.class
 com\increff\pos\controller\ProductApiController.class
-com\increff\pos\controller\LoginController.class
 com\increff\pos\model\InfoData.class
 com\increff\pos\model\ProductForm.class
 com\increff\pos\dao\AbstractDao.class
@@ -71,4 +70,5 @@ com\increff\pos\spring\DbConfig.class
 com\increff\pos\controller\AppRestControllerAdvice.class
 com\increff\pos\dto\ProductDto.class
 com\increff\pos\spring\ControllerConfig.class
+com\increff\pos\dto\UserDto.class
 com\increff\pos\service\AboutAppService.class
