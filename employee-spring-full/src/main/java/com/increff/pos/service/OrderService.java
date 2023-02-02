@@ -38,8 +38,8 @@ public class OrderService {
 		return orderDao.selectBetweenDates(startDate, endDate);
 	}
 
-	public List<OrderPojo> selectByDate(Instant instant){
-		return orderDao.selectByDate(instant);
+	public List<OrderPojo> selectByDate(Instant from, Instant to){
+		return orderDao.selectByDate(from,to);
 	}
 	
 }

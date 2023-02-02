@@ -15,8 +15,8 @@ public class OrderDao extends AbstractDao {
 	private String delete_id = "delete from OrderPojo o where id=:id";
 	private String select_all = "select o from OrderPojo o order by o.id DESC";
 	private String select_id = "select o from OrderPojo o where id=:id";
-	private String select_date = "select o from OrderPojo o where trunc(time) between trunc(:startDate) and trunc(:endDate)";
-	private String select_by_date = "select o from OrderPojo o where trunc(time)=trunc(:instant)";
+	private String select_date = "select o from OrderPojo o where time between :startDate and :endDate";
+	private String select_by_date = "select o from OrderPojo o where time between :from and :to";
 
 	public void insert(OrderPojo o) {
 		em().persist(o);
@@ -46,9 +46,10 @@ public class OrderDao extends AbstractDao {
 		return query.getResultList();
 	}
 
-	public List<OrderPojo> selectByDate(Instant date){
+	public List<OrderPojo> selectByDate(Instant from, Instant to){
 		TypedQuery<OrderPojo> query = getQuery(select_by_date, OrderPojo.class);
-		query.setParameter("instant", date);
+		query.setParameter("from", from);
+		query.setParameter("to", to);
 		return query.getResultList();
 	}
 

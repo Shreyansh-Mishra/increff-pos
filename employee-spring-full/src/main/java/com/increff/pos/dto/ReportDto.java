@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,21 +55,23 @@ public class ReportDto {
 	@Transactional
 	public void updateScheduler(){
 		SchedulerPojo scheduler = new SchedulerPojo();
-		Instant instant = Instant.now().minusSeconds(86400);
-		List<OrderPojo> o = orderService.selectByDate(instant);
+		Instant from = Instant.now().minusSeconds(600).truncatedTo(java.time.temporal.ChronoUnit.DAYS);
+		Instant to = Instant.now().truncatedTo(java.time.temporal.ChronoUnit.DAYS);
+		List<OrderPojo> o = orderService.selectByDate(from,to);
+		System.out.println(o.size());
 		double revenue = 0;
 		int itemcount = 0;
 		for(OrderPojo order: o){
 			List<OrderItemPojo> items = orderItemsService.selectItems(order.getId());
 			for(OrderItemPojo item: items){
 				revenue += item.getSellingPrice()*item.getQuantity();
-				itemcount++;
+				itemcount+=item.getQuantity();
 			}
 		}
 		scheduler.setRevenue(revenue);
 		scheduler.setInvoiced_items_count(itemcount);
 		scheduler.setInvoiced_orders_count(o.size());
-		scheduler.setDate(instant);
+		scheduler.setDate(from);
 		schedulerService.insertScheduler(scheduler);
 	}
 

@@ -8,6 +8,7 @@ com\increff\pos\dto\BrandDtoTest.class
 com\increff\pos\service\QaConfig.class
 com\increff\pos\service\OrderServiceTest.class
 com\increff\pos\service\SampleTest.class
+com\increff\pos\dto\UserDtoTest.class
 com\increff\pos\service\ProductServiceTest.class
 com\increff\pos\service\AboutAppServiceTest.class
 com\increff\pos\service\AbstractUnitTest.class

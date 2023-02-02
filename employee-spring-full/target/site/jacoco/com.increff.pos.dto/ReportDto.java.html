@@ -47,7 +47,7 @@ import javax.transaction.Transactional;
 	@Autowired
 	private SchedulerService schedulerService;
 
-	//schedule at 12:05 am everyday
+	//schedule at 12:01 am everyday
 
 	//set cron timezone to utc
 	@Scheduled(cron = &quot;0 1 0 * * *&quot; , zone = &quot;UTC&quot;)

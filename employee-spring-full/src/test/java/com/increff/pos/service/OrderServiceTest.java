@@ -180,8 +180,9 @@ public class OrderServiceTest extends AbstractUnitTest{
         OrderItemPojo item2 = createOrderItem(product2,or2, 20, 200);
         orderItems2.add(item2);
         orderItemsService.addItems(orderItems2, or2.getId());
-        Instant instant = Instant.now();
-        List<OrderPojo> orders = orderService.selectByDate(instant);
+        Instant from = Instant.now().truncatedTo(java.time.temporal.ChronoUnit.DAYS);
+        Instant to = Instant.now().plus(1,ChronoUnit.DAYS).truncatedTo(java.time.temporal.ChronoUnit.DAYS);
+        List<OrderPojo> orders = orderService.selectByDate(from, to);
         assertEquals(2, orders.size());
         List<OrderItemPojo> items = orderItemsService.selectItems(orders.get(0).getId());
         assertEquals(1, items.size());

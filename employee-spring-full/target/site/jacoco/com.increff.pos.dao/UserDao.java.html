@@ -21,8 +21,8 @@ import com.increff.pos.pojo.UserPojo;
 	
 	@Transactional
 	public void insert(UserPojo p) {
-<span class="nc" id="L24">		em().persist(p);</span>
-<span class="nc" id="L25">	}</span>
+<span class="fc" id="L24">		em().persist(p);</span>
+<span class="fc" id="L25">	}</span>
 
 	public int delete(int id) {
 <span class="nc" id="L28">		Query query = em().createQuery(delete_id);</span>
@@ -37,14 +37,14 @@ import com.increff.pos.pojo.UserPojo;
 	}
 
 	public UserPojo select(String email) {
-<span class="nc" id="L40">		TypedQuery&lt;UserPojo&gt; query = getQuery(select_email, UserPojo.class);</span>
-<span class="nc" id="L41">		query.setParameter(&quot;email&quot;, email);</span>
-<span class="nc" id="L42">		return getSingle(query);</span>
+<span class="fc" id="L40">		TypedQuery&lt;UserPojo&gt; query = getQuery(select_email, UserPojo.class);</span>
+<span class="fc" id="L41">		query.setParameter(&quot;email&quot;, email);</span>
+<span class="fc" id="L42">		return getSingle(query);</span>
 	}
 
 	public List&lt;UserPojo&gt; selectAll() {
-<span class="nc" id="L46">		TypedQuery&lt;UserPojo&gt; query = getQuery(select_all, UserPojo.class);</span>
-<span class="nc" id="L47">		return query.getResultList();</span>
+<span class="fc" id="L46">		TypedQuery&lt;UserPojo&gt; query = getQuery(select_all, UserPojo.class);</span>
+<span class="fc" id="L47">		return query.getResultList();</span>
 	}
 
 	public void update(UserPojo p) {

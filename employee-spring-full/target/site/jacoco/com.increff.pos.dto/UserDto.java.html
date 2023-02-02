@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">employee-spring</a> &gt; <a href="index.source.html" class="el_package">com.increff.pos.dto</a> &gt; <span class="el_source">UserDto.java</span></div><h1>UserDto.java</h1><pre class="source lang-java linenums">package com.increff.pos.dto;
+
+import com.increff.pos.model.InfoData;
+import com.increff.pos.model.LoginForm;
+import com.increff.pos.model.UserData;
+import com.increff.pos.model.UserForm;
+import com.increff.pos.pojo.UserPojo;
+import com.increff.pos.service.ApiException;
+import com.increff.pos.service.UserService;
+import com.increff.pos.util.SecurityUtil;
+import com.increff.pos.util.UserPrincipal;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@Component
+<span class="fc" id="L27">public class UserDto {</span>
+    @Autowired
+    private UserService service;
+
+    @Autowired
+    private InfoData info;
+
+    @Value(&quot;${signup.email}&quot;)
+    private String email;
+
+    public ModelAndView signup(UserForm form) throws ApiException {
+<span class="fc" id="L38">        UserPojo user = convert(form);</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if(user.getEmail().equals(email)){ user.setRole(&quot;supervisor&quot;); }</span>
+<span class="fc" id="L40">        else{ user.setRole(&quot;operator&quot;); }</span>
+<span class="fc" id="L41">        Boolean isSuccess = service.add(user);</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if(isSuccess){</span>
+<span class="fc" id="L43">            info.setMessage(&quot;Signup Successful!&quot;);</span>
+<span class="fc" id="L44">            return new ModelAndView(&quot;redirect:/site/login&quot;);</span>
+        }
+        else{
+<span class="fc" id="L47">            info.setMessage(&quot;The email is already registered!&quot;);</span>
+        }
+<span class="fc" id="L49">        return new ModelAndView(&quot;redirect:/site/signup&quot;);</span>
+    }
+
+    public List&lt;UserData&gt; getAllUsers() {
+<span class="fc" id="L53">        return convertUsers(service.selectAll());</span>
+    }
+
+    public List&lt;UserData&gt; convertUsers(List&lt;UserPojo&gt; user){
+<span class="fc" id="L57">        List&lt;UserData&gt; data = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        for(UserPojo u : user){</span>
+<span class="fc" id="L59">            UserData d = new UserData();</span>
+<span class="fc" id="L60">            d.setEmail(u.getEmail());</span>
+<span class="fc" id="L61">            d.setRole(u.getRole());</span>
+<span class="fc" id="L62">            d.setId(u.getId());</span>
+<span class="fc" id="L63">            data.add(d);</span>
+<span class="fc" id="L64">        }</span>
+<span class="fc" id="L65">        return data;</span>
+    }
+
+    public UserPojo login(LoginForm form) throws ApiException {
+<span class="fc" id="L69">        UserPojo user = service.select(form.getEmail());</span>
+<span class="pc bpc" id="L70" title="1 of 4 branches missed.">        boolean authenticated = (user != null &amp;&amp; Objects.equals(user.getPassword(), form.getPassword()));</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (!authenticated) {</span>
+<span class="fc" id="L72">            info.setMessage(&quot;Invalid username or password&quot;);</span>
+<span class="fc" id="L73">            return null;</span>
+        }
+<span class="fc" id="L75">        info.setMessage(&quot;Login Successful!&quot;);</span>
+<span class="fc" id="L76">        return user;</span>
+    }
+
+    public ModelAndView logout(HttpServletRequest request) {
+<span class="nc" id="L80">        request.getSession().invalidate();</span>
+<span class="nc" id="L81">        info.setMessage(&quot;Logout Successful!&quot;);</span>
+<span class="nc" id="L82">        return new ModelAndView(&quot;redirect:/site/logout&quot;);</span>
+    }
+
+    private static UserPojo convert(UserForm f) {
+<span class="fc" id="L86">        UserPojo p = new UserPojo();</span>
+<span class="fc" id="L87">        p.setEmail(f.getEmail());</span>
+<span class="fc" id="L88">        p.setPassword(f.getPassword());</span>
+<span class="fc" id="L89">        return p;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

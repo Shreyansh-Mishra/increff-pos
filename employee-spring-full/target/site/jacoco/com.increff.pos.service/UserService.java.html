@@ -18,33 +18,28 @@ import com.increff.pos.pojo.UserPojo;
 
 	@Transactional
 	public Boolean add(UserPojo p) throws ApiException {
-<span class="nc" id="L21">		normalize(p);</span>
-<span class="nc" id="L22">		UserPojo existing = dao.select(p.getEmail());</span>
-<span class="nc bnc" id="L23" title="All 2 branches missed.">		if (existing != null) {</span>
-<span class="nc" id="L24">			return false;</span>
+<span class="fc" id="L21">		normalize(p);</span>
+<span class="fc" id="L22">		UserPojo existing = dao.select(p.getEmail());</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">		if (existing != null) {</span>
+<span class="fc" id="L24">			return false;</span>
 		}
-<span class="nc" id="L26">		dao.insert(p);</span>
-<span class="nc" id="L27">		return true;</span>
+<span class="fc" id="L26">		dao.insert(p);</span>
+<span class="fc" id="L27">		return true;</span>
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public UserPojo get(String email) throws ApiException {
-<span class="nc" id="L32">		return dao.select(email);</span>
+	public UserPojo select(String email) throws ApiException {
+<span class="fc" id="L32">		return dao.select(email);</span>
 	}
 
 	@Transactional
-	public List&lt;UserPojo&gt; getAll() {
-<span class="nc" id="L37">		return dao.selectAll();</span>
+	public List&lt;UserPojo&gt; selectAll() {
+<span class="fc" id="L37">		return dao.selectAll();</span>
 	}
-
-	@Transactional
-	public void delete(int id) {
-<span class="nc" id="L42">		dao.delete(id);</span>
-<span class="nc" id="L43">	}</span>
 
 	protected static void normalize(UserPojo p) {
-<span class="nc" id="L46">		p.setEmail(p.getEmail().toLowerCase().trim());</span>
-<span class="nc" id="L47">		p.setRole(p.getRole().toLowerCase().trim());</span>
-<span class="nc" id="L48">	}</span>
+<span class="fc" id="L41">		p.setEmail(p.getEmail().toLowerCase().trim());</span>
+<span class="fc" id="L42">		p.setRole(p.getRole().toLowerCase().trim());</span>
+<span class="fc" id="L43">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
