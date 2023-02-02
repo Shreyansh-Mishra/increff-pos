@@ -301,6 +301,63 @@ function displayCreateOrder(){
 	$('#create-order-modal').modal('toggle');
 }
 
+function getProductUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/product";
+}
+
+function populateBarcode(){
+	var url = getProductUrl() + 's';
+	$.ajax({
+		url: url,
+		type: 'GET',
+		success: function(data) {
+			//find #inputBarcode and append the rows as option in it
+			var $select = $('#inputBarcode');
+			for(var i in data){
+				var e = data[i];
+				var option = '<option value="'+e.barcode+'">'+e.barcode+'</option>';
+				$select.append(option);
+			}
+		},
+		error: (response)=>{
+			handleError(response);
+		} 
+	}) 
+}
+
+let mrpAndQuantity = {mrp:0, quantity:0};
+
+
+function getInventoryUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/inventory";
+}
+
+function getMrpAndQuantity(){
+	var barcode = $('#inputBarcode').val();
+	var url = getProductUrl() + '/barcode/' + barcode;
+	$.ajax({
+		url: url,
+		type: 'GET',
+		success: function(data) {
+			mrpAndQuantity.mrp = data.mrp;
+			$.ajax({
+				url: getInventoryUrl() + '/' + data.id,
+				type: 'GET',
+				success: function(data) {
+					mrpAndQuantity.quantity = data.quantity;
+				},
+				error: (response)=>{
+					handleError(response);
+				}
+			})
+		},
+		error: (response)=>{
+			handleError(response);
+		}
+	})
+}
 
 //INITIALIZATION CODE
 function init(){
@@ -312,6 +369,8 @@ function init(){
 	$('#download-errors').click(downloadErrors);
     $('#orderFile').on('change', updateFileName);
 	$('#add-row').click(addRow);
+	$('#add-order').click(populateBarcode);
+	$('#inputBarcode').change(getMrpAndQuantity);
 }
 
 let i=1;
@@ -337,7 +396,7 @@ $(document).on('keydown', 'input[pattern]', function(e){
 
 function addRow(){
 	$form = $('#order-create-form');
-	var barcode = $form.find('input[name=barcode]').val();
+	var barcode = $form.find('select[name=barcode]').val();
 	var mrp = $form.find('input[name=mrp]').val();
 	var q = $form.find('input[name=quantity]').val();
 	if(barcode=='' || mrp=='' || q==''){
@@ -348,8 +407,24 @@ function addRow(){
 		  });
 		return;
 	}
+	else if(mrp>=mrpAndQuantity.mrp){
+		Swal.fire({
+			title: "Error",
+			text: "The MRP of the product is "+mrpAndQuantity.mrp+"!",
+			icon: "error",
+		});
+		return;
+	}
+	else if(q>mrpAndQuantity.quantity){
+		Swal.fire({
+			title: "Error",
+			text: "The Available quantity of the product is "+mrpAndQuantity.quantity+"!",
+			icon: "error",
+		});
+		return;
+	}
 	let isExist = $('.'+barcode).length
-	$form.find('input[name=barcode]').val('');
+	$form.find('select[name=barcode]').val('');
 	$form.find('input[name=mrp]').val('');
 	$form.find('input[name=quantity]').val('');
 	if(isExist>0){
@@ -406,7 +481,7 @@ function saveRow(i){
 	orderArr[i-1].barcode = $tr.find('input[name=barcode]').val();
 	orderArr[i-1].mrp = $tr.find('input[name=mrp]').val();
 	orderArr[i-1].quantity = $tr.find('input[name=quantity]').val();
-	barcodeMap[$tr.find('input[name=barcode]').val()] = i;
+	barcodeMap[$tr.find('select[name=barcode]').val()] = i;
 	//add new barcode as class to the tr element
 	$editRow.attr('onclick', 'editRow('+i+')');
 	console.log(orderArr);
@@ -426,4 +501,5 @@ function paginate(id) {
 
 $(document).ready(init);
 $(document).ready(getOrderList);
+
 

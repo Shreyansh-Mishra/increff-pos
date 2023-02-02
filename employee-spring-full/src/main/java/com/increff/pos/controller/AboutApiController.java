@@ -27,6 +27,4 @@ public class AboutApiController {
 		return d;
 	}
 
-
-
 }

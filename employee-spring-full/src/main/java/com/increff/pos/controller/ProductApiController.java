@@ -59,4 +59,10 @@ public class ProductApiController {
 	public void updateProduct(@PathVariable int id, @RequestBody ProductForm p) throws ApiException{
 		productFlow.updateProduct(id, p);
 	}
+
+	@ApiOperation("Get Product By Barcode")
+	@RequestMapping(path="/api/product/barcode/{barcode}", method=RequestMethod.GET)
+	public ProductData getProductByBarcode(@PathVariable String barcode) throws ApiException{
+		return productFlow.getProductByBarcode(barcode);
+	}
 }

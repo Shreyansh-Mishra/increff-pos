@@ -81,7 +81,7 @@
         <img th:src="@{/static/increff-logo1.png}" class="d-inline-block align-top" alt="Increff Logo" loading="lazy" height="40">
       </a>
   
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul th:switch="${info.getRole()}" class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link" th:href="@{/ui/home}">Home</a>
         </li>
@@ -97,14 +97,14 @@
         <li class="nav-item">
           <a class="nav-link" th:href="@{/ui/orders}">Orders</a>
         </li>
-        <li class="nav-item dropdown">
+        <li th:case="'supervisor'" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Reports
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" th:href="@{/ui/day-report}">Day Wise Report</a>
-            <a class="dropdown-item" th:href="@{/ui/sales-report}">Sales Report</a>
-            <a class="dropdown-item" th:href="@{/ui/inventory-report}">Inventory Report</a>
+            <a class="dropdown-item" th:href="@{/ui/report/day-report}">Day Wise Report</a>
+            <a class="dropdown-item" th:href="@{/ui/report/sales-report}">Sales Report</a>
+            <a class="dropdown-item" th:href="@{/ui/report/inventory-report}">Inventory Report</a>
           </div>
         </li>
       </ul>

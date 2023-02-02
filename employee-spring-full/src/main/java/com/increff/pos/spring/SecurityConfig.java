@@ -1,6 +1,7 @@
 package com.increff.pos.spring;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/api/product/**").hasAnyAuthority("supervisor")//
 				.antMatchers(HttpMethod.PUT, "/api/product/**").hasAnyAuthority("supervisor")//
 				.antMatchers(HttpMethod.DELETE, "/api/product/**").hasAnyAuthority("supervisor")//
-				.antMatchers(HttpMethod.GET, "/api/inventory/**").permitAll()//
+				.antMatchers(HttpMethod.GET, "/api/inventory/**").hasAnyAuthority("supervisor","operator")//
 				.antMatchers(HttpMethod.POST, "/api/inventory/**").hasAnyAuthority("supervisor")//
 				.antMatchers(HttpMethod.PUT, "/api/inventory/**").hasAnyAuthority("supervisor")//
 				.antMatchers(HttpMethod.DELETE, "/api/inventory/**").hasAnyAuthority("supervisor")//
@@ -43,13 +45,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/api/order/**").hasAnyAuthority("supervisor")//
 				.antMatchers(HttpMethod.PUT, "/api/order/**").hasAnyAuthority("supervisor")//
 				.antMatchers(HttpMethod.DELETE, "/api/order/**").hasAnyAuthority("supervisor")//
-				.antMatchers("/api/report/**").permitAll()//
-				.antMatchers("/api/admin/**").permitAll()//
+				.antMatchers("/api/report/**").hasAnyAuthority("supervisor")//
 				.antMatchers("/api/**").hasAnyAuthority("supervisor", "operator")//
-				.antMatchers("/ui/admin/**").hasAuthority("supervisor")//
+				.antMatchers("/ui/report/**").hasAnyAuthority("supervisor")//
 				.antMatchers("/ui/**").hasAnyAuthority("supervisor", "operator")//
-				// Ignore CSRF and CORS
+				.and().exceptionHandling().accessDeniedHandler(accessDeniedHandler())//
+				//handle accessDenied when not logged in
+				.and().exceptionHandling().accessDeniedPage("/site/403")//
 				.and().csrf().disable().cors().disable();
+
 		logger.info("Configuration complete");
 	}
 
@@ -57,6 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security",
 				"/swagger-ui.html", "/webjars/**");
+	}
+
+	@Bean
+	public AccessDeniedHandler accessDeniedHandler() {
+		return new CustomAccessDeniedHandler();
 	}
 
 }

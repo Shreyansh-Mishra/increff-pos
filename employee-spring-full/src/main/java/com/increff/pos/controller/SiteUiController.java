@@ -28,5 +28,9 @@ public class SiteUiController extends AbstractUiController {
 		return mav("signup.html");
 	}
 
+	@RequestMapping(value = "/site/403")
+	public ModelAndView error403() {
+		return mav("accessDenied.html");
+	}
 
 }
