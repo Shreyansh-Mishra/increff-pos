@@ -3,6 +3,7 @@ package com.increff.pos.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.increff.pos.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -79,7 +80,8 @@ public class ProductDto {
 		ProductPojo p2 = new ProductPojo();
 		p2.setBarcode(p.getBarcode());
 		p2.setName(p.getName());
-		p2.setMrp(p.getMrp());
+		//round off mrp to 2 digits
+		p2.setMrp(StringUtil.round(p.getMrp(), 2));
 		p2.setBrandName(p.getBrandName());
 		p2.setCategory(p.getCategory());
 		return p2;

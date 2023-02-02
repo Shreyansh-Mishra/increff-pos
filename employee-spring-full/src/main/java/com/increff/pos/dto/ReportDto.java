@@ -28,6 +28,8 @@ import com.increff.pos.pojo.SchedulerPojo;
 
 import javax.transaction.Transactional;
 
+import com.increff.pos.util.StringUtil;
+
 @Component
 public class ReportDto {
 	@Autowired
@@ -68,7 +70,7 @@ public class ReportDto {
 				itemcount+=item.getQuantity();
 			}
 		}
-		scheduler.setRevenue(revenue);
+		scheduler.setRevenue(StringUtil.round(revenue, 2));
 		scheduler.setInvoiced_items_count(itemcount);
 		scheduler.setInvoiced_orders_count(o.size());
 		scheduler.setDate(from);
@@ -188,17 +190,15 @@ public class ReportDto {
 	
 	public List<SalesByBrandAndCategoryData> convert(HashMap<Integer,List<Double>> m) throws ApiException{
 		List<SalesByBrandAndCategoryData> data = new ArrayList<SalesByBrandAndCategoryData>();
-		System.out.println("here3");
 		for(int key: m.keySet()) {
 			SalesByBrandAndCategoryData d = new SalesByBrandAndCategoryData();
 			BrandPojo brand = brandService.selectById(key);
-			d.setRevenue(m.get(key).get(0));
+			d.setRevenue(StringUtil.round(m.get(key).get(0), 2));
 			d.setBrand(brand.getBrand());
 			d.setCategory(brand.getCategory());
 			d.setQuantity((m.get(key).get(1)).intValue());
 			data.add(d);
 		}
-		System.out.println("here4");
 		return data;
 	}
 	
@@ -210,7 +210,7 @@ public class ReportDto {
 			d.setDate(day.getDate().toString());
 			d.setInvoiced_items_count(day.getInvoiced_items_count());
 			d.setInvoiced_orders_count(day.getInvoiced_orders_count());
-			d.setTotal_revenue(day.getRevenue());
+			d.setTotal_revenue(StringUtil.round(day.getRevenue(), 2));
 			data.add(d);
 		}
 		return data;

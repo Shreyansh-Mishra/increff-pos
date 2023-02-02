@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.increff.pos.pojo.*;
 import com.increff.pos.service.*;
+import com.increff.pos.util.StringUtil;
 import org.example.dto.InvoiceDto;
 import org.example.model.OrderFOPObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +148,7 @@ public class OrderDto {
 	public static OrderItemPojo convert(OrderForm o) {
 		OrderItemPojo o2 = new OrderItemPojo();
 		o2.setQuantity(o.getQuantity());
-		o2.setSellingPrice(o.getMrp());
+		o2.setSellingPrice(StringUtil.round(o.getMrp(), 2));
 		o2.setBarcode(o.getBarcode());
 		return o2;
 	}
