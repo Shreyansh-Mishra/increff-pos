@@ -334,8 +334,7 @@ function getInventoryUrl(){
 	return baseUrl + "/api/inventory";
 }
 
-function getMrpAndQuantity(){
-	var barcode = $('#inputBarcode').val();
+function getMrpAndQuantity(barcode){
 	var url = getProductUrl() + '/barcode/' + barcode;
 	$.ajax({
 		url: url,
@@ -370,7 +369,9 @@ function init(){
     $('#orderFile').on('change', updateFileName);
 	$('#add-row').click(addRow);
 	$('#add-order').click(populateBarcode);
-	$('#inputBarcode').change(getMrpAndQuantity);
+	$('#inputBarcode').change((e)=>{
+		getMrpAndQuantity($('#inputBarcode').val());
+	});
 }
 
 let i=1;
@@ -472,6 +473,15 @@ function editRow(i){
 function saveRow(i){
 	var $tr = $('#'+i);
 	console.log('.'+$tr.attr('class'));
+	getMrpAndQuantity($tr.find('input[name=barcode]').val());
+	if($tr.find('input[name=mrp]').val()>=mrpAndQuantity.mrp){
+		Swal.fire({icon: 'error',title: 'Oops...',text: 'The MRP of the product is '+mrpAndQuantity.mrp+'!'})
+		return;
+	}
+	else if($tr.find('input[name=quantity]').val()>mrpAndQuantity.quantity){
+		Swal.fire({icon: 'error',title: 'Oops...',text: 'The Available quantity of the product is '+mrpAndQuantity.quantity+'!'});
+		return;
+	}
 	delete barcodeMap['.'+$tr.attr('class')];
 	$tr.removeAttr('class');
 	$tr.addClass($tr.find('input[name=barcode]').val());

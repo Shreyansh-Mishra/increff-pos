@@ -154,7 +154,7 @@ public class OrderDto {
 	}
 	
 	public static List<OrderItemPojo> convert(List<OrderForm> form){
-		List<OrderItemPojo> list= new ArrayList<OrderItemPojo>();
+		List<OrderItemPojo> list= new ArrayList<>();
 		for(OrderForm i: form) {
 			OrderItemPojo o = convert(i);
 			list.add(o);

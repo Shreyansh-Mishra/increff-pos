@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.increff.pos.model.InfoData;
 import com.increff.pos.model.LoginForm;
 import com.increff.pos.service.ApiException;
 
@@ -28,13 +27,14 @@ import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 
 @Controller
+@RequestMapping(path = "/session")
 public class UserController {
 
 	@Autowired
 	private UserDto userDto;
 	
 	@ApiOperation(value = "Logs in a user")
-	@RequestMapping(path = "/session/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	@RequestMapping(path = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ModelAndView login(HttpServletRequest req, LoginForm f) throws ApiException {
 		UserPojo user = userDto.login(f);
 		if(user==null){
@@ -51,13 +51,13 @@ public class UserController {
 		return new ModelAndView("redirect:/ui/home");
 	}
 
-	@RequestMapping(path = "/session/logout", method = RequestMethod.GET)
+	@RequestMapping(path = "/logout", method = RequestMethod.GET)
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
 		return userDto.logout(request);
 	}
 
 	@ApiOperation(value = "Adds a user")
-	@RequestMapping(path = "/session/signup", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	@RequestMapping(path = "/signup", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ModelAndView addUser(HttpServletRequest req, UserForm form) throws ApiException {
 	    return userDto.signup(form);
 	}

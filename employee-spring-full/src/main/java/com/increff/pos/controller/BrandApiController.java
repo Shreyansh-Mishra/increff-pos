@@ -19,43 +19,44 @@ import io.swagger.annotations.ApiOperation;
 
 @Api
 @RestController
+@RequestMapping(path = "/api")
 public class BrandApiController {
 	@Autowired
 	private BrandDto brandDto;
 	
 	
 	@ApiOperation(value = "Adds a brand")
-	@RequestMapping(path = "/api/brand", method = RequestMethod.POST)
+	@RequestMapping(path = "/brand", method = RequestMethod.POST)
 	public void createBrand(@RequestBody BrandForm form) throws ApiException {
 		brandDto.createBrand(form);
 	}
 	
 	@ApiOperation(value= "Get all brands")
-	@RequestMapping(path= "/api/brands", method = RequestMethod.GET)
+	@RequestMapping(path= "/brands", method = RequestMethod.GET)
 	public List<BrandData> getBrands(){
 		return brandDto.getAllBrands();
 	}
 	
 	@ApiOperation(value= "Get brand by name and category")
-	@RequestMapping(path= "/api/brand/{name}/{category}", method = RequestMethod.GET)
+	@RequestMapping(path= "/brand/{name}/{category}", method = RequestMethod.GET)
 	public BrandData getBrand(@PathVariable String name,@PathVariable String category) throws ApiException{
 		return brandDto.getBrandByNameAndCategory(name, category);
 	}
 	
 	@ApiOperation(value= "Get brand by id")
-	@RequestMapping(path= "/api/brand/{id}", method = RequestMethod.GET)
+	@RequestMapping(path= "/brand/{id}", method = RequestMethod.GET)
 	public BrandData getBrand(@PathVariable int id) throws ApiException{
 		return brandDto.getBrandById(id);
 	}
 
 	@ApiOperation(value= "Get categories from brand")
-	@RequestMapping(path= "/api/brand/get-categories/{brandName}", method = RequestMethod.GET)
+	@RequestMapping(path= "/brand/get-categories/{brandName}", method = RequestMethod.GET)
 	public List<String> getCategoriesFromBrand(@PathVariable String brandName) throws ApiException{
 		return brandDto.getCategoriesByBrand(brandName);
 	}
 
 	@ApiOperation(value= "Update brand")
-	@RequestMapping(path= "/api/brand/{id}", method = RequestMethod.PUT)
+	@RequestMapping(path= "/brand/{id}", method = RequestMethod.PUT)
 	public void updateBrand(@PathVariable int id, @RequestBody BrandForm b) throws ApiException{
 		brandDto.updateBrand(id, b);
 	}

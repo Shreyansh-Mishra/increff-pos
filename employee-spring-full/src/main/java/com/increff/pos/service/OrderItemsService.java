@@ -25,6 +25,15 @@ public class OrderItemsService {
                 throw new ApiException("Selling Price needs to be positive");
             }
             o.setOrderId(id);
+            OrderItemPojo isExists = orderItemDao.checkExisting(o.getProductId(),o.getOrderId());
+            if(isExists!=null && isExists.getSellingPrice()!=o.getSellingPrice()){
+                throw new ApiException("Selling Price of the same product can't be different");
+            }
+            else if(isExists!=null && isExists.getSellingPrice()==o.getSellingPrice()){
+                isExists.setQuantity(o.getQuantity()+isExists.getQuantity());
+                orderItemDao.update(isExists);
+                continue;
+            }
             orderItemDao.insert(o);
         }
     }

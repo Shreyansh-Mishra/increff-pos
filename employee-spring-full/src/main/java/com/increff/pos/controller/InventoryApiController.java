@@ -19,31 +19,32 @@ import io.swagger.annotations.ApiOperation;
 
 @Api
 @RestController
+@RequestMapping(path = "/api")
 public class InventoryApiController {
 	
 	@Autowired
 	private InventoryDto inventoryDto;
 	
 	@ApiOperation(value="adds product to inventory")
-	@RequestMapping(path="/api/inventory/add-product",method=RequestMethod.POST)
+	@RequestMapping(path="/inventory/add-product",method=RequestMethod.POST)
 	public void addProductToInventory(@RequestBody InventoryForm i) throws ApiException {
 		inventoryDto.addToInventory(i);
 	}
 	
 	@ApiOperation(value="view inventory")
-	@RequestMapping(path="/api/inventory/get-inventory",method=RequestMethod.GET)
+	@RequestMapping(path="/inventory/get-inventory",method=RequestMethod.GET)
 	public List<InventoryData> getWholeInventory() throws ApiException {
 		return inventoryDto.getInventory();
 	}
 	
 	@ApiOperation(value="Get by id")
-	@RequestMapping(path="/api/inventory/{id}", method=RequestMethod.GET)
+	@RequestMapping(path="/inventory/{id}", method=RequestMethod.GET)
 	public InventoryData getItemById(@PathVariable int id) throws ApiException {
 		return inventoryDto.getById(id);
 	}
 	
 	@ApiOperation(value="edit Inventory")
-	@RequestMapping(path="/api/inventory/{id}", method=RequestMethod.PUT)
+	@RequestMapping(path="/inventory/{id}", method=RequestMethod.PUT)
 	public void updateInventory(@PathVariable int id,@RequestBody InventoryForm i) throws ApiException {
 		inventoryDto.editInventory(id,i);
 	}

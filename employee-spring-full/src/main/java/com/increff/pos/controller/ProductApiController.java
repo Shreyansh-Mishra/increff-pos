@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 @Api
 @RestController
+@RequestMapping(path = "/api")
 public class ProductApiController {
 	
 	@Autowired
@@ -25,43 +26,43 @@ public class ProductApiController {
 	
 	
 	@ApiOperation("Adds a Product")
-	@RequestMapping(path="/api/product", method=RequestMethod.POST)
+	@RequestMapping(path="/product", method=RequestMethod.POST)
 	public void createProduct(@RequestBody ProductForm p) throws ApiException {
 		productFlow.createProduct(p);
 	}
 	
 	@ApiOperation("Get All Products")
-	@RequestMapping(path="/api/products", method=RequestMethod.GET)
+	@RequestMapping(path="/products", method=RequestMethod.GET)
 	public List<ProductData> getProducts() throws ApiException{
 		return productFlow.getAllProducts();
 	}
 	
 	@ApiOperation("Get Products by id")
-	@RequestMapping(path="/api/product/{id}", method=RequestMethod.GET)
+	@RequestMapping(path="/product/{id}", method=RequestMethod.GET)
 	public ProductData getProductById(@PathVariable int id) throws ApiException {
 		return productFlow.getProductsById(id);
 	}
 	
 	@ApiOperation("Get Products by brand name")
-	@RequestMapping(path="/api/product/get-product-brand/{brandName}", method=RequestMethod.GET)
+	@RequestMapping(path="/product/get-product-brand/{brandName}", method=RequestMethod.GET)
 	public List<ProductData> getProductsByBrand(@PathVariable String brandName) throws ApiException{
 		return productFlow.getProductByBrandName(brandName);
 	}
 	
 	@ApiOperation("Get Products by Brand and Category")
-	@RequestMapping(path="/api/product/get-product/{brand}/{category}", method=RequestMethod.GET)
+	@RequestMapping(path="/product/get-product/{brand}/{category}", method=RequestMethod.GET)
 	public List<ProductData> getProductsByCategory(@PathVariable String brand,@PathVariable String category) throws ApiException{
 		return productFlow.getProductsByBrandAndCategory(brand, category);
 	}
 	
 	@ApiOperation("Edit Product")
-	@RequestMapping(path="/api/product/{id}", method=RequestMethod.PUT)
+	@RequestMapping(path="/product/{id}", method=RequestMethod.PUT)
 	public void updateProduct(@PathVariable int id, @RequestBody ProductForm p) throws ApiException{
 		productFlow.updateProduct(id, p);
 	}
 
 	@ApiOperation("Get Product By Barcode")
-	@RequestMapping(path="/api/product/barcode/{barcode}", method=RequestMethod.GET)
+	@RequestMapping(path="/product/barcode/{barcode}", method=RequestMethod.GET)
 	public ProductData getProductByBarcode(@PathVariable String barcode) throws ApiException{
 		return productFlow.getProductByBarcode(barcode);
 	}
