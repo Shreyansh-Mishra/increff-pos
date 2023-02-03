@@ -1,0 +1,5 @@
+org\example\model\OrderFOPObject.class
+org\example\model\InvoiceData.class
+org\example\model\OrderItemData.class
+org\example\dto\InvoiceDto.class
+org\example\util\InvoiceFOP.class

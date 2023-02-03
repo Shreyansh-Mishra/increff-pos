@@ -1,0 +1,89 @@
+<!doctype html>
+
+<html lang="en">
+
+<head th:replace="snippets.html :: name_head"></head>
+
+<body>
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+<div class="container">
+
+<br>
+
+ <!-- Top row with form-->
+ <div class="row">
+	 <div class="col-9">
+			<form class="form-inline md-form" id="report-form">
+                <div class="container">
+                    <div class="row">
+                        <div class="col form-outline mr-3">
+                            <input name="startDate" id="startDate" type="date"  class="form-control">
+                            <label class="form-label" for="startDate">Start Date</label>
+                        </div>
+                        <div class="col form-outline mr-3" >
+                            <input type="date" name="endDate" id="endDate" class="form-control">
+                            <label class="form-label" for="endDate">End Date</label>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary" id="get-report">Get Report</button>
+                        </div>
+						<div class="col">
+                            <button type="button" class="btn btn-primary" id="download-report">Download Report</button>
+                        </div>
+                    </div>
+                </div>
+			</form>
+	 </div>	
+</div> 
+
+
+<br>
+<div class="row">
+
+ <!-- Table -->
+ <div class="col-12">
+	<table class="table table-hover shadow-4-strong rounded-5 mb-2" id="dtBasicExample">
+	  <thead>
+	    <tr>
+	      <th scope="col">Date</th>
+	      <th scope="col">Invoiced Orders Count</th>
+	      <th scope="col">Invoiced Items Count</th>
+	      <th scope="col">Total Revenue</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td>1</td>
+	      <td>Romil Jain</td>
+	      <td>30</td>
+	      <td>Edit | Delete</td>
+	    </tr>
+	    <tr>
+	      <td>2</td>
+	      <td>Rajul Jain</td>
+	      <td>31</td>
+	      <td>Edit | Delete</td>
+	    </tr>
+	    <tr>
+	      <td>3</td>
+	      <td>Anaisha Jain</td>
+	      <td>7</td>
+	      <td>Edit | Delete</td>
+	    </tr>
+	  </tbody>
+	</table>
+
+</div>
+</div>
+
+</div> <!-- Container end-->
+
+<footer th:replace="snippets.html :: name_footer"></footer>
+
+<script th:src="@{/static/report.js}"/></script>
+
+</body>	
+
+</html>

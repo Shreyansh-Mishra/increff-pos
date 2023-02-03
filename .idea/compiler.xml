@@ -2,12 +2,18 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="invoice-pdf" />
         <module name="employee-spring-full" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="employee-spring-full (1)" target="1.8" />
+      <module name="employee-spring-full (2)" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
