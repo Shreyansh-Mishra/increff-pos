@@ -3,6 +3,7 @@ package com.increff.pos.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.increff.pos.util.DtoUtil;
 import com.increff.pos.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,18 +28,21 @@ public class ProductDto {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void createProduct(ProductForm form) throws ApiException {
-		ProductPojo p2 = convert(form);
+		ProductPojo p2 = DtoUtil.objectMapper(form, ProductPojo.class);
 		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName().toLowerCase(),p2.getCategory().toLowerCase());
 		p2.setBrand_category(b.getId());
 		productService.add(p2);
 	}
-	
+
+	@Transactional(rollbackOn = ApiException.class)
 	public List<ProductData> getAllProducts() throws ApiException {
 		List<ProductPojo> products = productService.selectAll();
-		List<ProductData> productList = new ArrayList<ProductData>();
+		List<ProductData> productList = new ArrayList<>();
 		for(ProductPojo product: products) {
-			ProductData data = convert(product);
-			data = convert(data,product);
+			ProductData data = DtoUtil.objectMapper(product,ProductData.class);
+			BrandPojo brand = brandService.selectById(product.getBrand_category());
+			data.setBrandName(brand.getBrand());
+			data.setCategory(brand.getCategory());
 			productList.add(data);
 		}
 		return productList;
@@ -46,31 +50,31 @@ public class ProductDto {
 	
 	public ProductData getProductsById(int id) throws ApiException{
 		ProductPojo p = productService.selectById(id);
-		ProductData p2 = convert(p);
+		ProductData p2 = DtoUtil.objectMapper(p,ProductData.class);
 		return p2;
 	}
 	
 	public List<ProductData> getProductByBrandName(String brandName){
 		List<ProductPojo> products = productService.selectByBrand(brandName);
-		List<ProductData> productList = new ArrayList<ProductData>();
+		List<ProductData> productList = new ArrayList<>();
 		for(ProductPojo product: products) {
-			productList.add(convert(product));
+			productList.add(DtoUtil.objectMapper(product,ProductData.class));
 		}
 		return productList;
 	}
 	
 	public List<ProductData> getProductsByBrandAndCategory(String brandName, String category){
 		List<ProductPojo> products = productService.selectByBrandAndCategory(brandName,category);
-		List<ProductData> productList = new ArrayList<ProductData>();
+		List<ProductData> productList = new ArrayList<>();
 		for(ProductPojo product: products) {
-			productList.add(convert(product));
+			productList.add(DtoUtil.objectMapper(product,ProductData.class));
 		}
 		return productList;
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateProduct(int id, ProductForm form) throws ApiException {
-		ProductPojo p2 = convert(form);
+		ProductPojo p2 = DtoUtil.objectMapper(form, ProductPojo.class);
 		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName().toLowerCase(),p2.getCategory().toLowerCase());
 		p2.setBrand_category(b.getId());
 		productService.update(p2,id);
@@ -78,36 +82,7 @@ public class ProductDto {
 
 	public ProductData getProductByBarcode(String barcode) throws ApiException {
 		ProductPojo p = productService.selectByBarcode(barcode);
-		ProductData p2 = convert(p);
+		ProductData p2 = DtoUtil.objectMapper(p,ProductData.class);
 		return p2;
 	}
-	
-	private static ProductPojo convert(ProductForm p) {
-		ProductPojo p2 = new ProductPojo();
-		p2.setBarcode(p.getBarcode());
-		p2.setName(p.getName());
-		//round off mrp to 2 digits
-		p2.setMrp(StringUtil.round(p.getMrp(), 2));
-		p2.setBrandName(p.getBrandName());
-		p2.setCategory(p.getCategory());
-		return p2;
-	}
-	
-	private static ProductData convert(ProductPojo p) {
-		ProductData p2 = new ProductData();
-		p2.setBarcode(p.getBarcode());
-		p2.setId(p.getId());
-		p2.setMrp(p.getMrp());
-		p2.setName(p.getName());
-		return p2;
-	}
-	
-	public ProductData convert(ProductData p, ProductPojo p2) throws ApiException {
-		BrandPojo b = brandService.selectById(p2.getBrand_category());
-		p.setBrandName(b.getBrand());
-		p.setCategory(b.getCategory());
-		return p;
-	}
-
-
 }

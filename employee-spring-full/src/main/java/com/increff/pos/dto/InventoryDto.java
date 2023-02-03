@@ -3,6 +3,7 @@ package com.increff.pos.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.increff.pos.util.DtoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,7 @@ public class InventoryDto {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public void addToInventory(InventoryForm form) throws ApiException {
-		InventoryPojo inventoryPojo = convert(form);
+		InventoryPojo inventoryPojo = DtoUtil.objectMapper(form, InventoryPojo.class);
 		ProductPojo product = productService.selectByBarcode(inventoryPojo.getBarcode().toLowerCase());
 		inventoryPojo.setId(product.getId());
 		inventoryService.add(inventoryPojo);
@@ -34,20 +35,20 @@ public class InventoryDto {
 	
 	public List<InventoryData> getInventory() throws ApiException{
 		List<InventoryPojo> i = inventoryService.selectInventory();
-		List<InventoryData> i2 = new ArrayList<InventoryData>();
+		List<InventoryData> i2 = new ArrayList<>();
 		for(InventoryPojo j: i) {
-			i2.add(convert(convert(j),j));
+			i2.add(convert(DtoUtil.objectMapper(j,InventoryData.class),j));
 		}
 		return i2;
 	}
 	
 	public InventoryData getById(int id) throws ApiException {
-		return convert(inventoryService.selectById(id));
+		return DtoUtil.objectMapper(inventoryService.selectById(id), InventoryData.class);
 	}
 	
 	public void editInventory(int id, InventoryForm i) throws ApiException {
 
-		InventoryPojo i2 = convert(i);
+		InventoryPojo i2 = DtoUtil.objectMapper(i,InventoryPojo.class);
 		i2.setId(id);
 		inventoryService.update(i2);
 	}
@@ -57,20 +58,6 @@ public class InventoryDto {
 		i.setBarcode(p.getBarcode());
 		i.setName(p.getName());
 		return i;
-	}
-	
-	private static InventoryPojo convert(InventoryForm i) {
-		InventoryPojo i2 = new InventoryPojo();
-		i2.setQuantity(i.getQuantity());
-		i2.setBarcode(i.getBarcode());
-		return i2;
-	}
-	
-	private static InventoryData convert(InventoryPojo i) {
-		InventoryData i2 = new InventoryData();
-		i2.setQuantity(i.getQuantity());
-		i2.setId(i.getId());
-		return i2;
 	}
 
 }

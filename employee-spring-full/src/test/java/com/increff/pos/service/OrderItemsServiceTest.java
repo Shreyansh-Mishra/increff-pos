@@ -53,8 +53,8 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         assertEquals(2, items.size());
         assertEquals(10, items.get(0).getQuantity());
         assertEquals(20, items.get(1).getQuantity());
-        assertEquals(100, items.get(0).getSellingPrice(), 0.001);
-        assertEquals(200, items.get(1).getSellingPrice(), 0.001);
+        assertEquals(100, items.get(0).getMrp(), 0.001);
+        assertEquals(200, items.get(1).getMrp(), 0.001);
     }
 
     @Test
@@ -83,8 +83,8 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         assertEquals(2, items.size());
         assertEquals(10, items.get(0).getQuantity());
         assertEquals(20, items.get(1).getQuantity());
-        assertEquals(100, items.get(0).getSellingPrice(), 0.001);
-        assertEquals(200, items.get(1).getSellingPrice(), 0.001);
+        assertEquals(100, items.get(0).getMrp(), 0.001);
+        assertEquals(200, items.get(1).getMrp(), 0.001);
     }
 
     @Test

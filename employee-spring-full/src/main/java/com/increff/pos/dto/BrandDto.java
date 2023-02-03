@@ -11,6 +11,7 @@ import com.increff.pos.model.BrandForm;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.service.ApiException;
 import com.increff.pos.service.BrandService;
+import com.increff.pos.util.DtoUtil;
 
 @Component
 public class BrandDto {
@@ -18,52 +19,38 @@ public class BrandDto {
 	BrandService brandService;
 	
 	public void createBrand(BrandForm form) throws ApiException {
-		BrandPojo b = convert(form);
+		BrandPojo b = DtoUtil.objectMapper(form, BrandPojo.class);
 		brandService.add(b);
 	}
 	
 	public List<BrandData> getAllBrands() {
 		List<BrandPojo> b = brandService.selectAll();
-		List<BrandData> b2 = new ArrayList<BrandData>();
+		List<BrandData> b2 = new ArrayList<>();
 		for(BrandPojo i: b) {
-			b2.add(convert(i));
+			b2.add(DtoUtil.objectMapper(i,BrandData.class));
 		}
 		return b2;
 	}
 	
 	public BrandData getBrandByNameAndCategory(String name, String category) throws ApiException {
 		BrandPojo b = brandService.selectByNameAndCategory(name.toLowerCase(), category.toLowerCase());
-		BrandData b2 = convert(b);
+		BrandData b2 = DtoUtil.objectMapper(b, BrandData.class);
 		return b2;
 	}
 	
 	public BrandData getBrandById(int id) throws ApiException {
 		BrandPojo b = brandService.selectById(id);
-		BrandData b2 = convert(b);
+		BrandData b2 = DtoUtil.objectMapper(b, BrandData.class);
 		return b2;
 	}
 	
 	public void updateBrand(int id, BrandForm b) throws ApiException {
-		BrandPojo b2 = convert(b);
+		BrandPojo b2 = DtoUtil.objectMapper(b, BrandPojo.class);
 		brandService.updateBrand(id,b2);
 	}
 	
 	public List<String> getCategoriesByBrand(String brandName) {
 		return brandService.getCategories(brandName);
 	}
-	
-	private static BrandPojo convert(BrandForm f) {
-		BrandPojo b = new BrandPojo();
-		b.setBrand(f.getBrand());
-		b.setCategory(f.getCategory());
-		return b;
-	}
-	
-	private static BrandData convert(BrandPojo b) {
-		BrandData b2 = new BrandData();
-		b2.setBrand(b.getBrand());
-		b2.setCategory(b.getCategory());
-		b2.setId(b.getId());
-		return b2;
-	}
+
 }

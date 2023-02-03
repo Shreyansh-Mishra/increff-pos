@@ -86,6 +86,10 @@ function processData(){
 
 function readFileDataCallback(results){
 	fileData = results.data;
+	if(fileData.length>5000){
+		Swal.fire({title: "Error",text: "You can upload maximum 5000 rows at a time",icon: "error",});
+		return;
+	}
 	uploadRows();
 }
 

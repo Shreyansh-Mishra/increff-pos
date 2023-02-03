@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.increff.pos.pojo.*;
 import com.increff.pos.service.*;
+import com.increff.pos.util.DtoUtil;
 import com.increff.pos.util.StringUtil;
 import org.example.dto.InvoiceDto;
 import org.example.model.OrderFOPObject;
@@ -24,17 +25,12 @@ public class OrderDto {
 	private InventoryService inventoryService;
 	@Autowired
 	private ProductService productService;
-	
 	@Autowired
 	private OrderService orderService;
-
-
 	@Autowired
 	private OrderItemsService orderItemsService;
-
 	@Autowired
 	private InvoiceDto invoiceDto;
-
 	@Autowired
 	private InvoiceService invoiceService;
 
@@ -76,7 +72,7 @@ public class OrderDto {
 		OrderFOPObject orderFop = new OrderFOPObject();
 		orderFop.setOrderId(order.getId());
 		orderFop.setDate(order.getTime().toString().split("T")[0]);
-		List<org.example.model.OrderItemData> fopItems = new ArrayList<org.example.model.OrderItemData>();
+		List<org.example.model.OrderItemData> fopItems = new ArrayList<>();
 		double total = 0;
 		for(OrderItemPojo item: items) {
 			org.example.model.OrderItemData i = new org.example.model.OrderItemData();
@@ -85,8 +81,8 @@ public class OrderDto {
 			i.setBarcode(product.getBarcode());
 			i.setOrderId(item.getOrderId());
 			i.setQuantity(item.getQuantity());
-			i.setSellingPrice(item.getSellingPrice());
-			i.setCost(item.getSellingPrice()*item.getQuantity());
+			i.setSellingPrice(item.getMrp());
+			i.setCost(item.getMrp()*item.getQuantity());
 			total += i.getCost();
 			fopItems.add(i);
 		}
@@ -97,34 +93,30 @@ public class OrderDto {
 	
 	public List<OrderData> getOrders(){
 		List<OrderPojo> orders = orderService.selectOrders();
-		List<OrderData> orderData = new ArrayList<OrderData>();
+		List<OrderData> orderData = new ArrayList<>();
 		for(OrderPojo order: orders) {
 			orderData.add(convert(order));
 		}
 		return orderData;
 	}
 	
-	public List<OrderItemData> getOrderItems(int id) throws ApiException{
+	public List<OrderItemData> getOrderItems(int id) throws ApiException {
 		List<OrderItemPojo> items = orderItemsService.selectItems(id);
-		List<OrderItemData> orderItems = new ArrayList<OrderItemData>();
+		List<OrderItemData> orderItems = new ArrayList<>();
 		for(OrderItemPojo i: items) {
-			OrderItemData o = convert(i);
+			System.out.println(i.getMrp());
+			OrderItemData o = DtoUtil.objectMapper(i,OrderItemData.class);
+			System.out.println(o.getMrp());
+			ProductPojo p = productService.selectById(i.getProductId());
+			o.setItemName(p.getName());
+			o.setBarcode(p.getBarcode());
 			orderItems.add(o);
 		}
 		return orderItems;
 	}
 
 	public InvoicePojo getInvoice(int id) throws ApiException{
-		InvoicePojo invoice = invoiceService.selectInvoice(id);
-		return invoice;
-	}
-	
-	public static OrderData convert(OrderPojo order) {
-		OrderData data = new OrderData();
-		String time = order.getTime().toString();
-		data.setId(order.getId());
-		data.setTime(time);
-		return data;
+		return invoiceService.selectInvoice(id);
 	}
 
 	public static InvoicePojo convert(int id, String path){
@@ -133,30 +125,20 @@ public class OrderDto {
 		invoice.setPath(path);
 		return invoice;
 	}
-	
-	public OrderItemData convert(OrderItemPojo o) throws ApiException {
-		OrderItemData data = new OrderItemData();
-		ProductPojo p = productService.selectById(o.getProductId());
-		data.setBarcode(p.getBarcode());
-		data.setItemName(p.getName());
-		data.setOrderId(o.getOrderId());
-		data.setQuantity(o.getQuantity());
-		data.setSellingPrice(o.getSellingPrice());
+
+	public static OrderData convert(OrderPojo order) {
+		OrderData data = new OrderData();
+		String time = order.getTime().toString();
+		data.setId(order.getId());
+		data.setTime(time);
 		return data;
 	}
-	
-	public static OrderItemPojo convert(OrderForm o) {
-		OrderItemPojo o2 = new OrderItemPojo();
-		o2.setQuantity(o.getQuantity());
-		o2.setSellingPrice(StringUtil.round(o.getMrp(), 2));
-		o2.setBarcode(o.getBarcode());
-		return o2;
-	}
-	
+
 	public static List<OrderItemPojo> convert(List<OrderForm> form){
 		List<OrderItemPojo> list= new ArrayList<>();
 		for(OrderForm i: form) {
-			OrderItemPojo o = convert(i);
+			OrderItemPojo o = DtoUtil.objectMapper(i,OrderItemPojo.class);
+			o.setMrp(StringUtil.round(i.getMrp(), 2));
 			list.add(o);
 		}
 		return list;

@@ -9,7 +9,7 @@ public class OrderItemData {
 	private int orderId;
 	private String itemName;
 	private int quantity;
-	private double sellingPrice;
+	private double mrp;
 	private String barcode;
 
 	private double cost;

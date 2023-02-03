@@ -100,6 +100,10 @@ function processData(){
 
 function readFileDataCallback(results){
 	fileData = results.data;
+	if(fileData.length>5000){
+		Swal.fire({title: "Error",text: "You can upload maximum 5000 rows at a time",icon: "error",});
+		return;
+	}
 	uploadRows();
 }
 
@@ -241,7 +245,7 @@ function displayInventory(data,barcode){
 		html:`<form class="form-inline" id="#inventory-edit-form">
 		<div class="container">
 		<div class="form-outline row">
-		<label class="col" for="quantity">Brand</label>
+		<label class="col" for="quantity">Enter New Quantity</label>
 		<input placeholder="Quantity" value="${data.quantity}" id="quantity" type="number" name="quantity" class="swal2-input col" />
 		</div>
 		<input type="hidden" id="id" value="${data.id}"/>

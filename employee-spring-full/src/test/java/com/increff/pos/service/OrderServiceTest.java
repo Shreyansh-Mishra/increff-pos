@@ -80,8 +80,8 @@ public class OrderServiceTest extends AbstractUnitTest{
         assertEquals(2, items.size());
         assertEquals(10, items.get(0).getQuantity());
         assertEquals(20, items.get(1).getQuantity());
-        assertEquals(100, items.get(0).getSellingPrice(), 0.001);
-        assertEquals(200, items.get(1).getSellingPrice(), 0.001);
+        assertEquals(100, items.get(0).getMrp(), 0.001);
+        assertEquals(200, items.get(1).getMrp(), 0.001);
     }
 
 
@@ -111,11 +111,11 @@ public class OrderServiceTest extends AbstractUnitTest{
         List<OrderItemPojo> items = orderItemsService.selectItems(orders.get(0).getId());
         assertEquals(1, items.size());
         assertEquals(20, items.get(0).getQuantity());
-        assertEquals(200, items.get(0).getSellingPrice(), 0.001);
+        assertEquals(200, items.get(0).getMrp(), 0.001);
         items = orderItemsService.selectItems(orders.get(1).getId());
         assertEquals(1, items.size());
         assertEquals(10, items.get(0).getQuantity());
-        assertEquals(100, items.get(0).getSellingPrice(), 0.001);
+        assertEquals(100, items.get(0).getMrp(), 0.001);
     }
 
     @Test
@@ -144,13 +144,13 @@ public class OrderServiceTest extends AbstractUnitTest{
         List<OrderItemPojo> items = orderItemsService.selectItems(order3.getId());
         assertEquals(1, items.size());
         assertEquals(10, items.get(0).getQuantity());
-        assertEquals(100, items.get(0).getSellingPrice(), 0.001);
+        assertEquals(100, items.get(0).getMrp(), 0.001);
         order3 = orderService.selectOrderById(order2.getId());
         assertEquals(order2.getId(), order3.getId());
         items = orderItemsService.selectItems(order3.getId());
         assertEquals(1, items.size());
         assertEquals(20, items.get(0).getQuantity());
-        assertEquals(200, items.get(0).getSellingPrice(), 0.001);
+        assertEquals(200, items.get(0).getMrp(), 0.001);
         try{
             orderService.selectOrderById(100);
             fail();
@@ -187,11 +187,11 @@ public class OrderServiceTest extends AbstractUnitTest{
         List<OrderItemPojo> items = orderItemsService.selectItems(orders.get(0).getId());
         assertEquals(1, items.size());
         assertEquals(10, items.get(0).getQuantity());
-        assertEquals(100, items.get(0).getSellingPrice(), 0.001);
+        assertEquals(100, items.get(0).getMrp(), 0.001);
         items = orderItemsService.selectItems(orders.get(1).getId());
         assertEquals(1, items.size());
         assertEquals(20, items.get(0).getQuantity());
-        assertEquals(200, items.get(0).getSellingPrice(), 0.001);
+        assertEquals(200, items.get(0).getMrp(), 0.001);
     }
 
 }

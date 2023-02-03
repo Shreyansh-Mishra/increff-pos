@@ -78,7 +78,7 @@ public abstract class AbstractUnitTest {
         oi.setProductId(product.getId());
         oi.setOrderId(order.getId());
         oi.setQuantity(quantity);
-        oi.setSellingPrice(sellingPrice);
+        oi.setMrp(sellingPrice);
         return oi;
     }
 

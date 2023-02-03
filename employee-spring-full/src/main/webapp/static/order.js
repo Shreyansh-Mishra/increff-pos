@@ -237,7 +237,7 @@ function displayOrderItems(data){
         + '<td>'  + e.barcode + '</td>'
         + '<td>' + e.orderId + '</td>'
 		+ '<td>' + e.quantity + '</td>'
-        + '<td>' + e.sellingPrice + '</td>'
+        + '<td>' + e.mrp + '</td>'
         + '</tr>';
         $tbody.append(row);
         j++;	
@@ -408,6 +408,23 @@ function addRow(){
 		  });
 		return;
 	}
+	else if(q<0){
+		Swal.fire({
+			title: "Error",
+			text: "Quantity cannot be negative!",
+			icon: "error",
+		});
+		return;
+	}
+	//check if quantity is an integer
+	else if(!Number.isInteger(Number(q))){
+		Swal.fire({
+			title: "Error",
+			text: "Quantity must be an integer!",
+			icon: "error",
+		});
+		return;
+	}
 	else if(mrp>=mrpAndQuantity.mrp){
 		Swal.fire({
 			title: "Error",
@@ -437,7 +454,12 @@ function addRow(){
 			  });
 			return;
 		}
+		getMrpAndQuantity(barcode);
 		let quant = parseInt(q) + parseInt($('.'+barcode).find('input[name=quantity]').val())
+		if(quant>mrpAndQuantity.quantity){
+			Swal.fire({title: "Error",text: "The Available quantity of the product is "+mrpAndQuantity.quantity+"!",icon: "error" });
+			return;
+		}
 		$('.'+barcode).find('input[name=quantity]').val(quant)
 		orderArr[barcodeMap[barcode]-1]['quantity'] = quant
 	}
@@ -474,7 +496,16 @@ function saveRow(i){
 	var $tr = $('#'+i);
 	console.log('.'+$tr.attr('class'));
 	getMrpAndQuantity($tr.find('input[name=barcode]').val());
-	if($tr.find('input[name=mrp]').val()>=mrpAndQuantity.mrp){
+
+	if($tr.find('input[name=quantity]').val()<0){
+		Swal.fire({icon: 'error',title: 'Oops...',text: 'Quantity cannot be negative!'});
+		return;
+	}
+	else if(!Number.isInteger(Number($tr.find('input[name=quantity]').val()))){
+		Swal.fire({icon: 'error',title: 'Oops...',text: 'Quantity must be an integer!'});
+		return;
+	}
+	else if($tr.find('input[name=mrp]').val()>=mrpAndQuantity.mrp){
 		Swal.fire({icon: 'error',title: 'Oops...',text: 'The MRP of the product is '+mrpAndQuantity.mrp+'!'})
 		return;
 	}

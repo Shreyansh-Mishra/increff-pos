@@ -3,8 +3,6 @@ package com.increff.pos.dto;
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.InvoicePojo;
 import com.increff.pos.service.AbstractUnitTest;
-import com.increff.pos.service.ApiException;
-import org.apache.xpath.operations.Or;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -57,8 +55,8 @@ public class OrderDtoTest extends AbstractUnitTest {
         assertEquals(2,orderItems.size());
         assertEquals(10,orderItems.get(0).getQuantity(),0);
         assertEquals(10,orderItems.get(1).getQuantity(),0);
-        assertEquals(100,orderItems.get(0).getSellingPrice(),0);
-        assertEquals(200,orderItems.get(1).getSellingPrice(),0);
+        assertEquals(100,orderItems.get(0).getMrp(),0);
+        assertEquals(200,orderItems.get(1).getMrp(),0);
     }
 
     @Test

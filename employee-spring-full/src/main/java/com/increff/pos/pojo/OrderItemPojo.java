@@ -19,7 +19,7 @@ public class OrderItemPojo {
 	private int orderId;
 	private int productId;
 	private int quantity;
-	private double sellingPrice;
+	private double mrp;
 	@Transient
 	private String barcode;
 }

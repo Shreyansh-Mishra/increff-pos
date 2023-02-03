@@ -1,10 +1,8 @@
 package com.increff.pos.dto;
 
-import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,7 +64,7 @@ public class ReportDto {
 		for(OrderPojo order: o){
 			List<OrderItemPojo> items = orderItemsService.selectItems(order.getId());
 			for(OrderItemPojo item: items){
-				revenue += item.getSellingPrice()*item.getQuantity();
+				revenue += item.getMrp()*item.getQuantity();
 				itemcount+=item.getQuantity();
 			}
 		}
@@ -118,7 +116,7 @@ public class ReportDto {
 			List<OrderItemPojo> orderItems = orderItemsService.selectItems(order.getId());
 			double revenue = 0;
 			for(OrderItemPojo orderItem: orderItems) {
-				revenue=(orderItem.getSellingPrice()*orderItem.getQuantity());
+				revenue=(orderItem.getMrp()*orderItem.getQuantity());
 				if(map2.containsKey(orderItem.getProductId())) {
 					List<Double> pr= map2.get(orderItem.getProductId());
 					List<Double> newpr = new ArrayList<Double>();

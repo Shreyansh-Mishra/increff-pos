@@ -49,7 +49,7 @@ public class InventoryService {
 		inventoryDao.update(i2);
 	}
 	public static void isNegative(int a, String barcode) throws ApiException {
-		if(a<=0)
+		if(a<0)
 			throw new ApiException("Enter a valid quantity for product with barcode "+barcode);
 	}
 

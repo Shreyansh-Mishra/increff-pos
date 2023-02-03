@@ -34,11 +34,11 @@ public class BrandService {
 	}
 	
 	public BrandPojo selectByNameAndCategory(String name, String category) throws ApiException {
-		BrandPojo b = brandDao.select(name, category.toLowerCase());
-		if(b==null) {
+		BrandPojo brand = brandDao.select(name, category.toLowerCase());
+		if(brand==null) {
 			throw new ApiException("The requested brand and category combination does not exists");
 		}
-		return b;
+		return brand;
 	}
 	
 	public BrandPojo selectById(int id) throws ApiException {
@@ -61,11 +61,11 @@ public class BrandService {
 	}
 	
 	public BrandPojo checkIfExists(int id) throws ApiException {
-		BrandPojo b = brandDao.select(id);
-		if(b==null) {
+		BrandPojo brand = brandDao.select(id);
+		if(brand==null) {
 			throw new ApiException("The requested brand does not exists");
 		}
-		return b;
+		return brand;
 	}
 	
 	public List<String> getCategories(String brandName) {
