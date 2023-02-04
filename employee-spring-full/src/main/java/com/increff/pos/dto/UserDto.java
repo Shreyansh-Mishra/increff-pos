@@ -47,16 +47,16 @@ public class UserDto {
         return convertUsers(service.selectAll());
     }
 
-    public List<UserData> convertUsers(List<UserPojo> user){
-        List<UserData> data = new ArrayList<>();
-        for(UserPojo u : user){
-            UserData d = new UserData();
-            d.setEmail(u.getEmail());
-            d.setRole(u.getRole());
-            d.setId(u.getId());
-            data.add(d);
+    public List<UserData> convertUsers(List<UserPojo> users){
+        List<UserData> userData = new ArrayList<>();
+        for(UserPojo user : users){
+            UserData data = new UserData();
+            data.setEmail(user.getEmail());
+            data.setRole(user.getRole());
+            data.setId(user.getId());
+            userData.add(data);
         }
-        return data;
+        return userData;
     }
 
     public UserPojo login(LoginForm form) throws ApiException {
@@ -76,10 +76,10 @@ public class UserDto {
         return new ModelAndView("redirect:/site/logout");
     }
 
-    private static UserPojo convert(UserForm f) {
-        UserPojo p = new UserPojo();
-        p.setEmail(f.getEmail());
-        p.setPassword(f.getPassword());
-        return p;
+    private static UserPojo convert(UserForm form) {
+        UserPojo user = new UserPojo();
+        user.setEmail(form.getEmail());
+        user.setPassword(form.getPassword());
+        return user;
     }
 }

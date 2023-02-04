@@ -36,55 +36,70 @@ public class OrderDto {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void createOrder(List<OrderForm> o) throws Exception {
-		List<OrderItemPojo> o2 = convert(o);
-		for(OrderItemPojo item: o2){
-			ProductPojo p = productService.selectByBarcode(item.getBarcode());
-			InventoryPojo i = new InventoryPojo();
-			InventoryPojo i2 = inventoryService.selectById(p.getId());
-			i.setBarcode(p.getBarcode());
-			int newQuantity = i2.getQuantity()-item.getQuantity();
-			i.setQuantity(newQuantity);
-			i.setId(p.getId());
-			i.setBarcode(p.getBarcode());
-			inventoryService.update(i);
-			item.setProductId(p.getId());
-		}
+		//create an order
+		List<OrderItemPojo> orderItems = convert(o);
+		updateOrderInventory(orderItems);
 		OrderPojo order = new OrderPojo();
 		orderService.addOrder(order);
-		orderItemsService.addItems(o2,order.getId());
+		orderItemsService.addItems(orderItems,order.getId());
+
+		//generate the invoice and get the base64 string
 		String pdf = generateInvoice(order.getId());
+
 		//decode the pdf from the base64 string
-		byte[] decodedBytes = java.util.Base64.getDecoder().decode(pdf);
+		byte[] decodedPdf = java.util.Base64.getDecoder().decode(pdf);
+
 		String date = order.getTime().toString();
 		date = date.split("T", 2)[0] + "-" + date.split("T", 2)[1].split(":")[0] + "-" + date.split("T", 2)[1].split(":")[1];
 		String fileName = "Invoice-"+order.getId()+"-"+date+".pdf";
+
 		//write the decoded bytes to a file in the resources folder
 		java.nio.file.Path path = java.nio.file.Paths.get("C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName);
-		java.nio.file.Files.write(path, decodedBytes);
+		java.nio.file.Files.write(path, decodedPdf);
+
+		//insert the invoice path in the database
 		String path2 = "C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName;
 		InvoicePojo invoice = convert(order.getId(), path2);
 		invoiceService.insertInvoice(invoice);
 	}
 
+	@Transactional(rollbackOn = ApiException.class)
+	public void updateOrderInventory(List<OrderItemPojo> orderItems) throws ApiException {
+		for(OrderItemPojo item: orderItems){
+			ProductPojo product = productService.selectByBarcode(item.getBarcode());
+			InventoryPojo newInventory = new InventoryPojo();
+			InventoryPojo oldInventory = inventoryService.selectById(product.getId());
+			newInventory.setBarcode(product.getBarcode());
+			newInventory.setQuantity(oldInventory.getQuantity()-item.getQuantity());
+			newInventory.setId(product.getId());
+			newInventory.setBarcode(product.getBarcode());
+			inventoryService.update(newInventory);
+			item.setProductId(product.getId());
+		}
+	}
+
+	@Transactional(rollbackOn = Exception.class)
 	public String generateInvoice(int orderId) throws Exception {
 		OrderPojo order = orderService.selectOrderById(orderId);
-		List<OrderItemPojo> items = orderItemsService.selectItems(orderId);
+		List<OrderItemPojo> orderItems = orderItemsService.selectItems(orderId);
+
+		//fop object of the invoice module
 		OrderFOPObject orderFop = new OrderFOPObject();
 		orderFop.setOrderId(order.getId());
 		orderFop.setDate(order.getTime().toString().split("T")[0]);
 		List<org.example.model.OrderItemData> fopItems = new ArrayList<>();
 		double total = 0;
-		for(OrderItemPojo item: items) {
-			org.example.model.OrderItemData i = new org.example.model.OrderItemData();
+		for(OrderItemPojo item: orderItems) {
+			org.example.model.OrderItemData itemData = new org.example.model.OrderItemData();
 			ProductPojo product = productService.selectById(item.getProductId());
-			i.setItemName(product.getName());
-			i.setBarcode(product.getBarcode());
-			i.setOrderId(item.getOrderId());
-			i.setQuantity(item.getQuantity());
-			i.setSellingPrice(item.getMrp());
-			i.setCost(item.getMrp()*item.getQuantity());
-			total += i.getCost();
-			fopItems.add(i);
+			itemData.setItemName(product.getName());
+			itemData.setBarcode(product.getBarcode());
+			itemData.setOrderId(item.getOrderId());
+			itemData.setQuantity(item.getQuantity());
+			itemData.setSellingPrice(item.getMrp());
+			itemData.setCost(item.getMrp()*item.getQuantity());
+			total += itemData.getCost();
+			fopItems.add(itemData);
 		}
 		orderFop.setOrderItems(fopItems);
 		orderFop.setTotal(total);
@@ -102,22 +117,24 @@ public class OrderDto {
 	
 	public List<OrderItemData> getOrderItems(int id) throws ApiException {
 		List<OrderItemPojo> items = orderItemsService.selectItems(id);
-		List<OrderItemData> orderItems = new ArrayList<>();
-		for(OrderItemPojo i: items) {
-			System.out.println(i.getMrp());
-			OrderItemData o = DtoUtil.objectMapper(i,OrderItemData.class);
+		List<OrderItemData> orderItemsData = new ArrayList<>();
+		for(OrderItemPojo item: items) {
+			System.out.println(item.getMrp());
+			OrderItemData o = DtoUtil.objectMapper(item,OrderItemData.class);
 			System.out.println(o.getMrp());
-			ProductPojo p = productService.selectById(i.getProductId());
+			ProductPojo p = productService.selectById(item.getProductId());
 			o.setItemName(p.getName());
 			o.setBarcode(p.getBarcode());
-			orderItems.add(o);
+			orderItemsData.add(o);
 		}
-		return orderItems;
+		return orderItemsData;
 	}
 
 	public InvoicePojo getInvoice(int id) throws ApiException{
 		return invoiceService.selectInvoice(id);
 	}
+
+
 
 	public static InvoicePojo convert(int id, String path){
 		InvoicePojo invoice = new InvoicePojo();

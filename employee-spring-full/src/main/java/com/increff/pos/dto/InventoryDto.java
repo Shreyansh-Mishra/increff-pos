@@ -20,10 +20,10 @@ import javax.transaction.Transactional;
 @Component
 public class InventoryDto {
 	@Autowired
-	ProductService productService;
+	private ProductService productService;
 	
 	@Autowired
-	InventoryService inventoryService;
+	private InventoryService inventoryService;
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public void addToInventory(InventoryForm form) throws ApiException {
@@ -34,23 +34,22 @@ public class InventoryDto {
 	}
 	
 	public List<InventoryData> getInventory() throws ApiException{
-		List<InventoryPojo> i = inventoryService.selectInventory();
-		List<InventoryData> i2 = new ArrayList<>();
-		for(InventoryPojo j: i) {
-			i2.add(convert(DtoUtil.objectMapper(j,InventoryData.class),j));
+		List<InventoryPojo> inventory = inventoryService.selectInventory();
+		List<InventoryData> inventoryData = new ArrayList<>();
+		for(InventoryPojo item: inventory) {
+			inventoryData.add(convert(DtoUtil.objectMapper(item,InventoryData.class),item));
 		}
-		return i2;
+		return inventoryData;
 	}
 	
 	public InventoryData getById(int id) throws ApiException {
 		return DtoUtil.objectMapper(inventoryService.selectById(id), InventoryData.class);
 	}
 	
-	public void editInventory(int id, InventoryForm i) throws ApiException {
-
-		InventoryPojo i2 = DtoUtil.objectMapper(i,InventoryPojo.class);
-		i2.setId(id);
-		inventoryService.update(i2);
+	public void editInventory(int id, InventoryForm form) throws ApiException {
+		InventoryPojo inventory = DtoUtil.objectMapper(form,InventoryPojo.class);
+		inventory.setId(id);
+		inventoryService.update(inventory);
 	}
 	
 	public InventoryData convert(InventoryData i, InventoryPojo i2) throws ApiException {

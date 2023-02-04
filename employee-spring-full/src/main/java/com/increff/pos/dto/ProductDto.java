@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.increff.pos.util.DtoUtil;
-import com.increff.pos.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,17 +20,17 @@ import javax.transaction.Transactional;
 @Component
 public class ProductDto {
 	@Autowired
-	ProductService productService;
+	private ProductService productService;
 	
 	@Autowired
-	BrandService brandService;
+	private BrandService brandService;
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void createProduct(ProductForm form) throws ApiException {
-		ProductPojo p2 = DtoUtil.objectMapper(form, ProductPojo.class);
-		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName().toLowerCase(),p2.getCategory().toLowerCase());
-		p2.setBrand_category(b.getId());
-		productService.add(p2);
+		ProductPojo product = DtoUtil.objectMapper(form, ProductPojo.class);
+		BrandPojo brand = brandService.selectByNameAndCategory(product.getBrandName().toLowerCase(),product.getCategory().toLowerCase());
+		product.setBrand_category(brand.getId());
+		productService.add(product);
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
@@ -50,8 +49,7 @@ public class ProductDto {
 	
 	public ProductData getProductsById(int id) throws ApiException{
 		ProductPojo p = productService.selectById(id);
-		ProductData p2 = DtoUtil.objectMapper(p,ProductData.class);
-		return p2;
+		return DtoUtil.objectMapper(p,ProductData.class);
 	}
 	
 	public List<ProductData> getProductByBrandName(String brandName){
@@ -74,15 +72,14 @@ public class ProductDto {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateProduct(int id, ProductForm form) throws ApiException {
-		ProductPojo p2 = DtoUtil.objectMapper(form, ProductPojo.class);
-		BrandPojo b = brandService.selectByNameAndCategory(p2.getBrandName().toLowerCase(),p2.getCategory().toLowerCase());
-		p2.setBrand_category(b.getId());
-		productService.update(p2,id);
+		ProductPojo product = DtoUtil.objectMapper(form, ProductPojo.class);
+		BrandPojo brand = brandService.selectByNameAndCategory(product.getBrandName().toLowerCase(),product.getCategory().toLowerCase());
+		product.setBrand_category(brand.getId());
+		productService.update(product,id);
 	}
 
 	public ProductData getProductByBarcode(String barcode) throws ApiException {
 		ProductPojo p = productService.selectByBarcode(barcode);
-		ProductData p2 = DtoUtil.objectMapper(p,ProductData.class);
-		return p2;
+		return DtoUtil.objectMapper(p,ProductData.class);
 	}
 }

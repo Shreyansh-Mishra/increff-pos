@@ -11,21 +11,22 @@ import com.increff.pos.pojo.SchedulerPojo;
 
 @Repository
 public class SchedulerDao extends AbstractDao{
-	private String checkDate = "select s from SchedulerPojo s where date(date)=date(:instant)";
-	private String select = "select s from SchedulerPojo s";
+	private static final String CHECK_DATE = "select s from SchedulerPojo s where date(date)=date(:instant)";
+	private static final String SELECT = "select s from SchedulerPojo s";
+
 	public void insert(SchedulerPojo s) {
 		em().persist(s);
 	}
 	
 	public SchedulerPojo checkExisting(Instant date) {
-		TypedQuery<SchedulerPojo> query = getQuery(checkDate, SchedulerPojo.class);
+		TypedQuery<SchedulerPojo> query = getQuery(CHECK_DATE, SchedulerPojo.class);
 		System.out.print(date);
 		query.setParameter("instant", date);
 		return getSingle(query);
 	}
 	
 	public List<SchedulerPojo> select(){
-		TypedQuery<SchedulerPojo> query = getQuery(select, SchedulerPojo.class);
+		TypedQuery<SchedulerPojo> query = getQuery(SELECT, SchedulerPojo.class);
 		return query.getResultList();
 	}
 	

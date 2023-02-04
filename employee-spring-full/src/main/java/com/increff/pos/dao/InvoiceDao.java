@@ -7,13 +7,14 @@ import javax.persistence.TypedQuery;
 
 @Repository
 public class InvoiceDao extends AbstractDao{
-    String select_id = "select i from InvoicePojo i where i.id=:id";
+    private static final String SELECT_ID = "select i from InvoicePojo i where i.id=:id";
+
     public void insert(InvoicePojo i){
         em().persist(i);
     }
 
     public InvoicePojo selectId(int id){
-        TypedQuery<InvoicePojo> query = getQuery(select_id, InvoicePojo.class);
+        TypedQuery<InvoicePojo> query = getQuery(SELECT_ID, InvoicePojo.class);
         query.setParameter("id", id);
         return getSingle(query);
     }

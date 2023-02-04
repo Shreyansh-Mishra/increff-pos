@@ -16,37 +16,35 @@ import com.increff.pos.util.DtoUtil;
 @Component
 public class BrandDto {
 	@Autowired
-	BrandService brandService;
+	private BrandService brandService;
 	
 	public void createBrand(BrandForm form) throws ApiException {
-		BrandPojo b = DtoUtil.objectMapper(form, BrandPojo.class);
-		brandService.add(b);
+		BrandPojo brand = DtoUtil.objectMapper(form, BrandPojo.class);
+		brandService.add(brand);
 	}
 	
 	public List<BrandData> getAllBrands() {
-		List<BrandPojo> b = brandService.selectAll();
-		List<BrandData> b2 = new ArrayList<>();
-		for(BrandPojo i: b) {
-			b2.add(DtoUtil.objectMapper(i,BrandData.class));
+		List<BrandPojo> brands = brandService.selectAll();
+		List<BrandData> brandData = new ArrayList<>();
+		for(BrandPojo i: brands) {
+			brandData.add(DtoUtil.objectMapper(i,BrandData.class));
 		}
-		return b2;
+		return brandData;
 	}
 	
 	public BrandData getBrandByNameAndCategory(String name, String category) throws ApiException {
-		BrandPojo b = brandService.selectByNameAndCategory(name.toLowerCase(), category.toLowerCase());
-		BrandData b2 = DtoUtil.objectMapper(b, BrandData.class);
-		return b2;
+		BrandPojo brand = brandService.selectByNameAndCategory(name.toLowerCase(), category.toLowerCase());
+		return DtoUtil.objectMapper(brand, BrandData.class);
 	}
 	
 	public BrandData getBrandById(int id) throws ApiException {
-		BrandPojo b = brandService.selectById(id);
-		BrandData b2 = DtoUtil.objectMapper(b, BrandData.class);
-		return b2;
+		BrandPojo brand = brandService.selectById(id);
+		return DtoUtil.objectMapper(brand, BrandData.class);
 	}
 	
-	public void updateBrand(int id, BrandForm b) throws ApiException {
-		BrandPojo b2 = DtoUtil.objectMapper(b, BrandPojo.class);
-		brandService.updateBrand(id,b2);
+	public void updateBrand(int id, BrandForm brandForm) throws ApiException {
+		BrandPojo brand = DtoUtil.objectMapper(brandForm, BrandPojo.class);
+		brandService.updateBrand(id,brand);
 	}
 	
 	public List<String> getCategoriesByBrand(String brandName) {
