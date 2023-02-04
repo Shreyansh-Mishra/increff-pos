@@ -24,9 +24,7 @@ public class BrandService {
 		if(isExists!=null) {
 			throw new ApiException("Brand and Category Already Exists");
 		}
-		else {
-			brandDao.insert(brand);
-		}
+		brandDao.insert(brand);
 	}
 	
 	public List<BrandPojo> selectAll(){
@@ -50,14 +48,12 @@ public class BrandService {
 		normalize(brand);
 		BrandPojo newBrand = checkIfExists(id);
 		BrandPojo isExist = brandDao.select(brand.getBrand(), brand.getCategory());
-		if(isExist==null) {
-			newBrand.setBrand(brand.getBrand());
-			newBrand.setCategory(brand.getCategory());
-			brandDao.update(newBrand);
-		}
-		else {
+		if(isExist!=null){
 			throw new ApiException("The Brand and Category already exists!");
 		}
+		newBrand.setBrand(brand.getBrand());
+		newBrand.setCategory(brand.getCategory());
+		brandDao.update(newBrand);
 	}
 	
 	public BrandPojo checkIfExists(int id) throws ApiException {
@@ -82,5 +78,4 @@ public class BrandService {
 		b.setBrand(b.getBrand().toLowerCase().trim());
 		b.setCategory(b.getCategory().toLowerCase().trim());
 	}
-
 }

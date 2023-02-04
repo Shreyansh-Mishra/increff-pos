@@ -42,12 +42,7 @@ public class ProductApiController {
 	public ProductData getProductById(@PathVariable int id) throws ApiException {
 		return productFlow.getProductsById(id);
 	}
-	
-	@ApiOperation("Get Products by brand name")
-	@RequestMapping(path="/product/get-product-brand/{brandName}", method=RequestMethod.GET)
-	public List<ProductData> getProductsByBrand(@PathVariable String brandName) throws ApiException{
-		return productFlow.getProductByBrandName(brandName);
-	}
+
 	
 	@ApiOperation("Get Products by Brand and Category")
 	@RequestMapping(path="/product/get-product/{brand}/{category}", method=RequestMethod.GET)

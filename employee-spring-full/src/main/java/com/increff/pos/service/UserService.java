@@ -17,13 +17,13 @@ public class UserService {
 	private UserDao dao;
 
 	@Transactional
-	public Boolean add(UserPojo p) throws ApiException {
-		normalize(p);
-		UserPojo existing = dao.select(p.getEmail());
+	public Boolean add(UserPojo user) throws ApiException {
+		normalize(user);
+		UserPojo existing = dao.select(user.getEmail());
 		if (existing != null) {
 			return false;
 		}
-		dao.insert(p);
+		dao.insert(user);
 		return true;
 	}
 

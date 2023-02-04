@@ -17,24 +17,25 @@ public class OrderItemsService {
     public void addItems(List<OrderItemPojo> orderItems, int id) throws ApiException {
         if(orderItems.size()==0)
             throw new ApiException("Please add atleast 1 item to place your order!");
-        for(OrderItemPojo o: orderItems) {
-            if(o.getQuantity()<=0) {
+        for(OrderItemPojo item: orderItems) {
+            if(item.getQuantity()<=0)
                 throw new ApiException("Quantity should be a positive value");
-            }
-            if(o.getMrp()<0) {
+
+            if(item.getMrp()<0)
                 throw new ApiException("Selling Price needs to be positive");
-            }
-            o.setOrderId(id);
-            OrderItemPojo isExists = orderItemDao.checkExisting(o.getProductId(),o.getOrderId());
-            if(isExists!=null && isExists.getMrp()!=o.getMrp()){
+
+            item.setOrderId(id);
+            OrderItemPojo isExists = orderItemDao.checkExisting(item.getProductId(),item.getOrderId());
+
+            if(isExists!=null && isExists.getMrp()!=item.getMrp())
                 throw new ApiException("Selling Price of the same product can't be different");
-            }
-            else if(isExists!=null && isExists.getMrp()==o.getMrp()){
-                isExists.setQuantity(o.getQuantity()+isExists.getQuantity());
+
+            else if(isExists!=null && isExists.getMrp()==item.getMrp()){
+                isExists.setQuantity(item.getQuantity()+isExists.getQuantity());
                 orderItemDao.update(isExists);
                 continue;
             }
-            orderItemDao.insert(o);
+            orderItemDao.insert(item);
         }
     }
 

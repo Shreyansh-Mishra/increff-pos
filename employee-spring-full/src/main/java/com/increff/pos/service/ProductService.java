@@ -24,43 +24,39 @@ public class ProductService {
 		isEmpty(product.getName(),product.getBarcode());
 		isNegative(product.getMrp());
 		normalize(product);
-		ProductPojo p2 = productDao.selectBarcode(product.getBarcode());
-		if(p2!=null) {
+		ProductPojo isExists = productDao.selectBarcode(product.getBarcode());
+		if(isExists!=null) {
 			throw new ApiException("The product already exists");
 		}
-
 		productDao.insert(product);
 	}
 	
 	public List<ProductPojo> selectAll() {
-		List<ProductPojo> p = productDao.selectAll();
-		return p;
+		return productDao.selectAll();
 	}
 	
 	public List<ProductPojo> selectByBrand(String brandName){
-		List<ProductPojo> p2 = productDao.selectBrand(brandName.toLowerCase());
-		return p2;
+		return productDao.selectBrand(brandName.toLowerCase());
 	}
 	
 	public ProductPojo selectById(int id) throws ApiException {
-		ProductPojo p = productDao.selectId(id);
-		if(p==null)
+		ProductPojo product = productDao.selectId(id);
+		if(product==null)
 			throw new ApiException("The product with id "+ id +" does not exists");
-		return p;
+		return product;
 	}
 
 	
 	public List<ProductPojo> selectByBrandAndCategory(String brand, String category){
-		List<ProductPojo> p2 = productDao.selectBrandAndCategory(brand.toLowerCase(), category.toLowerCase());
-		return p2;
+		return productDao.selectBrandAndCategory(brand.toLowerCase(), category.toLowerCase());
 	}
 
 	public ProductPojo selectByBarcode(String barcode) throws ApiException {
 		isEmpty(barcode,barcode);
-		ProductPojo p = productDao.selectBarcode(barcode.trim().toLowerCase());
-		if(p==null)
+		ProductPojo product = productDao.selectBarcode(barcode.trim().toLowerCase());
+		if(product==null)
 			throw new ApiException("The product with barcode "+ barcode +" does not exists");
-		return p;
+		return product;
 	}
 
 
@@ -68,15 +64,15 @@ public class ProductService {
 		isEmpty(product.getName(),product.getBarcode());
 		isNegative(product.getMrp());
 		normalize(product);
-		ProductPojo p2 = productDao.selectBarcode(product.getBarcode());
-		if(p2!=null && p2.getId()!=id) {
+		ProductPojo prod2 = productDao.selectBarcode(product.getBarcode());
+		if(prod2!=null && prod2.getId()!=id) {
 			throw new ApiException("A Product already exists with the same barcode!");
 		}
-		p2 = this.selectById(id);
-		p2.setBarcode(product.getBarcode());
-		p2.setBrand_category(product.getBrand_category());
-		p2.setMrp(product.getMrp());
-		p2.setName(product.getName());
+		prod2 = this.selectById(id);
+		prod2.setBarcode(product.getBarcode());
+		prod2.setBrand_category(product.getBrand_category());
+		prod2.setMrp(product.getMrp());
+		prod2.setName(product.getName());
 		productDao.update();
 	}
 

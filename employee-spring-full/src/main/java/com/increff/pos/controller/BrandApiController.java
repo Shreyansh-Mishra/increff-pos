@@ -51,7 +51,7 @@ public class BrandApiController {
 
 	@ApiOperation(value= "Get categories from brand")
 	@RequestMapping(path= "/brand/get-categories/{brandName}", method = RequestMethod.GET)
-	public List<String> getCategoriesFromBrand(@PathVariable String brandName) throws ApiException{
+	public List<String> getCategoriesFromBrand(@PathVariable String brandName){
 		return brandDto.getCategoriesByBrand(brandName);
 	}
 

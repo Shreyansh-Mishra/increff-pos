@@ -14,16 +14,15 @@ public class InvoiceService {
     private InvoiceDao invoiceDao;
 
     @Transactional
-    public void insertInvoice(InvoicePojo i){
-        invoiceDao.insert(i);
+    public void insertInvoice(InvoicePojo invoice){
+        invoiceDao.insert(invoice);
     }
 
     @Transactional(rollbackOn = ApiException.class)
     public InvoicePojo selectInvoice(int id) throws ApiException {
         InvoicePojo invoice = invoiceDao.selectId(id);
-        if(invoice==null){
+        if(invoice==null)
             throw new ApiException("Invoice with id "+id+" does not exist");
-        }
         return invoice;
     }
 }
