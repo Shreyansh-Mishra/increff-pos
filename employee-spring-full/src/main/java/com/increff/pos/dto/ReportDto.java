@@ -3,6 +3,7 @@ package com.increff.pos.dto;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -75,11 +76,17 @@ public class ReportDto {
 		schedulerService.insertScheduler(scheduler);
 	}
 
-	public List<DayWiseReportData> getDayWiseReport() {
-		return convert(schedulerService.selectSchedulerData());
+	public List<DayWiseReportData> getDayWiseReport(String startDate, String endDate) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		sdf.setTimeZone(TimeZone.getTimeZone("utc"));
+		Date date = sdf.parse(startDate);
+		Date date2 = sdf.parse(endDate);
+		Instant from = date.toInstant();
+		Instant to = date2.toInstant().plus(1, ChronoUnit.DAYS);
+		return convert(schedulerService.selectSchedulerData(from, to));
 	}
 	
-	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(String startDate, String endDate) throws ParseException, ApiException{
+	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(String startDate, String endDate, String brandName, String category) throws ParseException, ApiException{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("utc"));
 		sdf.setLenient(false);
@@ -91,12 +98,27 @@ public class ReportDto {
 		Instant to = date2.toInstant();
 		
 		//map of brand id and list<product id>
-		HashMap<Integer,List<Integer>> map=new HashMap<Integer,List<Integer>>();
+		HashMap<Integer,List<Integer>> map=new HashMap<>();
 		
 		//map of product id and revenue
-		HashMap<Integer,List<Double>> map2 = new HashMap<Integer, List<Double>>();
-		
-		List<BrandPojo> brands = brandService.selectAll();
+		HashMap<Integer,List<Double>> map2 = new HashMap<>();
+		List<BrandPojo> brands = new ArrayList<>();
+		if(brandName.equals("all") && category.equals("all")){
+			System.out.println("all");
+			brands = brandService.selectAll();
+		}
+		else if(brandName.equals("all")){
+			System.out.println("all 2");
+			brands = brandService.getByCategory(category);
+		}
+		else if(category.equals("all")){
+			System.out.println("all 3");
+			brands = brandService.getByName(brandName);
+		}
+		else{
+			System.out.println("all 4");
+			brands.add(brandService.selectByNameAndCategory(brandName, category));
+		}
 		List<ProductPojo> products = productService.selectAll();
 		
 		//loop for storing all product ids with respect to brand and category

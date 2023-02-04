@@ -34,42 +34,13 @@ function getSalesReportList(){
         });
         return;
     }
-	var url = getSalesReportUrl()+"/get-sales-report"+"/"+json['startDate']+"/"+json['endDate'];
+	var url = getSalesReportUrl()+"/"+json['brand']+"/"+json['category']+"/"+json['startDate']+"/"+json['endDate']+"/get-sales-report";
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   	if(json['brand']!='all' && json['category']!='all'){
-            let filteredData = []
-            for(d of data){
-                if(d.brand==json['brand'] && d.category==json['category']){
-                    filteredData.push(d);
-                }
-            }
-            data = filteredData;
-        }
-        else if(json['brand']!='all'){
-            let filteredData = []
-            for(d of data){
-                if(d.brand==json['brand']){
-                    filteredData.push(d);
-                }
-            }
-            data = filteredData;
-        }	
-
-        else if(json['category']!='all'){
-            let filteredData = []
-            for(d of data){
-                if(d.category==json['category']){
-                    filteredData.push(d);
-                }
-            }
-            data = filteredData;
-        }
         jsontocsv(data);
         displaySalesReportList(data);
-              
 	   },
 	   error: (response)=>{
 		handleError(response);

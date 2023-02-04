@@ -5,7 +5,9 @@ function getReportUrl(){
 }
 
 function getReportList(){
-	var url = getReportUrl()+"/get-sales-report";
+	let startDate = $('#startDate').val();
+	let endDate = $('#endDate').val();
+	var url = getReportUrl()+"/get-day-wise-report"+"/"+startDate+"/"+endDate;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
@@ -68,54 +70,10 @@ function displayReportList(data){
 	paginate("#dtBasicExample");
 }
 
-function filterByDate(){
-    var $form = $('#report-form');
-    var json = toJson($form);
-    json=JSON.parse(json);
-    console.log(json);
-    var startDate = new Date(json['startDate']);
-    var endDate = new Date(json['endDate']);
-	if(startDate > endDate){
-		Swal.fire({
-			icon: 'error',
-			title: 'Error',
-			text: 'Start date cannot be greater than end date',
-		});
-	}
-	else{
-    var url = getReportUrl()+"/get-sales-report";
-	$.ajax({
-	   url: url,
-	   type: 'GET',
-	   success: function(data) {
-            //filter the data between startDate and endDate
-            let filteredData = []
-            for(d of data){
-                let obj = {}
-                console.log(new Date(d.date.split('T')[0]), startDate, endDate);
-                if(new Date(d.date.split('T')[0]) >= startDate && new Date(d.date.split('T')[0]) <= endDate){
-                    obj['date'] = d.date
-                    obj['invoiced_orders_count'] = d.invoiced_orders_count
-                    obj['invoiced_items_count'] = d.invoiced_items_count
-                    obj['total_revenue'] = d.total_revenue
-                    filteredData.push(obj)
-                }
-            }
-			jsontocsv(filteredData);
-            displayReportList(filteredData);
-	   },
-	   error: (response)=>{
-		handleError(response);
-	   }
-	});
-	}
-}
-
-
 
 //INITIALIZATION CODE
 function init(){
-    $('#get-report').click(filterByDate);
+    $('#get-report').click(getReportList);
 	$("#endDate").prop("max", function(){
         return new Date().toJSON().split('T')[0];
     });
@@ -130,4 +88,4 @@ function paginate(id) {
 }
 
 $(document).ready(init);
-$(document).ready(getReportList);
+// $(document).ready(getReportList);

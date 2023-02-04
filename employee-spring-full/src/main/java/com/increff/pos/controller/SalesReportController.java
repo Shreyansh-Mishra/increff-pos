@@ -27,15 +27,16 @@ public class SalesReportController {
 	
 	
 	@ApiOperation(value="Scheduler")
-	@RequestMapping(path="/report/get-sales-report", method=RequestMethod.GET)
-	public List<DayWiseReportData> getDayByDayReport() throws ParseException{
-		return salesReportDto.getDayWiseReport();
+	@RequestMapping(path="/report/get-day-wise-report/{startDate}/{endDate}", method=RequestMethod.GET)
+	public List<DayWiseReportData> getDayByDayReport(@PathVariable String startDate, @PathVariable String endDate) throws ParseException{
+		return salesReportDto.getDayWiseReport(startDate, endDate);
 	}
 	
 	@ApiOperation(value="Get Sales Report")
-	@RequestMapping(path="/report/get-sales-report/{startDate}/{endDate}",method=RequestMethod.GET)
-	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, ApiException{
-		return salesReportDto.getSalesByBrandAndCategory(startDate, endDate);
+	@RequestMapping(path="/report/{brandName}/{category}/{startDate}/{endDate}/get-sales-report",method=RequestMethod.GET)
+	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(@PathVariable String brandName, @PathVariable String category, @PathVariable String startDate, @PathVariable String endDate) throws ParseException, ApiException{
+		System.out.println("brandName: "+brandName);
+		return salesReportDto.getSalesByBrandAndCategory(startDate, endDate, brandName, category);
 	}
 	
 	@ApiOperation(value="Get Inventory Report")

@@ -68,6 +68,16 @@ public class BrandService {
 		return brandDao.selectCategories(brandName);
 	}
 
+	@Transactional
+	public List<BrandPojo> getByCategory(String category){
+		return brandDao.selectByCategory(category);
+	}
+
+	@Transactional
+	public List<BrandPojo> getByName(String name){
+		return brandDao.select(name);
+	}
+
 	public static void isEmpty(String a, String b) throws ApiException {
 		if(a.isEmpty()||b.isEmpty()) {
 			throw new ApiException("Brand or Category cannot be empty!");

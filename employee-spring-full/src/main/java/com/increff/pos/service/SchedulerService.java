@@ -26,7 +26,7 @@ public class SchedulerService {
     }
 
     @Transactional
-    public List<SchedulerPojo> selectSchedulerData() {
-        return schedulerDao.select();
+    public List<SchedulerPojo> selectSchedulerData(Instant startDate, Instant endDate) {
+        return schedulerDao.select(startDate, endDate);
     }
 }
