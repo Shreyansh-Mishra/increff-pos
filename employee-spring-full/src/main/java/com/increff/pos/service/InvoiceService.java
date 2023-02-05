@@ -19,7 +19,7 @@ public class InvoiceService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public InvoicePojo selectInvoice(int id) throws ApiException {
+    public InvoicePojo selectInvoice(Integer id) throws ApiException {
         InvoicePojo invoice = invoiceDao.selectId(id);
         if(invoice==null)
             throw new ApiException("Invoice with id "+id+" does not exist");

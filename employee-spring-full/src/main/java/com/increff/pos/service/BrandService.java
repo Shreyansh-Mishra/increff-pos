@@ -17,14 +17,14 @@ public class BrandService {
 	@Autowired
 	private BrandDao brandDao;
 
-	public void add(BrandPojo brand) throws ApiException {
+	public BrandPojo add(BrandPojo brand) throws ApiException {
 		isEmpty(brand.getBrand(),brand.getCategory());
 		normalize(brand);
 		BrandPojo isExists = brandDao.select(brand.getBrand(),brand.getCategory());
 		if(isExists!=null) {
 			throw new ApiException("Brand and Category Already Exists");
 		}
-		brandDao.insert(brand);
+		return brandDao.insert(brand);
 	}
 	
 	public List<BrandPojo> selectAll(){
@@ -39,11 +39,11 @@ public class BrandService {
 		return brand;
 	}
 	
-	public BrandPojo selectById(int id) throws ApiException {
+	public BrandPojo selectById(Integer id) throws ApiException {
 		return checkIfExists(id);
 	}
 	
-	public void updateBrand(int id, BrandPojo brand) throws ApiException {
+	public void updateBrand(Integer id, BrandPojo brand) throws ApiException {
 		isEmpty(brand.getBrand(),brand.getCategory());
 		normalize(brand);
 		BrandPojo newBrand = checkIfExists(id);
@@ -56,7 +56,7 @@ public class BrandService {
 		brandDao.update(newBrand);
 	}
 	
-	public BrandPojo checkIfExists(int id) throws ApiException {
+	public BrandPojo checkIfExists(Integer id) throws ApiException {
 		BrandPojo brand = brandDao.select(id);
 		if(brand==null) {
 			throw new ApiException("The requested brand does not exists");

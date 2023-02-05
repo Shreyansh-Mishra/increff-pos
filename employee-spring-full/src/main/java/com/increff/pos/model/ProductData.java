@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductData {
-	private int id;
-	private double mrp;
+	private Integer id;
+	private Double mrp;
 	private String name;
 	private String barcode;
 	private String brandName;

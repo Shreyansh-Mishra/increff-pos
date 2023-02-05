@@ -10,5 +10,5 @@ public class ProductForm {
 	private String brandName;
 	private String category;
 	private String name;
-	private double mrp;
+	private Double mrp;
 }

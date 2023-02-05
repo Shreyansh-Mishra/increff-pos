@@ -20,11 +20,11 @@ public class BrandDao extends AbstractDao {
 	private static final String SELECT_BY_CATEGORY = "select b from BrandPojo b where category=:category";
 
 	@Transactional
-	public void insert(BrandPojo b) {
-		em().persist(b);
+	public BrandPojo insert(BrandPojo b) {
+		return persist(b);
 	}
 
-	public BrandPojo select(int id) {
+	public BrandPojo select(Integer id) {
 		TypedQuery<BrandPojo> query = getQuery(SELECT_ID, BrandPojo.class);
 		query.setParameter("id", id);
 		return getSingle(query);

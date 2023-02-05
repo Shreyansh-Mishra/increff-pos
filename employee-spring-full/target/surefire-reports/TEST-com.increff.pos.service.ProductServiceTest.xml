@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="11" failures="0" name="com.increff.pos.service.ProductServiceTest" time="0.086" errors="0" skipped="0">
+<testsuite tests="11" failures="0" name="com.increff.pos.service.ProductServiceTest" time="0.072" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="17.0.5+9-LTS-191"/>
@@ -61,15 +61,15 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testUpdateDuplicate" time="0.013"/>
-  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testSelectBarcode" time="0.009"/>
-  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testAdd" time="0.01"/>
-  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testSelectByBrand" time="0.01"/>
-  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testSelectByBrandAndCategory" time="0.007"/>
+  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testUpdateDuplicate" time="0.01"/>
+  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testSelectBarcode" time="0.006"/>
+  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testAdd" time="0.009"/>
+  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testSelectByBrand" time="0.005"/>
+  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testSelectByBrandAndCategory" time="0.008"/>
   <testcase classname="com.increff.pos.service.ProductServiceTest" name="testSelectAll" time="0.006"/>
   <testcase classname="com.increff.pos.service.ProductServiceTest" name="testIsNegative" time="0.003"/>
-  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testIsEmpty" time="0.003"/>
-  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testUpdate" time="0.008"/>
+  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testIsEmpty" time="0.004"/>
+  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testUpdate" time="0.01"/>
   <testcase classname="com.increff.pos.service.ProductServiceTest" name="testSelectById" time="0.006"/>
-  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testAddDuplicate" time="0.011"/>
+  <testcase classname="com.increff.pos.service.ProductServiceTest" name="testAddDuplicate" time="0.005"/>
 </testsuite>

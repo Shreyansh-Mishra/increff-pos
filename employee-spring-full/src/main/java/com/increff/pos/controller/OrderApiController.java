@@ -35,26 +35,26 @@ public class OrderApiController {
     OrderDto orderDto;
 	
 	@ApiOperation(value = "Create an order")
-	@RequestMapping(path= "/order/add-order", method=RequestMethod.POST)
+	@RequestMapping(path= "/order", method=RequestMethod.POST)
 	public void createOrder(@RequestBody List<OrderForm> o) throws ApiException, Exception {
 		orderDto.createOrder(o);
 	}
 	
 	@ApiOperation(value = "Get all orders")
-	@RequestMapping(path="/order/get-orders", method=RequestMethod.GET)
+	@RequestMapping(path="/order", method=RequestMethod.GET)
 	public List<OrderData> getOrders() {
 		return orderDto.getOrders();
 	}
 	
 	@ApiOperation(value = "Get order items")
 	@RequestMapping(path="/order/{id}", method=RequestMethod.GET)
-	public List<OrderItemData> getOrderItems(@PathVariable int id) throws ApiException{
+	public List<OrderItemData> getOrderItems(@PathVariable Integer id) throws ApiException{
 		return orderDto.getOrderItems(id);
 	}
 
 	@ApiOperation(value = "Get Invoice")
 	@RequestMapping(path="/order/invoice/{id}", method=RequestMethod.GET, produces = "application/pdf")
-	public StreamingResponseBody getInvoice(@PathVariable int id, HttpServletResponse response) throws Exception{
+	public StreamingResponseBody getInvoice(@PathVariable Integer id, HttpServletResponse response) throws Exception{
 		//get file with the name as id
 		InvoicePojo invoice = orderDto.getInvoice(id);
 		File file = new File(invoice.getPath());
@@ -64,7 +64,7 @@ public class OrderApiController {
 		InputStream inputStream = new FileInputStream(new File(invoice.getPath()));
 
 		return outputStream -> {
-			int nRead;
+			Integer nRead;
 			byte[] data = new byte[1024];
 			while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
 				outputStream.write(data, 0, nRead);

@@ -16,15 +16,16 @@ public class InventoryService {
 	private InventoryDao inventoryDao;
 	
 
-	public void add(InventoryPojo inventoryItem) throws ApiException {
+	public InventoryPojo add(InventoryPojo inventoryItem) throws ApiException {
 		isNegative(inventoryItem.getQuantity(), inventoryItem.getBarcode());
 		InventoryPojo inventory = inventoryDao.selectId(inventoryItem.getId());
 		if(inventory!=null) {
 			inventory.setQuantity(inventoryItem.getQuantity()+inventory.getQuantity());
 			inventoryDao.update(inventory);
+			return inventory;
 		}
 		else {
-		inventoryDao.insert(inventoryItem);
+			return inventoryDao.insert(inventoryItem);
 		}
 	}
 	
@@ -32,7 +33,7 @@ public class InventoryService {
 		return inventoryDao.selectAll();
 	}
 	
-	public InventoryPojo selectById(int id) throws ApiException {
+	public InventoryPojo selectById(Integer id) throws ApiException {
 		InventoryPojo inventory = inventoryDao.selectId(id);
 		if(inventory==null)
 			throw new ApiException("The product does not exists in the Inventory");
@@ -45,7 +46,7 @@ public class InventoryService {
 		inventory.setQuantity(inventoryItem.getQuantity());
 		inventoryDao.update(inventory);
 	}
-	public static void isNegative(int a, String barcode) throws ApiException {
+	public static void isNegative(Integer a, String barcode) throws ApiException {
 		if(a<0)
 			throw new ApiException("Enter a valid quantity for product with barcode "+barcode);
 	}

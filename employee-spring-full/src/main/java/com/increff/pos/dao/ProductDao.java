@@ -18,8 +18,8 @@ public class ProductDao extends AbstractDao {
 	private static final String SELECT_BARCODE = "select p from ProductPojo p where barcode=:barcode";
 
 	@Transactional
-	public void insert(ProductPojo p) {
-		em().persist(p);
+	public ProductPojo insert(ProductPojo p) {
+		return persist(p);
 	}
 	
 	
@@ -47,7 +47,7 @@ public class ProductDao extends AbstractDao {
 		return query.getResultList();
 	}
 	
-	public ProductPojo selectId(int id) {
+	public ProductPojo selectId(Integer id) {
 		TypedQuery<ProductPojo> query = getQuery(SELECT_ID, ProductPojo.class);
 		query.setParameter("id", id);
 		return getSingle(query);

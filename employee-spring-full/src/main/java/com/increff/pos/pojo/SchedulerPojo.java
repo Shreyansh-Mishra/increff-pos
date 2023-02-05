@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class SchedulerPojo {
 	@Id
 	private Instant date;
-	private int invoiced_orders_count;
-	private int invoiced_items_count;
-	private double revenue;
+	private Integer invoiced_orders_count;
+	private Integer invoiced_items_count;
+	private Double revenue;
 }

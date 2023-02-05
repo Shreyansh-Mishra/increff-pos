@@ -16,6 +16,11 @@ public abstract class AbstractDao {
 	protected <T> TypedQuery<T> getQuery(String jpql, Class<T> clazz) {
 		return em.createQuery(jpql, clazz);
 	}
+
+	protected <T> T persist(T t) {
+		em.persist(t);
+		return t;
+	}
 	
 	protected EntityManager em() {
 		return em;

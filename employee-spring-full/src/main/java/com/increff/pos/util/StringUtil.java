@@ -13,7 +13,7 @@ public class StringUtil {
 		return s == null ? null : s.trim().toLowerCase();
 	}
 
-	public static double round(double value, int places) {
+	public static Double round(Double value, Integer places) {
 		if (places < 0) throw new IllegalArgumentException();
 
 		BigDecimal bd = BigDecimal.valueOf(value);

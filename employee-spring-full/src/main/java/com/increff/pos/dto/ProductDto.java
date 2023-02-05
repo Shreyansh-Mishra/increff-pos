@@ -3,7 +3,7 @@ package com.increff.pos.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.increff.pos.util.DtoUtil;
+import com.increff.pos.util.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +26,11 @@ public class ProductDto {
 	private BrandService brandService;
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void createProduct(ProductForm form) throws ApiException {
-		ProductPojo product = DtoUtil.objectMapper(form, ProductPojo.class);
+	public ProductData createProduct(ProductForm form) throws ApiException {
+		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
 		BrandPojo brand = brandService.selectByNameAndCategory(product.getBrandName().toLowerCase(),product.getCategory().toLowerCase());
 		product.setBrand_category(brand.getId());
-		productService.add(product);
+		return ObjectUtil.objectMapper(productService.add(product), ProductData.class);
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
@@ -38,7 +38,7 @@ public class ProductDto {
 		List<ProductPojo> products = productService.selectAll();
 		List<ProductData> productList = new ArrayList<>();
 		for(ProductPojo product: products) {
-			ProductData data = DtoUtil.objectMapper(product,ProductData.class);
+			ProductData data = ObjectUtil.objectMapper(product,ProductData.class);
 			BrandPojo brand = brandService.selectById(product.getBrand_category());
 			data.setBrandName(brand.getBrand());
 			data.setCategory(brand.getCategory());
@@ -47,16 +47,16 @@ public class ProductDto {
 		return productList;
 	}
 	
-	public ProductData getProductsById(int id) throws ApiException{
+	public ProductData getProductsById(Integer id) throws ApiException{
 		ProductPojo p = productService.selectById(id);
-		return DtoUtil.objectMapper(p,ProductData.class);
+		return ObjectUtil.objectMapper(p,ProductData.class);
 	}
 	
 	public List<ProductData> getProductByBrandName(String brandName){
 		List<ProductPojo> products = productService.selectByBrand(brandName);
 		List<ProductData> productList = new ArrayList<>();
 		for(ProductPojo product: products) {
-			productList.add(DtoUtil.objectMapper(product,ProductData.class));
+			productList.add(ObjectUtil.objectMapper(product,ProductData.class));
 		}
 		return productList;
 	}
@@ -65,14 +65,14 @@ public class ProductDto {
 		List<ProductPojo> products = productService.selectByBrandAndCategory(brandName,category);
 		List<ProductData> productList = new ArrayList<>();
 		for(ProductPojo product: products) {
-			productList.add(DtoUtil.objectMapper(product,ProductData.class));
+			productList.add(ObjectUtil.objectMapper(product,ProductData.class));
 		}
 		return productList;
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void updateProduct(int id, ProductForm form) throws ApiException {
-		ProductPojo product = DtoUtil.objectMapper(form, ProductPojo.class);
+	public void updateProduct(Integer id, ProductForm form) throws ApiException {
+		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
 		BrandPojo brand = brandService.selectByNameAndCategory(product.getBrandName().toLowerCase(),product.getCategory().toLowerCase());
 		product.setBrand_category(brand.getId());
 		productService.update(product,id);
@@ -80,6 +80,6 @@ public class ProductDto {
 
 	public ProductData getProductByBarcode(String barcode) throws ApiException {
 		ProductPojo p = productService.selectByBarcode(barcode);
-		return DtoUtil.objectMapper(p,ProductData.class);
+		return ObjectUtil.objectMapper(p,ProductData.class);
 	}
 }

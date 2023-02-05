@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
+import com.increff.pos.model.BrandReportData;
 import com.increff.pos.service.*;
+import com.increff.pos.util.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -60,8 +62,8 @@ public class ReportDto {
 		Instant to = Instant.now().truncatedTo(java.time.temporal.ChronoUnit.DAYS);
 		List<OrderPojo> o = orderService.selectByDate(from,to);
 		System.out.println(o.size());
-		double revenue = 0;
-		int itemcount = 0;
+		Double revenue = 0.0;
+		Integer itemcount = 0;
 		for(OrderPojo order: o){
 			List<OrderItemPojo> items = orderItemsService.selectItems(order.getId());
 			for(OrderItemPojo item: items){
@@ -136,7 +138,7 @@ public class ReportDto {
 		System.out.println("Order:"+orders.size()+"from: "+ from +"to: "+ to);
 		for(OrderPojo order: orders) {
 			List<OrderItemPojo> orderItems = orderItemsService.selectItems(order.getId());
-			double revenue = 0;
+			Double revenue = 0.0;
 			for(OrderItemPojo orderItem: orderItems) {
 				revenue=(orderItem.getMrp()*orderItem.getQuantity());
 				if(map2.containsKey(orderItem.getProductId())) {
@@ -149,7 +151,7 @@ public class ReportDto {
 				else {
 					List<Double> newpr = new ArrayList<Double>();
 					newpr.add(revenue);
-					newpr.add((double)orderItem.getQuantity());
+					newpr.add(orderItem.getQuantity().doubleValue());
 					map2.put(orderItem.getProductId(), newpr);
 				}
 			}
@@ -160,10 +162,10 @@ public class ReportDto {
 		HashMap<Integer,List<Double>> map3 = new HashMap<Integer, List<Double>>();
 		for(Integer key: map.keySet()) {
 			List<Integer> prod = map.get(key);
-			for(int p: prod) {
+			for(Integer p: prod) {
 				if(map2.containsKey(p)) {
-					double newRevenue=0;
-					double newQuantity=0;
+					Double newRevenue=0.0;
+					Double newQuantity=0.0;
 					if(map3.containsKey(key)) {
 						newRevenue = map3.get(key).get(0)+map2.get(p).get(0);
 						newQuantity = map3.get(key).get(1)+map2.get(p).get(1);
@@ -197,7 +199,7 @@ public class ReportDto {
 				map.put(product.getBrand_category(), item.getQuantity());
 			}
 		}
-		for(int key: map.keySet()) {
+		for(Integer key: map.keySet()) {
 			BrandPojo brand = brandService.selectById(key);
 			InventoryReportData data = new InventoryReportData();
 			data.setQuantity(map.get(key));
@@ -207,10 +209,37 @@ public class ReportDto {
 		}
 		return inventoryReport;
 	}
+
+	public List<BrandReportData> getBrandReport(String brand, String category) throws ApiException{
+		List<BrandReportData> data = new ArrayList<>();
+		if(brand.equals("all")&& category.equals("all")){
+			List<BrandPojo> brands = brandService.selectAll();
+			for(BrandPojo b:  brands){
+				data.add(ObjectUtil.objectMapper(b, BrandReportData.class));
+			}
+		}
+		else if(category.equals("all")){
+			List<BrandPojo> brands = brandService.getByName(brand);
+			for(BrandPojo b: brands){
+				data.add(ObjectUtil.objectMapper(b, BrandReportData.class));
+			}
+		}
+		else if(brand.equals("all")){
+			List<BrandPojo> brands = brandService.getByCategory(category);
+			for(BrandPojo b: brands){
+				data.add(ObjectUtil.objectMapper(b, BrandReportData.class));
+			}
+		}
+		else{
+			BrandPojo b = brandService.selectByNameAndCategory(brand, category);
+			data.add(ObjectUtil.objectMapper(b, BrandReportData.class));
+		}
+		return data;
+	}
 	
 	public List<SalesByBrandAndCategoryData> convert(HashMap<Integer,List<Double>> m) throws ApiException{
 		List<SalesByBrandAndCategoryData> data = new ArrayList<SalesByBrandAndCategoryData>();
-		for(int key: m.keySet()) {
+		for(Integer key: m.keySet()) {
 			SalesByBrandAndCategoryData d = new SalesByBrandAndCategoryData();
 			BrandPojo brand = brandService.selectById(key);
 			d.setRevenue(StringUtil.round(m.get(key).get(0), 2));

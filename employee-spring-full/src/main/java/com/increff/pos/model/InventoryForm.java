@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InventoryForm {
-	private int quantity;
+	private Integer quantity;
 	private String barcode;
 }

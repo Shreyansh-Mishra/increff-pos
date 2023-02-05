@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BrandData {
-	private int id;
+	private Integer id;
 	private String brand;
 	private String category;
 }

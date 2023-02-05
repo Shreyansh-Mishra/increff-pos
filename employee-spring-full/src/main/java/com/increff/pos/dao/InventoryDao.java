@@ -15,11 +15,11 @@ public class InventoryDao extends AbstractDao {
 	private static final String SELECT_ID = "select i from InventoryPojo i where i.id=:id";
 	
 	@Transactional
-	public void insert(InventoryPojo i) {
-		em().persist(i);
+	public InventoryPojo insert(InventoryPojo i) {
+		return persist(i);
 	}
 	
-	public InventoryPojo selectId(int id) {
+	public InventoryPojo selectId(Integer id) {
 		TypedQuery<InventoryPojo> query = getQuery(SELECT_ID, InventoryPojo.class);
 		query.setParameter("id", id);
 		return getSingle(query);

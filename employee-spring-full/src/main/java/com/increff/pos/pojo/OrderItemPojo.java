@@ -15,11 +15,11 @@ import javax.persistence.Transient;
 public class OrderItemPojo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private int orderId;
-	private int productId;
-	private int quantity;
-	private double mrp;
+	private Integer id;
+	private Integer orderId;
+	private Integer productId;
+	private Integer quantity;
+	private Double mrp;
 	@Transient
 	private String barcode;
 }

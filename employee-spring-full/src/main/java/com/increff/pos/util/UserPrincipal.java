@@ -2,7 +2,7 @@ package com.increff.pos.util;
 
 public class UserPrincipal {
 
-	private int id;
+	private Integer id;
 	private String email;
 
 	private String role;
@@ -19,11 +19,11 @@ public class UserPrincipal {
 		return email;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

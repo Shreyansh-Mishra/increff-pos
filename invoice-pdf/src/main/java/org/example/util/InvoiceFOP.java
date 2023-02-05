@@ -21,7 +21,7 @@ import java.util.Base64;
 
 public class InvoiceFOP {
 
-    public static ByteArrayOutputStream getXMLSource(OrderFOPObject orderFop) throws Exception {
+    public static ByteArrayOutputStream getXMLSource(OrderFOPObject orderFop) {
         JAXBContext context;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         try {
@@ -38,8 +38,7 @@ public class InvoiceFOP {
 
     public static String generatePdf(StreamSource streamSource)
             throws FOPException, TransformerException, IOException {
-        File xsltFile = new File("C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\template.xsl");
-
+        File xsltFile = new File("C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\invoice-pdf\\src\\main\\resources\\template.xsl");
         FopFactory fopFactory = FopFactory.newInstance();
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
         //create a temporary output stream to store the pdf and later convert it to a base64 string

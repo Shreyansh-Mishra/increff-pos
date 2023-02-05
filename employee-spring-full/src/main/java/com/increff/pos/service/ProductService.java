@@ -20,7 +20,7 @@ public class ProductService {
 	@Autowired
 	private ProductDao productDao;
 
-	public void add(ProductPojo product) throws ApiException {
+	public ProductPojo add(ProductPojo product) throws ApiException {
 		isEmpty(product.getName(),product.getBarcode());
 		isNegative(product.getMrp());
 		normalize(product);
@@ -28,7 +28,7 @@ public class ProductService {
 		if(isExists!=null) {
 			throw new ApiException("The product already exists");
 		}
-		productDao.insert(product);
+		return productDao.insert(product);
 	}
 	
 	public List<ProductPojo> selectAll() {
@@ -39,7 +39,7 @@ public class ProductService {
 		return productDao.selectBrand(brandName.toLowerCase());
 	}
 	
-	public ProductPojo selectById(int id) throws ApiException {
+	public ProductPojo selectById(Integer id) throws ApiException {
 		ProductPojo product = productDao.selectId(id);
 		if(product==null)
 			throw new ApiException("The product with id "+ id +" does not exists");
@@ -60,7 +60,7 @@ public class ProductService {
 	}
 
 
-	public void update(ProductPojo product,int id) throws ApiException {
+	public void update(ProductPojo product,Integer id) throws ApiException {
 		isEmpty(product.getName(),product.getBarcode());
 		isNegative(product.getMrp());
 		normalize(product);
@@ -76,7 +76,7 @@ public class ProductService {
 		productDao.update();
 	}
 
-	public static void isNegative(double num) throws ApiException {
+	public static void isNegative(Double num) throws ApiException {
 		if(num<=0)
 			throw new ApiException("Enter a Valid MRP");
 	}

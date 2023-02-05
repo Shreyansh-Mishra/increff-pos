@@ -31,7 +31,7 @@ public abstract class AbstractUnitTest {
         return p;
     }
 
-    public ProductPojo createProduct(BrandPojo brand, String name, String barcode, double mrp) throws ApiException {
+    public ProductPojo createProduct(BrandPojo brand, String name, String barcode, Double mrp) throws ApiException {
         ProductPojo p = new ProductPojo();
         p.setBrandName(brand.getBrand());
         p.setCategory(brand.getCategory());
@@ -42,7 +42,7 @@ public abstract class AbstractUnitTest {
         return p;
     }
 
-    public ProductForm createProductForm(BrandForm brand, String name, String barcode, double mrp) {
+    public ProductForm createProductForm(BrandForm brand, String name, String barcode, Double mrp) {
         ProductForm p = new ProductForm();
         p.setBrandName(brand.getBrand());
         p.setCategory(brand.getCategory());
@@ -52,14 +52,14 @@ public abstract class AbstractUnitTest {
         return p;
     }
 
-    public InventoryForm createInventoryForm(String barcode, int quantity) {
+    public InventoryForm createInventoryForm(String barcode, Integer quantity) {
         InventoryForm p = new InventoryForm();
         p.setBarcode(barcode);
         p.setQuantity(quantity);
         return p;
     }
 
-    public InventoryPojo createInventory(ProductPojo product, int quantity){
+    public InventoryPojo createInventory(ProductPojo product, Integer quantity){
         InventoryPojo i = new InventoryPojo();
         i.setBarcode(product.getBarcode());
         i.setQuantity(quantity);
@@ -72,7 +72,7 @@ public abstract class AbstractUnitTest {
         return o;
     }
 
-    public OrderItemPojo createOrderItem(ProductPojo product, OrderPojo order, int quantity, double sellingPrice){
+    public OrderItemPojo createOrderItem(ProductPojo product, OrderPojo order, Integer quantity, Double sellingPrice){
         OrderItemPojo oi = new OrderItemPojo();
         oi.setBarcode(product.getBarcode());
         oi.setProductId(product.getId());

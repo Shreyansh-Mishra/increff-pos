@@ -8,6 +8,6 @@ import lombok.Setter;
 public class InventoryReportData {
 	private String brand;
 	private String category;
-	private int quantity;
+	private Integer quantity;
 
 }

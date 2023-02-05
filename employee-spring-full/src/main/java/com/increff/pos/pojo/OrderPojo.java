@@ -19,7 +19,7 @@ public class OrderPojo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	private Instant time;
 	@PrePersist
 	protected void onCreate() {

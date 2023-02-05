@@ -18,19 +18,19 @@ public class OrderItemDao extends AbstractDao{
 		em().persist(oi);
 	}
 	
-	public OrderItemPojo selectId(int id) {
+	public OrderItemPojo selectId(Integer id) {
 		TypedQuery<OrderItemPojo> query = getQuery(SELECT_ID, OrderItemPojo.class);
 		query.setParameter("id", id);
 		return getSingle(query);
 	}
 	
-	public List<OrderItemPojo> selectItems(int id){
+	public List<OrderItemPojo> selectItems(Integer id){
 		TypedQuery<OrderItemPojo> query = getQuery(SELECT_ITEMS, OrderItemPojo.class);
 		query.setParameter("id", id);
 		return query.getResultList();
 	}
 
-	public OrderItemPojo checkExisting(int prodId, int orderId){
+	public OrderItemPojo checkExisting(Integer prodId, Integer orderId){
 		TypedQuery<OrderItemPojo> query = getQuery(CHECK_EXISTING, OrderItemPojo.class);
 		query.setParameter("prodId", prodId);
 		query.setParameter("orderId", orderId);

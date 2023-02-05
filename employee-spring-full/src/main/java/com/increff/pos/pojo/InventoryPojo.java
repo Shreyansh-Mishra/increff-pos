@@ -12,8 +12,8 @@ import javax.persistence.Transient;
 @Entity
 public class InventoryPojo {
 	@Id
-	private int id;
-	private int quantity;
+	private Integer id;
+	private Integer quantity;
 	@Transient
 	private String barcode;
 }

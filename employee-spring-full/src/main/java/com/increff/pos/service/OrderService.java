@@ -26,7 +26,7 @@ public class OrderService {
 		return orderDao.selectAll();
 	}
 
-	public OrderPojo selectOrderById(int id) throws ApiException {
+	public OrderPojo selectOrderById(Integer id) throws ApiException {
 		OrderPojo order = orderDao.selectId(id);
 		if(order == null) {
 			throw new ApiException("Order with id " + id + " does not exist");

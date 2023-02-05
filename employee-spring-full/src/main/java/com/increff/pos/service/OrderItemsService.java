@@ -14,7 +14,7 @@ public class OrderItemsService {
     @Autowired
     private OrderItemDao orderItemDao;
 
-    public void addItems(List<OrderItemPojo> orderItems, int id) throws ApiException {
+    public void addItems(List<OrderItemPojo> orderItems, Integer id) throws ApiException {
         if(orderItems.size()==0)
             throw new ApiException("Please add atleast 1 item to place your order!");
         for(OrderItemPojo item: orderItems) {
@@ -39,7 +39,7 @@ public class OrderItemsService {
         }
     }
 
-    public List<OrderItemPojo> selectItems(int id){
+    public List<OrderItemPojo> selectItems(Integer id){
         return orderItemDao.selectItems(id);
     }
 

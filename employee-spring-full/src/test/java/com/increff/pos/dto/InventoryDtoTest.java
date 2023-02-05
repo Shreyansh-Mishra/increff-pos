@@ -28,7 +28,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
     public void testAddToInventory() throws ApiException {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
         brandDto.createBrand(brand);
-        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
+        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100.0);
         productDto.createProduct(product);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
         inventoryDto.addToInventory(inventoryForm);
@@ -41,7 +41,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
     public void testGetById() throws ApiException {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
         brandDto.createBrand(brand);
-        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
+        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100.0);
         productDto.createProduct(product);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
         inventoryDto.addToInventory(inventoryForm);
@@ -54,7 +54,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
     public void testEditInventory() throws ApiException{
         BrandForm brand = createBrandForm("testBrand", "testCategory");
         brandDto.createBrand(brand);
-        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
+        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100.0);
         productDto.createProduct(product);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
         inventoryDto.addToInventory(inventoryForm);

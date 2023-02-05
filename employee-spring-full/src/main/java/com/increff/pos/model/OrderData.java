@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderData {
-	private int id;
+	private Integer id;
 	private String time;
 	
 }

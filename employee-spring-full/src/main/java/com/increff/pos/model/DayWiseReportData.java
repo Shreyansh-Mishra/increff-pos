@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class DayWiseReportData {
 	private String date;
-	private int invoiced_orders_count;
-	private int invoiced_items_count;
-	private double total_revenue;
+	private Integer invoiced_orders_count;
+	private Integer invoiced_items_count;
+	private Double total_revenue;
 }

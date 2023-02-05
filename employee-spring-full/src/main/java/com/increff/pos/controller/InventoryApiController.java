@@ -26,26 +26,26 @@ public class InventoryApiController {
 	private InventoryDto inventoryDto;
 	
 	@ApiOperation(value="adds product to inventory")
-	@RequestMapping(path="/inventory/add-product",method=RequestMethod.POST)
-	public void addProductToInventory(@RequestBody InventoryForm i) throws ApiException {
-		inventoryDto.addToInventory(i);
+	@RequestMapping(path="/inventory",method=RequestMethod.POST)
+	public InventoryData addProductToInventory(@RequestBody InventoryForm i) throws ApiException {
+		return inventoryDto.addToInventory(i);
 	}
 	
 	@ApiOperation(value="view inventory")
-	@RequestMapping(path="/inventory/get-inventory",method=RequestMethod.GET)
+	@RequestMapping(path="/inventory",method=RequestMethod.GET)
 	public List<InventoryData> getWholeInventory() throws ApiException {
 		return inventoryDto.getInventory();
 	}
 	
 	@ApiOperation(value="Get by id")
 	@RequestMapping(path="/inventory/{id}", method=RequestMethod.GET)
-	public InventoryData getItemById(@PathVariable int id) throws ApiException {
+	public InventoryData getItemById(@PathVariable Integer id) throws ApiException {
 		return inventoryDto.getById(id);
 	}
 	
 	@ApiOperation(value="edit Inventory")
 	@RequestMapping(path="/inventory/{id}", method=RequestMethod.PUT)
-	public void updateInventory(@PathVariable int id,@RequestBody InventoryForm i) throws ApiException {
+	public void updateInventory(@PathVariable Integer id,@RequestBody InventoryForm i) throws ApiException {
 		inventoryDto.editInventory(id,i);
 	}
 	

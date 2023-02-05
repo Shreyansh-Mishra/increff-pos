@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SalesByBrandAndCategoryData {
-	private double revenue;
-	private int quantity;
+	private Double revenue;
+	private Integer quantity;
 	private String brand;
 	private String category;
 }

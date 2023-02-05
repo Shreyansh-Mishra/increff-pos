@@ -32,9 +32,9 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
         BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productService.add(product);
-        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
+        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200.0);
         productService.add(product2);
         InventoryPojo inventory = createInventory(product, 100);
         InventoryPojo inventory2 = createInventory(product2, 200);
@@ -44,15 +44,15 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         orderService.addOrder(order);
         OrderPojo or = orderService.selectOrders().get(0);
         List<OrderItemPojo> orderItems =  new ArrayList<OrderItemPojo>();
-        OrderItemPojo item1 = createOrderItem(product,or, 10, 100);
+        OrderItemPojo item1 = createOrderItem(product,or, 10, 100.0);
         orderItems.add(item1);
-        OrderItemPojo item2 = createOrderItem(product2,or, 20, 200);
+        OrderItemPojo item2 = createOrderItem(product2,or, 20, 200.0);
         orderItems.add(item2);
         orderItemsService.addItems(orderItems, or.getId());
         List<OrderItemPojo> items = orderItemsService.selectItems(or.getId());
         assertEquals(2, items.size());
-        assertEquals(10, items.get(0).getQuantity());
-        assertEquals(20, items.get(1).getQuantity());
+        assertEquals((Integer)10, items.get(0).getQuantity());
+        assertEquals((Integer) 20, items.get(1).getQuantity());
         assertEquals(100, items.get(0).getMrp(), 0.001);
         assertEquals(200, items.get(1).getMrp(), 0.001);
     }
@@ -62,9 +62,9 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
         BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productService.add(product);
-        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200);
+        ProductPojo product2 = createProduct(brandPojo, "name2", "barcode2", 200.0);
         productService.add(product2);
         InventoryPojo inventory = createInventory(product, 100);
         InventoryPojo inventory2 = createInventory(product2, 200);
@@ -74,15 +74,15 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         List<OrderItemPojo> orderItems =  new ArrayList<OrderItemPojo>();
         orderService.addOrder(order);
         OrderPojo or = orderService.selectOrders().get(0);
-        OrderItemPojo item1 = createOrderItem(product,or, 10, 100);
+        OrderItemPojo item1 = createOrderItem(product,or, 10, 100.0);
         orderItems.add(item1);
-        OrderItemPojo item2 = createOrderItem(product2,or, 20, 200);
+        OrderItemPojo item2 = createOrderItem(product2,or, 20, 200.0);
         orderItems.add(item2);
         orderItemsService.addItems(orderItems, or.getId());
         List<OrderItemPojo> items = orderItemsService.selectItems(or.getId());
         assertEquals(2, items.size());
-        assertEquals(10, items.get(0).getQuantity());
-        assertEquals(20, items.get(1).getQuantity());
+        assertEquals((Integer) 10, items.get(0).getQuantity());
+        assertEquals((Integer) 20, items.get(1).getQuantity());
         assertEquals(100, items.get(0).getMrp(), 0.001);
         assertEquals(200, items.get(1).getMrp(), 0.001);
     }
@@ -92,7 +92,7 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
         BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productService.add(product);
         InventoryPojo inventory = createInventory(product, 100);
         inventoryService.add(inventory);
@@ -100,7 +100,7 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         List<OrderItemPojo> orderItems =  new ArrayList<OrderItemPojo>();
         orderService.addOrder(order);
         OrderPojo or = orderService.selectOrders().get(0);
-        OrderItemPojo item1 = createOrderItem(product,or, -10, 100);
+        OrderItemPojo item1 = createOrderItem(product,or, -10, 100.0);
         orderItems.add(item1);
         try {
             orderItemsService.addItems(orderItems, or.getId());
@@ -116,7 +116,7 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
         BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productService.add(product);
         InventoryPojo inventory = createInventory(product, 100);
         inventoryService.add(inventory);
@@ -124,7 +124,7 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         List<OrderItemPojo> orderItems =  new ArrayList<OrderItemPojo>();
         orderService.addOrder(order);
         OrderPojo or = orderService.selectOrders().get(0);
-        OrderItemPojo item1 = createOrderItem(product,or, 10, -100);
+        OrderItemPojo item1 = createOrderItem(product,or, 10, -100.0);
         orderItems.add(item1);
         try {
             orderItemsService.addItems(orderItems, or.getId());
@@ -140,7 +140,7 @@ public class OrderItemsServiceTest extends AbstractUnitTest{
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandService.add(brand);
         BrandPojo brandPojo = brandService.selectByNameAndCategory("testbrand","testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100);
+        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productService.add(product);
         InventoryPojo inventory = createInventory(product, 100);
         inventoryService.add(inventory);

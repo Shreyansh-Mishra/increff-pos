@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">employee-spring</a> &gt; <a href="index.source.html" class="el_package">com.increff.pos.dto</a> &gt; <span class="el_source">OrderDto.java</span></div><h1>OrderDto.java</h1><pre class="source lang-java linenums">package com.increff.pos.dto;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.increff.pos.pojo.*;
+import com.increff.pos.service.*;
+import com.increff.pos.util.ObjectUtil;
+import com.increff.pos.util.StringUtil;
+import org.example.dto.InvoiceDto;
+import org.example.model.OrderFOPObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.increff.pos.model.OrderData;
+import com.increff.pos.model.OrderForm;
+import com.increff.pos.model.OrderItemData;
+
+import javax.transaction.Transactional;
+
+@Component
+<span class="fc" id="L22">public class OrderDto {</span>
+
+	@Autowired
+	private InventoryService inventoryService;
+	@Autowired
+	private ProductService productService;
+	@Autowired
+	private OrderService orderService;
+	@Autowired
+	private OrderItemsService orderItemsService;
+	@Autowired
+	private InvoiceDto invoiceDto;
+	@Autowired
+	private InvoiceService invoiceService;
+
+	@Transactional(rollbackOn = ApiException.class)
+	public void createOrder(List&lt;OrderForm&gt; o) throws Exception {
+		//create an order
+<span class="fc" id="L40">		List&lt;OrderItemPojo&gt; orderItems = convert(o);</span>
+<span class="fc" id="L41">		updateOrderInventory(orderItems);</span>
+<span class="fc" id="L42">		OrderPojo order = new OrderPojo();</span>
+<span class="fc" id="L43">		orderService.addOrder(order);</span>
+<span class="fc" id="L44">		orderItemsService.addItems(orderItems,order.getId());</span>
+
+		//generate the invoice and get the base64 string
+<span class="fc" id="L47">		String pdf = generateInvoice(order.getId());</span>
+
+		//decode the pdf from the base64 string
+<span class="fc" id="L50">		byte[] decodedPdf = java.util.Base64.getDecoder().decode(pdf);</span>
+
+<span class="fc" id="L52">		String date = order.getTime().toString();</span>
+<span class="fc" id="L53">		date = date.split(&quot;T&quot;, 2)[0] + &quot;-&quot; + date.split(&quot;T&quot;, 2)[1].split(&quot;:&quot;)[0] + &quot;-&quot; + date.split(&quot;T&quot;, 2)[1].split(&quot;:&quot;)[1];</span>
+<span class="fc" id="L54">		String fileName = &quot;Invoice-&quot;+order.getId()+&quot;-&quot;+date+&quot;.pdf&quot;;</span>
+
+		//write the decoded bytes to a file in the resources folder
+<span class="fc" id="L57">		java.nio.file.Path path = java.nio.file.Paths.get(&quot;C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\&quot;+fileName);</span>
+<span class="fc" id="L58">		java.nio.file.Files.write(path, decodedPdf);</span>
+
+		//insert the invoice path in the database
+<span class="fc" id="L61">		String path2 = &quot;C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\&quot;+fileName;</span>
+<span class="fc" id="L62">		InvoicePojo invoice = convert(order.getId(), path2);</span>
+<span class="fc" id="L63">		invoiceService.insertInvoice(invoice);</span>
+<span class="fc" id="L64">	}</span>
+
+	@Transactional(rollbackOn = ApiException.class)
+	public void updateOrderInventory(List&lt;OrderItemPojo&gt; orderItems) throws ApiException {
+<span class="fc bfc" id="L68" title="All 2 branches covered.">		for(OrderItemPojo item: orderItems){</span>
+<span class="fc" id="L69">			ProductPojo product = productService.selectByBarcode(item.getBarcode());</span>
+<span class="fc" id="L70">			InventoryPojo newInventory = new InventoryPojo();</span>
+<span class="fc" id="L71">			InventoryPojo oldInventory = inventoryService.selectById(product.getId());</span>
+<span class="fc" id="L72">			newInventory.setBarcode(product.getBarcode());</span>
+<span class="fc" id="L73">			newInventory.setQuantity(oldInventory.getQuantity()-item.getQuantity());</span>
+<span class="fc" id="L74">			newInventory.setId(product.getId());</span>
+<span class="fc" id="L75">			newInventory.setBarcode(product.getBarcode());</span>
+<span class="fc" id="L76">			inventoryService.update(newInventory);</span>
+<span class="fc" id="L77">			item.setProductId(product.getId());</span>
+<span class="fc" id="L78">		}</span>
+<span class="fc" id="L79">	}</span>
+
+	@Transactional(rollbackOn = Exception.class)
+	public String generateInvoice(Integer orderId) throws Exception {
+<span class="fc" id="L83">		OrderPojo order = orderService.selectOrderById(orderId);</span>
+<span class="fc" id="L84">		List&lt;OrderItemPojo&gt; orderItems = orderItemsService.selectItems(orderId);</span>
+
+		//fop object of the invoice module
+<span class="fc" id="L87">		OrderFOPObject orderFop = new OrderFOPObject();</span>
+<span class="fc" id="L88">		orderFop.setOrderId(order.getId());</span>
+<span class="fc" id="L89">		orderFop.setDate(order.getTime().toString().split(&quot;T&quot;)[0]);</span>
+<span class="fc" id="L90">		List&lt;org.example.model.OrderItemData&gt; fopItems = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L91">		Double total = 0.0;</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">		for(OrderItemPojo item: orderItems) {</span>
+<span class="fc" id="L93">			org.example.model.OrderItemData itemData = new org.example.model.OrderItemData();</span>
+<span class="fc" id="L94">			ProductPojo product = productService.selectById(item.getProductId());</span>
+<span class="fc" id="L95">			itemData.setItemName(product.getName());</span>
+<span class="fc" id="L96">			itemData.setBarcode(product.getBarcode());</span>
+<span class="fc" id="L97">			itemData.setOrderId(item.getOrderId());</span>
+<span class="fc" id="L98">			itemData.setQuantity(item.getQuantity());</span>
+<span class="fc" id="L99">			itemData.setSellingPrice(item.getMrp());</span>
+<span class="fc" id="L100">			itemData.setCost(item.getMrp()*item.getQuantity());</span>
+<span class="fc" id="L101">			total += itemData.getCost();</span>
+<span class="fc" id="L102">			fopItems.add(itemData);</span>
+<span class="fc" id="L103">		}</span>
+<span class="fc" id="L104">		orderFop.setOrderItems(fopItems);</span>
+<span class="fc" id="L105">		orderFop.setTotal(total);</span>
+<span class="fc" id="L106">		return invoiceDto.generateInvoice(orderFop);</span>
+	}
+	
+	public List&lt;OrderData&gt; getOrders(){
+<span class="fc" id="L110">		List&lt;OrderPojo&gt; orders = orderService.selectOrders();</span>
+<span class="fc" id="L111">		List&lt;OrderData&gt; orderData = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">		for(OrderPojo order: orders) {</span>
+<span class="fc" id="L113">			orderData.add(convert(order));</span>
+<span class="fc" id="L114">		}</span>
+<span class="fc" id="L115">		return orderData;</span>
+	}
+	
+	public List&lt;OrderItemData&gt; getOrderItems(Integer id) throws ApiException {
+<span class="fc" id="L119">		List&lt;OrderItemPojo&gt; items = orderItemsService.selectItems(id);</span>
+<span class="fc" id="L120">		List&lt;OrderItemData&gt; orderItemsData = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">		for(OrderItemPojo item: items) {</span>
+<span class="fc" id="L122">			System.out.println(item.getMrp());</span>
+<span class="fc" id="L123">			OrderItemData o = ObjectUtil.objectMapper(item,OrderItemData.class);</span>
+<span class="fc" id="L124">			System.out.println(o.getMrp());</span>
+<span class="fc" id="L125">			ProductPojo p = productService.selectById(item.getProductId());</span>
+<span class="fc" id="L126">			o.setItemName(p.getName());</span>
+<span class="fc" id="L127">			o.setBarcode(p.getBarcode());</span>
+<span class="fc" id="L128">			orderItemsData.add(o);</span>
+<span class="fc" id="L129">		}</span>
+<span class="fc" id="L130">		return orderItemsData;</span>
+	}
+
+	public InvoicePojo getInvoice(Integer id) throws ApiException{
+<span class="fc" id="L134">		return invoiceService.selectInvoice(id);</span>
+	}
+
+
+
+	public static InvoicePojo convert(Integer id, String path){
+<span class="fc" id="L140">		InvoicePojo invoice = new InvoicePojo();</span>
+<span class="fc" id="L141">		invoice.setId(id);</span>
+<span class="fc" id="L142">		invoice.setPath(path);</span>
+<span class="fc" id="L143">		return invoice;</span>
+	}
+
+	public static OrderData convert(OrderPojo order) {
+<span class="fc" id="L147">		OrderData data = new OrderData();</span>
+<span class="fc" id="L148">		String time = order.getTime().toString();</span>
+<span class="fc" id="L149">		data.setId(order.getId());</span>
+<span class="fc" id="L150">		data.setTime(time);</span>
+<span class="fc" id="L151">		return data;</span>
+	}
+
+	public static List&lt;OrderItemPojo&gt; convert(List&lt;OrderForm&gt; form){
+<span class="fc" id="L155">		List&lt;OrderItemPojo&gt; list= new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">		for(OrderForm i: form) {</span>
+<span class="fc" id="L157">			OrderItemPojo o = ObjectUtil.objectMapper(i,OrderItemPojo.class);</span>
+<span class="fc" id="L158">			o.setMrp(StringUtil.round(i.getMrp(), 2));</span>
+<span class="fc" id="L159">			list.add(o);</span>
+<span class="fc" id="L160">		}</span>
+<span class="fc" id="L161">		return list;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

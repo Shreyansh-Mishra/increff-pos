@@ -3,7 +3,7 @@ package com.increff.pos.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.increff.pos.util.DtoUtil;
+import com.increff.pos.util.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,28 +26,28 @@ public class InventoryDto {
 	private InventoryService inventoryService;
 	
 	@Transactional(rollbackOn = ApiException.class)
-	public void addToInventory(InventoryForm form) throws ApiException {
-		InventoryPojo inventoryPojo = DtoUtil.objectMapper(form, InventoryPojo.class);
+	public InventoryData addToInventory(InventoryForm form) throws ApiException {
+		InventoryPojo inventoryPojo = ObjectUtil.objectMapper(form, InventoryPojo.class);
 		ProductPojo product = productService.selectByBarcode(inventoryPojo.getBarcode().toLowerCase());
 		inventoryPojo.setId(product.getId());
-		inventoryService.add(inventoryPojo);
+		return convert(ObjectUtil.objectMapper(inventoryService.add(inventoryPojo), InventoryData.class),inventoryPojo);
 	}
 	
 	public List<InventoryData> getInventory() throws ApiException{
 		List<InventoryPojo> inventory = inventoryService.selectInventory();
 		List<InventoryData> inventoryData = new ArrayList<>();
 		for(InventoryPojo item: inventory) {
-			inventoryData.add(convert(DtoUtil.objectMapper(item,InventoryData.class),item));
+			inventoryData.add(convert(ObjectUtil.objectMapper(item,InventoryData.class),item));
 		}
 		return inventoryData;
 	}
 	
-	public InventoryData getById(int id) throws ApiException {
-		return DtoUtil.objectMapper(inventoryService.selectById(id), InventoryData.class);
+	public InventoryData getById(Integer id) throws ApiException {
+		return ObjectUtil.objectMapper(inventoryService.selectById(id), InventoryData.class);
 	}
 	
-	public void editInventory(int id, InventoryForm form) throws ApiException {
-		InventoryPojo inventory = DtoUtil.objectMapper(form,InventoryPojo.class);
+	public void editInventory(Integer id, InventoryForm form) throws ApiException {
+		InventoryPojo inventory = ObjectUtil.objectMapper(form,InventoryPojo.class);
 		inventory.setId(id);
 		inventoryService.update(inventory);
 	}

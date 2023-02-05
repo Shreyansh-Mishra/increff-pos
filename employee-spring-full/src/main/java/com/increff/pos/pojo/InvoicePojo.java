@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @Entity
 public class InvoicePojo {
     @Id
-    private int id;
+    private Integer id;
     private String path;
 
 }

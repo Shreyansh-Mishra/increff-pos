@@ -29,9 +29,9 @@ public class OrderDtoTest extends AbstractUnitTest {
     public void testCreateOrder() throws Exception {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
         brandDto.createBrand(brand);
-        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
+        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100.0);
         productDto.createProduct(product);
-        ProductForm product2 = createProductForm(brand, "testProduct2", "testBarcode2", 200);
+        ProductForm product2 = createProductForm(brand, "testProduct2", "testBarcode2", 200.0);
         productDto.createProduct(product2);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
         inventoryDto.addToInventory(inventoryForm);
@@ -40,11 +40,11 @@ public class OrderDtoTest extends AbstractUnitTest {
         OrderForm o = new OrderForm();
         o.setBarcode(product.getBarcode());
         o.setQuantity(10);
-        o.setMrp(100);
+        o.setMrp(100.0);
         OrderForm o2 = new OrderForm();
         o2.setBarcode(product2.getBarcode());
         o2.setQuantity(10);
-        o2.setMrp(200);
+        o2.setMrp(200.0);
         List<OrderForm> order = new ArrayList<>();
         order.add(o);
         order.add(o2);
@@ -63,9 +63,9 @@ public class OrderDtoTest extends AbstractUnitTest {
     public void testGetInvoice() throws Exception {
         BrandForm brand = createBrandForm("testBrand", "testCategory");
         brandDto.createBrand(brand);
-        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100);
+        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100.0);
         productDto.createProduct(product);
-        ProductForm product2 = createProductForm(brand, "testProduct2", "testBarcode2", 200);
+        ProductForm product2 = createProductForm(brand, "testProduct2", "testBarcode2", 200.0);
         productDto.createProduct(product2);
         InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
         inventoryDto.addToInventory(inventoryForm);
@@ -74,17 +74,16 @@ public class OrderDtoTest extends AbstractUnitTest {
         OrderForm o = new OrderForm();
         o.setBarcode(product.getBarcode());
         o.setQuantity(10);
-        o.setMrp(100);
+        o.setMrp(100.0);
         OrderForm o2 = new OrderForm();
         o2.setBarcode(product2.getBarcode());
         o2.setQuantity(10);
-        o2.setMrp(200);
+        o2.setMrp(200.0);
         List<OrderForm> order = new ArrayList<>();
         order.add(o);
         order.add(o2);
         orderDto.createOrder(order);
         List<OrderData> orders = orderDto.getOrders();
-        List<OrderItemData> orderItems = orderDto.getOrderItems(orders.get(0).getId());
         InvoicePojo invoiceData = orderDto.getInvoice(orders.get(0).getId());
         assertEquals(orders.get(0).getId(),invoiceData.getId());
     }

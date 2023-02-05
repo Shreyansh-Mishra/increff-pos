@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class OrderForm {
 	private String barcode;
-	private int quantity;
-	private double mrp;
+	private Integer quantity;
+	private Double mrp;
 }
