@@ -52,6 +52,18 @@ public class OrderApiController {
 		return orderDto.getOrderItems(id);
 	}
 
+	@ApiOperation(value = "Generate Invoice")
+	@RequestMapping(path="/order/invoice/{id}", method=RequestMethod.POST)
+	public void generateInvoice(@PathVariable Integer id) throws ApiException, Exception{
+		orderDto.generateInvoice(id);
+	}
+
+	@ApiOperation(value="Edit an order")
+	@RequestMapping(path="/order/{id}", method=RequestMethod.PUT)
+	public void editOrder(@PathVariable Integer id, @RequestBody List<OrderForm> items) throws ApiException{
+		orderDto.editOrder(items, id);
+	}
+
 	@ApiOperation(value = "Get Invoice")
 	@RequestMapping(path="/order/invoice/{id}", method=RequestMethod.GET, produces = "application/pdf")
 	public StreamingResponseBody getInvoice(@PathVariable Integer id, HttpServletResponse response) throws Exception{

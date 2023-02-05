@@ -21,6 +21,7 @@ public class OrderPojo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private Instant time;
+	private String status;
 	@PrePersist
 	protected void onCreate() {
 		Instant it = Instant.now();

@@ -19,6 +19,7 @@ public class OrderService {
 	private OrderDao orderDao;
 
 	public void addOrder(OrderPojo orderPojo) throws ApiException {
+		orderPojo.setStatus("PENDING");
 		orderDao.insert(orderPojo);
 	}
 
@@ -41,5 +42,10 @@ public class OrderService {
 	public List<OrderPojo> selectByDate(Instant from, Instant to){
 		return orderDao.selectByDate(from,to);
 	}
-	
+
+	public void checkStatus(OrderPojo order) throws ApiException{
+		if(order.getStatus().equals("INVOICED")) {
+			throw new ApiException("Order with id " + order.getId() + " is already invoiced");
+		}
+	}
 }

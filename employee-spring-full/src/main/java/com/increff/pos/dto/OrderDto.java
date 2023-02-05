@@ -42,25 +42,6 @@ public class OrderDto {
 		OrderPojo order = new OrderPojo();
 		orderService.addOrder(order);
 		orderItemsService.addItems(orderItems,order.getId());
-
-		//generate the invoice and get the base64 string
-		String pdf = generateInvoice(order.getId());
-
-		//decode the pdf from the base64 string
-		byte[] decodedPdf = java.util.Base64.getDecoder().decode(pdf);
-
-		String date = order.getTime().toString();
-		date = date.split("T", 2)[0] + "-" + date.split("T", 2)[1].split(":")[0] + "-" + date.split("T", 2)[1].split(":")[1];
-		String fileName = "Invoice-"+order.getId()+"-"+date+".pdf";
-
-		//write the decoded bytes to a file in the resources folder
-		java.nio.file.Path path = java.nio.file.Paths.get("C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName);
-		java.nio.file.Files.write(path, decodedPdf);
-
-		//insert the invoice path in the database
-		String path2 = "C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName;
-		InvoicePojo invoice = convert(order.getId(), path2);
-		invoiceService.insertInvoice(invoice);
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
@@ -79,10 +60,11 @@ public class OrderDto {
 	}
 
 	@Transactional(rollbackOn = Exception.class)
-	public String generateInvoice(Integer orderId) throws Exception {
+	public void generateInvoice(Integer orderId) throws Exception {
 		OrderPojo order = orderService.selectOrderById(orderId);
+		orderService.checkStatus(order);
+		order.setStatus("INVOICED");
 		List<OrderItemPojo> orderItems = orderItemsService.selectItems(orderId);
-
 		//fop object of the invoice module
 		OrderFOPObject orderFop = new OrderFOPObject();
 		orderFop.setOrderId(order.getId());
@@ -103,7 +85,40 @@ public class OrderDto {
 		}
 		orderFop.setOrderItems(fopItems);
 		orderFop.setTotal(total);
-		return invoiceDto.generateInvoice(orderFop);
+		String pdf = invoiceDto.generateInvoice(orderFop);
+		byte[] decodedPdf = java.util.Base64.getDecoder().decode(pdf);
+
+		String date = order.getTime().toString();
+		date = date.split("T", 2)[0] + "-" + date.split("T", 2)[1].split(":")[0] + "-" + date.split("T", 2)[1].split(":")[1];
+		String fileName = "Invoice-"+order.getId()+"-"+date+".pdf";
+
+		//write the decoded bytes to a file in the resources folder
+		java.nio.file.Path path = java.nio.file.Paths.get("C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName);
+		java.nio.file.Files.write(path, decodedPdf);
+
+		//insert the invoice path in the database
+		String path2 = "C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\employee-spring-full\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName;
+		InvoicePojo invoice = convert(order.getId(), path2);
+		invoiceService.insertInvoice(invoice);
+	}
+
+	public void editOrder(List<OrderForm> items, Integer orderId) throws ApiException {
+		List<OrderItemPojo> orderItems = convert(items);
+		for(OrderItemPojo item: orderItems){
+			ProductPojo product = productService.selectByBarcode(item.getBarcode());
+			OrderItemPojo i = orderItemsService.selectItem(product.getId(), orderId);
+			Integer quant = item.getQuantity();
+			if(i!=null){
+				quant = (item.getQuantity() - i.getQuantity());
+			}
+			item.setProductId(product.getId());
+			InventoryPojo inventory = new InventoryPojo();
+			inventory.setId(product.getId());
+			inventory.setBarcode(product.getBarcode());
+			inventory.setQuantity(inventoryService.selectById(product.getId()).getQuantity()-quant);
+			inventoryService.update(inventory);
+		}
+		orderItemsService.updateItems(orderItems, orderId);
 	}
 	
 	public List<OrderData> getOrders(){
