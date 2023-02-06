@@ -42,7 +42,7 @@ public abstract class AbstractUnitTest {
         return p;
     }
 
-    public ProductForm createProductForm(BrandForm brand, String name, String barcode, Double mrp) {
+    public ProductForm createProductForm(BrandPojo brand, String name, String barcode, Double mrp) {
         ProductForm p = new ProductForm();
         p.setBrandName(brand.getBrand());
         p.setCategory(brand.getCategory());

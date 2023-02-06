@@ -1,8 +1,13 @@
 package com.increff.pos.dto;
 
+import com.increff.pos.dao.BrandDao;
+import com.increff.pos.dao.ProductDao;
+import com.increff.pos.model.BrandData;
 import com.increff.pos.model.BrandForm;
 import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
+import com.increff.pos.pojo.BrandPojo;
+import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.AbstractUnitTest;
 import com.increff.pos.service.ApiException;
 import org.junit.Test;
@@ -17,15 +22,21 @@ public class ProductDtoTest extends AbstractUnitTest {
     BrandDto brandDto;
 
     @Autowired
-    ProductDto productFlow;
+    ProductDto productDto;
+
+    @Autowired
+    private BrandDao brandDao;
+
+    @Autowired
+    private ProductDao productDao;
 
     @Test
     public void testCreateProduct() throws ApiException {
-        BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandDto.createBrand(brand);
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandDao.insert(brand);
         ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100.0);
-        productFlow.createProduct(form);
-        List<ProductData> products = productFlow.getAllProducts();
+        productDto.createProduct(form);
+        List<ProductPojo> products = productDao.selectAll();
         assertEquals(1,products.size());
         assertEquals("testproduct",products.get(0).getName());
         assertEquals("testbarcode",products.get(0).getBarcode());
@@ -34,12 +45,12 @@ public class ProductDtoTest extends AbstractUnitTest {
 
     @Test
     public void testProductsById() throws ApiException {
-        BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandDto.createBrand(brand);
-        ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100.0);
-        productFlow.createProduct(form);
-        List<ProductData> products = productFlow.getAllProducts();
-        ProductData product = productFlow.getProductsById(products.get(0).getId());
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandDao.insert(brand);
+        ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
+        productDao.insert(productPojo);
+        List<ProductPojo> products = productDao.selectAll();
+        ProductData product = productDto.getProductsById(products.get(0).getId());
         assertEquals("testproduct",product.getName());
         assertEquals("testbarcode",product.getBarcode());
         assertEquals(100,product.getMrp(),0);
@@ -47,11 +58,11 @@ public class ProductDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGetProductByBrandName() throws ApiException {
-        BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandDto.createBrand(brand);
-        ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100.0);
-        productFlow.createProduct(form);
-        List<ProductData> products = productFlow.getProductByBrandName("testBrand");
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandDao.insert(brand);
+        ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
+        productDao.insert(productPojo);
+        List<ProductData> products = productDto.getProductByBrandName("testBrand");
         assertEquals(1,products.size());
         assertEquals("testproduct",products.get(0).getName());
         assertEquals("testbarcode",products.get(0).getBarcode());
@@ -60,11 +71,11 @@ public class ProductDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGetProductsByBrandAndCategory() throws ApiException {
-        BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandDto.createBrand(brand);
-        ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100.0);
-        productFlow.createProduct(form);
-        List<ProductData> products = productFlow.getProductsByBrandAndCategory("testBrand","testCategory");
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandDao.insert(brand);
+        ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
+        productDao.insert(productPojo);
+        List<ProductData> products = productDto.getProductsByBrandAndCategory("testBrand","testCategory");
         assertEquals(1,products.size());
         assertEquals("testproduct",products.get(0).getName());
         assertEquals("testbarcode",products.get(0).getBarcode());
@@ -73,14 +84,14 @@ public class ProductDtoTest extends AbstractUnitTest {
 
     @Test
     public void testUpdateProduct() throws ApiException {
-        BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandDto.createBrand(brand);
-        ProductForm form = createProductForm(brand, "testProduct", "testBarcode", 100.0);
-        productFlow.createProduct(form);
-        List<ProductData> products = productFlow.getAllProducts();
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandDao.insert(brand);
+        ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
+        productDao.insert(productPojo);
+        List<ProductPojo> products = productDao.selectAll();
         ProductForm form1 = createProductForm(brand, "testProduct1", "testBarcode1", 200.0);
-        productFlow.updateProduct(products.get(0).getId(),form1);
-        List<ProductData> products1 = productFlow.getAllProducts();
+        productDto.updateProduct(products.get(0).getId(),form1);
+        List<ProductPojo> products1 = productDao.selectAll();
         assertEquals(1,products1.size());
         assertEquals("testproduct1",products1.get(0).getName());
         assertEquals("testbarcode1",products1.get(0).getBarcode());

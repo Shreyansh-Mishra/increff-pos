@@ -54,12 +54,12 @@ public class ReportDto {
 	//schedule at 12:01 am everyday
 
 	//set cron timezone to utc
-	@Scheduled(cron = "0 1 0 * * *" , zone = "UTC")
+	@Scheduled(cron = "0 0 0 * * *" , zone = "UTC")
 	@Transactional
 	public void updateScheduler(){
 		SchedulerPojo scheduler = new SchedulerPojo();
 		Instant from = Instant.now().minusSeconds(600).truncatedTo(java.time.temporal.ChronoUnit.DAYS);
-		Instant to = Instant.now().truncatedTo(java.time.temporal.ChronoUnit.DAYS);
+		Instant to = Instant.now();
 		List<OrderPojo> o = orderService.selectByDate(from,to);
 		System.out.println(o.size());
 		Double revenue = 0.0;

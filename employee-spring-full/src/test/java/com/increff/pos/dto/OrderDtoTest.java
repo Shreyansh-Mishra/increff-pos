@@ -1,7 +1,8 @@
 package com.increff.pos.dto;
 
+import com.increff.pos.dao.*;
 import com.increff.pos.model.*;
-import com.increff.pos.pojo.InvoicePojo;
+import com.increff.pos.pojo.*;
 import com.increff.pos.service.AbstractUnitTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,43 +15,49 @@ import static org.junit.Assert.assertEquals;
 public class OrderDtoTest extends AbstractUnitTest {
 
     @Autowired
-    BrandDto brandDto;
-
-    @Autowired
-    ProductDto productDto;
-
-    @Autowired
-    InventoryDto inventoryDto;
-
-    @Autowired
     OrderDto orderDto;
+
+    @Autowired
+    private BrandDao brandDao;
+
+    @Autowired
+    private ProductDao productDao;
+
+    @Autowired
+    private InventoryDao inventoryDao;
+
+    @Autowired
+    private OrderDao orderDao;
+
+    @Autowired
+    private OrderItemDao orderItemDao;
 
     @Test
     public void testCreateOrder() throws Exception {
-        BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandDto.createBrand(brand);
-        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100.0);
-        productDto.createProduct(product);
-        ProductForm product2 = createProductForm(brand, "testProduct2", "testBarcode2", 200.0);
-        productDto.createProduct(product2);
-        InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
-        inventoryDto.addToInventory(inventoryForm);
-        InventoryForm inventoryForm1 = createInventoryForm(product2.getBarcode(), 100);
-        inventoryDto.addToInventory(inventoryForm1);
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandDao.insert(brand);
+        ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
+        productDao.insert(productPojo);
+        ProductPojo productPojo2 = createProduct(brand, "testproduct2", "testbarcode2", 200.0);
+        productDao.insert(productPojo2);
+        InventoryPojo inventoryPojo = createInventory(productPojo, 100);
+        inventoryDao.insert(inventoryPojo);
+        InventoryPojo inventoryPojo2 = createInventory(productPojo2, 100);
+        inventoryDao.insert(inventoryPojo2);
         OrderForm o = new OrderForm();
-        o.setBarcode(product.getBarcode());
+        o.setBarcode(productPojo.getBarcode());
         o.setQuantity(10);
         o.setMrp(100.0);
         OrderForm o2 = new OrderForm();
-        o2.setBarcode(product2.getBarcode());
+        o2.setBarcode(productPojo2.getBarcode());
         o2.setQuantity(10);
         o2.setMrp(200.0);
         List<OrderForm> order = new ArrayList<>();
         order.add(o);
         order.add(o2);
         orderDto.createOrder(order);
-        List<OrderData> orders = orderDto.getOrders();
-        List<OrderItemData> orderItems = orderDto.getOrderItems(orders.get(0).getId());
+        List<OrderPojo> orders = orderDao.selectAll();
+        List<OrderItemPojo> orderItems = orderItemDao.selectItems(orders.get(0).getId());
         assertEquals(1,orders.size());
         assertEquals(2,orderItems.size());
         assertEquals(10,orderItems.get(0).getQuantity(),0);
@@ -61,22 +68,22 @@ public class OrderDtoTest extends AbstractUnitTest {
 
     @Test
     public void testGetInvoice() throws Exception {
-        BrandForm brand = createBrandForm("testBrand", "testCategory");
-        brandDto.createBrand(brand);
-        ProductForm product = createProductForm(brand, "testProduct", "testBarcode", 100.0);
-        productDto.createProduct(product);
-        ProductForm product2 = createProductForm(brand, "testProduct2", "testBarcode2", 200.0);
-        productDto.createProduct(product2);
-        InventoryForm inventoryForm = createInventoryForm(product.getBarcode(), 100);
-        inventoryDto.addToInventory(inventoryForm);
-        InventoryForm inventoryForm1 = createInventoryForm(product2.getBarcode(), 100);
-        inventoryDto.addToInventory(inventoryForm1);
+        BrandPojo brand = createBrand("testbrand", "testcategory");
+        brandDao.insert(brand);
+        ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
+        productDao.insert(productPojo);
+        ProductPojo productPojo2 = createProduct(brand, "testproduct2", "testbarcode2", 200.0);
+        productDao.insert(productPojo2);
+        InventoryPojo inventoryPojo = createInventory(productPojo, 100);
+        inventoryDao.insert(inventoryPojo);
+        InventoryPojo inventoryPojo2 = createInventory(productPojo2, 100);
+        inventoryDao.insert(inventoryPojo2);
         OrderForm o = new OrderForm();
-        o.setBarcode(product.getBarcode());
+        o.setBarcode(productPojo.getBarcode());
         o.setQuantity(10);
         o.setMrp(100.0);
         OrderForm o2 = new OrderForm();
-        o2.setBarcode(product2.getBarcode());
+        o2.setBarcode(productPojo2.getBarcode());
         o2.setQuantity(10);
         o2.setMrp(200.0);
         List<OrderForm> order = new ArrayList<>();
