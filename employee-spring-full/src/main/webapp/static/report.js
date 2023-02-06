@@ -89,3 +89,8 @@ function paginate(id) {
 
 $(document).ready(init);
 // $(document).ready(getReportList);
+$(document).ready(()=>{
+    //set startDate as 1 january 2023 and endDate as today
+    document.getElementById("startDate").valueAsDate = new Date("2023-01-01");
+    document.getElementById("endDate").valueAsDate = new Date();
+})
