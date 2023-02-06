@@ -425,7 +425,7 @@ function addRow(){
 		});
 		return;
 	}
-	else if(mrp>=mrpAndQuantity.mrp){
+	else if(mrp>mrpAndQuantity.mrp){
 		Swal.fire({
 			title: "Error",
 			text: "The MRP of the product is "+mrpAndQuantity.mrp+"!",
@@ -442,7 +442,8 @@ function addRow(){
 		return;
 	}
 	let isExist = $('.'+barcode).length
-	$form.find('select[name=barcode]').val('');
+	//set a default option attribute to barcode
+	$form.find('select[name=barcode]').append('<option selected disabled>Enter Barcode</option>');
 	$form.find('input[name=mrp]').val('');
 	$form.find('input[name=quantity]').val('');
 	if(isExist>0){
@@ -477,7 +478,7 @@ function addRow(){
 	+ '</tr>';
 	$tbody.append(row);
 	i++;
-	paginate("#dtBasicExample-order-create");
+	// paginate("#dtBasicExample-order-create");
 	}
 }
 
@@ -505,7 +506,7 @@ function saveRow(i){
 		Swal.fire({icon: 'error',title: 'Oops...',text: 'Quantity must be an integer!'});
 		return;
 	}
-	else if($tr.find('input[name=mrp]').val()>=mrpAndQuantity.mrp){
+	else if($tr.find('input[name=mrp]').val()>mrpAndQuantity.mrp){
 		Swal.fire({icon: 'error',title: 'Oops...',text: 'The MRP of the product is '+mrpAndQuantity.mrp+'!'})
 		return;
 	}
