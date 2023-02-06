@@ -99,7 +99,7 @@ function uploadRows(){
 	//If everything processed then return
 	if(processCount==fileData.length){
 		if(errorData.length>0){
-			alert("There was some problem with some of your entries!");
+			// alert("There was some problem with some of your entries!");
 		}
 		else if(errorData.length==0){
 			handleSuccess("All products uploaded successfully");
@@ -110,6 +110,13 @@ function uploadRows(){
 	}
 	
 	//Process next row
+	if(fileData[processCount].mrp==""){
+		fileData[processCount].mrp=0;
+	}
+	if(fileData[processCount].name==undefined||fileData[processCount].barcode==undefined||fileData[processCount].brandName==undefined||fileData[processCount].category==undefined||fileData[processCount].mrp==undefined){
+		Swal.fire({title: "Error",text: "Invalid headers in TSV file!",icon: "error"});
+		return;
+	}
 	var row = fileData[processCount];
 	processCount++;
 	
@@ -127,7 +134,7 @@ function uploadRows(){
 	   		uploadRows();  
 	   },
 	   error: function(response){
-	   		row.error=response.responseText
+			row.error=JSON.parse(response.responseText).message;
 	   		errorData.push(row);
 	   		uploadRows();
 	   }

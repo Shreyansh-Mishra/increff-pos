@@ -32,6 +32,7 @@ public class BrandService {
 	}
 	
 	public BrandPojo selectByNameAndCategory(String name, String category) throws ApiException {
+		isEmpty(name,category);
 		BrandPojo brand = brandDao.select(name, category.toLowerCase());
 		if(brand==null) {
 			throw new ApiException("The requested brand and category combination does not exists");

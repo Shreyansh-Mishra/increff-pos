@@ -67,6 +67,7 @@ public class OrderDto {
 	public void updateOrderInventory(List<OrderItemPojo> orderItems) throws ApiException {
 		for(OrderItemPojo item: orderItems){
 			ProductPojo product = productService.selectByBarcode(item.getBarcode());
+			productService.checkMrp(item.getMrp(), product);
 			InventoryPojo newInventory = new InventoryPojo();
 			InventoryPojo oldInventory = inventoryService.selectById(product.getId());
 			newInventory.setBarcode(product.getBarcode());

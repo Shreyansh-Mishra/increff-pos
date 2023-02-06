@@ -76,6 +76,11 @@ public class ProductService {
 		productDao.update();
 	}
 
+	public void checkMrp(Double sellingPrice, ProductPojo product) throws ApiException {
+		if(sellingPrice>product.getMrp())
+			throw new ApiException("The MRP of the product is "+product.getMrp()+"!");
+	}
+
 	public static void isNegative(Double num) throws ApiException {
 		if(num<=0)
 			throw new ApiException("Enter a Valid MRP");

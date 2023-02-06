@@ -101,7 +101,7 @@ function uploadRows(){
 	//If everything processed then return
 	if(processCount==fileData.length){
 		if(errorData.length>0){
-			alert("There was some problem with some of your entries!");
+			// alert("There was some problem with some of your entries!");
 		}
 		else if(errorData.length==0){
 			$('#upload-brand-modal').modal('toggle');
@@ -111,6 +111,10 @@ function uploadRows(){
 		return;
 	}
 	
+	if(fileData[processCount].brand==undefined || fileData[processCount].category==undefined){
+		Swal.fire({title: "Error",text: "Invalid headers in TSV file",icon: "error",});
+		return;
+	}
 	//Process next row
 	var row = fileData[processCount];
 	processCount++;
@@ -129,7 +133,7 @@ function uploadRows(){
 	   		uploadRows();  
 	   },
 	   error: function(response){
-	   		row.error=response.responseText
+			row.error=JSON.parse(response.responseText).message;
 	   		errorData.push(row);
 	   		uploadRows();
 	   }

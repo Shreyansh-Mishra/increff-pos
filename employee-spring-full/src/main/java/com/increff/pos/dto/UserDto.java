@@ -25,12 +25,12 @@ public class UserDto {
     @Autowired
     private InfoData info;
 
-    @Value("${signup.email}")
-    private String email;
+    @Value("#{${signupemails}}")
+    private List<String> email;
 
     public ModelAndView signup(UserForm form) throws ApiException {
         UserPojo user = convert(form);
-        if(user.getEmail().equals(email)){ user.setRole("supervisor"); }
+        if(email.contains(user.getEmail())){ user.setRole("supervisor"); }
         else{ user.setRole("operator"); }
         Boolean isSuccess = service.add(user);
         if(isSuccess){

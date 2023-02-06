@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 @Api
 @RestController
 @RequestMapping(path = "/api")
-public class InventoryApiController {
+public class InventoryController {
 	
 	@Autowired
 	private InventoryDto inventoryDto;

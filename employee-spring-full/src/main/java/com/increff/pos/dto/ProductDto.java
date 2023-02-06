@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.increff.pos.util.ObjectUtil;
+import com.increff.pos.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,7 @@ public class ProductDto {
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
 		BrandPojo brand = brandService.selectByNameAndCategory(product.getBrandName().toLowerCase(),product.getCategory().toLowerCase());
 		product.setBrand_category(brand.getId());
+		product.setMrp(StringUtil.round(product.getMrp(),2));
 		return ObjectUtil.objectMapper(productService.add(product), ProductData.class);
 	}
 
@@ -75,11 +77,16 @@ public class ProductDto {
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
 		BrandPojo brand = brandService.selectByNameAndCategory(product.getBrandName().toLowerCase(),product.getCategory().toLowerCase());
 		product.setBrand_category(brand.getId());
+		product.setMrp(StringUtil.round(product.getMrp(),2));
 		productService.update(product,id);
 	}
 
 	public ProductData getProductByBarcode(String barcode) throws ApiException {
 		ProductPojo p = productService.selectByBarcode(barcode);
-		return ObjectUtil.objectMapper(p,ProductData.class);
+		BrandPojo brand = brandService.selectById(p.getBrand_category());
+		ProductData data = ObjectUtil.objectMapper(p,ProductData.class);
+		data.setBrandName(brand.getBrand());
+		data.setCategory(brand.getCategory());
+		return data;
 	}
 }

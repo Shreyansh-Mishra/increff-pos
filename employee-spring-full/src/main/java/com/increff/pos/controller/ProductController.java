@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiOperation;
 @Api
 @RestController
 @RequestMapping(path = "/api")
-public class ProductApiController {
+public class ProductController {
 	
 	@Autowired
 	private ProductDto productDto;
@@ -45,8 +45,8 @@ public class ProductApiController {
 
 	@ApiOperation("Edit Product")
 	@RequestMapping(path="/products/{id}", method=RequestMethod.PUT)
-	public void updateProduct(@PathVariable Integer id, @RequestBody ProductForm p) throws ApiException{
-		productDto.updateProduct(id, p);
+	public void updateProduct(@PathVariable Integer id, @RequestBody ProductForm product) throws ApiException{
+		productDto.updateProduct(id, product);
 	}
 
 	@ApiOperation("Get Product By Barcode")

@@ -2,10 +2,7 @@ package com.increff.pos.dto;
 
 import com.increff.pos.dao.BrandDao;
 import com.increff.pos.dao.ProductDao;
-import com.increff.pos.model.BrandData;
-import com.increff.pos.model.BrandForm;
-import com.increff.pos.model.ProductData;
-import com.increff.pos.model.ProductForm;
+import com.increff.pos.model.*;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.AbstractUnitTest;
@@ -89,7 +86,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
         productDao.insert(productPojo);
         List<ProductPojo> products = productDao.selectAll();
-        ProductForm form1 = createProductForm(brand, "testProduct1", "testBarcode1", 200.0);
+        ProductForm form1 = createProductForm(brand, "testProduct1","testBarcode1", 200.0);
         productDto.updateProduct(products.get(0).getId(),form1);
         List<ProductPojo> products1 = productDao.selectAll();
         assertEquals(1,products1.size());

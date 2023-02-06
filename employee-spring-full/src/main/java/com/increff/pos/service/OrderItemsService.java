@@ -27,10 +27,9 @@ public class OrderItemsService {
             item.setOrderId(id);
             OrderItemPojo isExists = orderItemDao.checkExisting(item.getProductId(),item.getOrderId());
 
-            if(isExists!=null && isExists.getMrp()!=item.getMrp())
+            if(isExists!=null && !(isExists.getMrp().equals(item.getMrp())))
                 throw new ApiException("Selling Price of the same product can't be different");
-
-            else if(isExists!=null && isExists.getMrp()==item.getMrp()){
+            else if(isExists!=null){
                 isExists.setQuantity(item.getQuantity()+isExists.getQuantity());
                 orderItemDao.update(isExists);
                 continue;

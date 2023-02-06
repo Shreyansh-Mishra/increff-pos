@@ -30,7 +30,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 @Api
 @RestController
 @RequestMapping(path = "/api")
-public class OrderApiController {
+public class OrderController {
 	@Autowired
     OrderDto orderDto;
 	
