@@ -6,7 +6,6 @@ C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\service\ApiException.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\service\ProductService.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\UserController.java
-C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\SalesReportController.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\dto\InventoryDto.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\spring\SpringConfig.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\spring\WebInitializer.java
@@ -50,6 +49,7 @@ C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\model\BrandData.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\model\MessageData.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\AbstractUiController.java
+C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\controller\ReportController.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\pojo\SchedulerPojo.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\service\OrderItemsService.java
 C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\java\com\increff\pos\model\InfoData.java

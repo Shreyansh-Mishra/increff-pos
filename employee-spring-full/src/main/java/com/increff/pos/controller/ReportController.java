@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 @Api
 @RestController
 @RequestMapping(path = "/api")
-public class SalesReportController {
+public class ReportController {
 	@Autowired
     ReportDto salesReportDto;
 	
@@ -47,7 +47,7 @@ public class SalesReportController {
 	}
 
 	@ApiOperation(value="Get Brand Report")
-	@RequestMapping(path="/report/{brand}/{category}/get-brand-report", method=RequestMethod.GET)
+	@RequestMapping(path="/report/{brand}/{category}/brand-report", method=RequestMethod.GET)
 	public List<BrandReportData> getBrandReport(@PathVariable String brand, @PathVariable String category) throws ApiException{
 		return salesReportDto.getBrandReport(brand, category);
 	}

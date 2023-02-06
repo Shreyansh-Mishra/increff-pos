@@ -1,10 +1,10 @@
 
-function getSalesReportUrl(){
+function getBrandReportUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/report";
 }
 
-function getSalesReportList(){
+function getBrandReportList(){
     $form = $('#report-form');
     var json = toJson($form);
     json=JSON.parse(json);
@@ -34,13 +34,13 @@ function getSalesReportList(){
         });
         return;
     }
-	var url = getSalesReportUrl()+"/"+json['brand']+"/"+json['category']+"/"+json['startDate']+"/"+json['endDate']+"/sales-report";
+	var url = getBrandReportUrl()+"/"+json['brand']+"/"+json['category']+"/brand-report";
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
         jsontocsv(data);
-        displaySalesReportList(data);
+        displayBrandReportList(data);
 	   },
 	   error: (response)=>{
 		handleError(response);
@@ -49,7 +49,7 @@ function getSalesReportList(){
 }
 
 
-function displaySalesReportList(data){
+function displayBrandReportList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
 	$('#dtBasicExample').DataTable().destroy();
 	$tbody.empty();
@@ -57,13 +57,11 @@ function displaySalesReportList(data){
     console.log(data);
 	for(var i in data){
 		var e = data[i];
-        var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayWholeSalesReport('+e.id+')">view</button>'
+        var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayWholeBrandReport('+e.id+')">view</button>'
 		var row = '<tr>'
         + '<td>' + j + '</td>'
 		+ '<td>' + e.brand + '</td>'
 		+ '<td>' + e.category + '</td>'
-		+ '<td>'  + e.quantity + '</td>'
-		+ '<td>' + Math.round((e.revenue + Number.EPSILON) * 100) / 100 + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 		j++;	
@@ -95,51 +93,10 @@ function downloadCSV(){
 	var hiddenElement = document.createElement('a');
 	hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
 	hiddenElement.target = '_blank';
-	hiddenElement.download = 'sales_report.csv';
+	hiddenElement.download = 'brand_report.csv';
 	hiddenElement.click();
 }
 
-function filterByDate(){
-    var $form = $('#report-form');
-    var json = toJson($form);
-    json=JSON.parse(json);
-    console.log(json);
-    var startDate = new Date(json['startDate']);
-    var endDate = new Date(json['endDate']);
-    if(startDate > endDate){
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Start date cannot be greater than end date!',
-        })
-    }
-    else{
-    var url = getSalesReportUrl()+"/sales-report";
-	$.ajax({
-	   url: url,
-	   type: 'GET',
-	   success: function(data) {
-            //filter the data between startDate and endDate
-            let filteredData = []
-            for(d of data){
-                let obj = {}
-                console.log(new Date(d.date.split('T')[0]), startDate, endDate);
-                if(new Date(d.date.split('T')[0]) >= startDate && new Date(d.date.split('T')[0]) <= endDate){
-                    obj['date'] = d.date
-                    obj['invoiced_orders_count'] = d.invoiced_orders_count
-                    obj['invoiced_items_count'] = d.invoiced_items_count
-                    obj['total_revenue'] = d.total_revenue
-                    filteredData.push(obj)
-                }
-            }
-            displaySalesReportList(filteredData);
-	   },
-	   error: (response)=>{
-		handleError(response);
-	   }
-	});
-    }
-}
 
 function getBrandUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
@@ -189,7 +146,7 @@ function populateCategoryDropdown(){
 
 //INITIALIZATION CODE
 function init(){
-    $('#get-sales-report').click(getSalesReportList);
+    $('#get-brand-report').click(getBrandReportList);
     $("#endDate").prop("max", function(){
         return new Date().toJSON().split('T')[0];
     });
