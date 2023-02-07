@@ -3,11 +3,10 @@ package com.increff.pos.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.*;
 
 import com.increff.pos.dto.ProductDto;
 import com.increff.pos.model.ProductData;
@@ -18,13 +17,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 @Api
 @RestController
+@ControllerAdvice
 @RequestMapping(path = "/api")
 public class ProductController {
 	
 	@Autowired
 	private ProductDto productDto;
-	
-	
+
 	@ApiOperation("Adds a Product")
 	@RequestMapping(path="/products", method=RequestMethod.POST)
 	public ProductData createProduct(@RequestBody ProductForm p) throws ApiException {
@@ -53,5 +52,10 @@ public class ProductController {
 	@RequestMapping(path="/products/barcode/{barcode}", method=RequestMethod.GET)
 	public ProductData getProductByBarcode(@PathVariable String barcode) throws ApiException{
 		return productDto.getProductByBarcode(barcode);
+	}
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<String> handleException(HttpMessageNotReadableException e) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
 	}
 }

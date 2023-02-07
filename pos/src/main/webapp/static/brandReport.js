@@ -109,12 +109,17 @@ function populateBrandDropDown(){
         url: url,
         type: 'GET',
         success: function(data) {
+            var brandSet = new Set();
+			for(var i in data){
+				var e = data[i];
+				brandSet.add(e.brand);
+			}
+            data = Array.from(brandSet);
             var $select = $('#inputBrand');
-            $select.empty();
 			$select.append('<option value="all">' + 'All' + '</option>');
             for(var i in data){
                 var e = data[i];
-                var option = '<option value="' + e.brand + '">' + e.brand + '</option>';
+                var option = '<option value="' + e + '">' + e + '</option>';
                 $select.append(option);
             }
         },
@@ -123,13 +128,18 @@ function populateBrandDropDown(){
 }
 
 function populateCategoryDropdown(){
-    var url = getBrandUrl() +"/"+ document.getElementById("inputBrand").value + "/get-categories";
+    var url = getBrandUrl();
     $.ajax({
         url: url,
         type: 'GET',
         success: function(data) {
+            var categorySet = new Set();
+            for(var i in data){
+                var e = data[i];
+                categorySet.add(e.category);
+            }
+            data = Array.from(categorySet);
             var $select = $('#inputCategory');
-            $select.empty();
 			$select.append('<option value="all">' + 'All' + '</option>');
             $select.removeAttr('disabled');
             for(var i in data){
@@ -141,6 +151,7 @@ function populateCategoryDropdown(){
         error: handleError
     });
 }
+
 
 
 

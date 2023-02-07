@@ -13,7 +13,7 @@ import javax.persistence.Transient;
 @Getter
 @Setter
 @Entity
-public class ProductPojo {
+public class ProductPojo{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;

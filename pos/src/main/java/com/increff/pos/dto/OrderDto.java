@@ -97,13 +97,13 @@ public class OrderDto {
 			itemData.setBarcode(product.getBarcode());
 			itemData.setOrderId(item.getOrderId());
 			itemData.setQuantity(item.getQuantity());
-			itemData.setSellingPrice(item.getMrp());
+			itemData.setSellingPrice(StringUtil.round(item.getMrp(),2));
 			itemData.setCost(item.getMrp()*item.getQuantity());
 			total += itemData.getCost();
 			fopItems.add(itemData);
 		}
 		orderFop.setOrderItems(fopItems);
-		orderFop.setTotal(total);
+		orderFop.setTotal(StringUtil.round(total,2));
 		return invoiceDto.generateInvoice(orderFop);
 	}
 	

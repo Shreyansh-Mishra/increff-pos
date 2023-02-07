@@ -15,7 +15,14 @@ function addProduct(event){
 	var $form = $("#product-form");
 	var json = toJson($form);
 	var url = getProductUrl();
-
+	if(JSON.parse(json).barcode=="" || JSON.parse(json).brandName=="" || JSON.parse(json).category=="" || JSON.parse(json).name==""){
+		Swal.fire({title: "Error", text:"Please fill all the fields properly", icon: "error"});
+		return;
+	}
+	if(JSON.parse(json).mrp==""){
+		Swal.fire({title: "Error", text:"Please enter a valid MRP", icon: "error"});
+		return;
+	}
 	$.ajax({
 	   url: url,
 	   type: 'POST',
@@ -38,6 +45,14 @@ function addProduct(event){
 function updateProduct(id,brand,category,name,mrp,barcode){
 	var url = getProductUrl() + "/" + id;
 	let productData = {barcode:barcode,brandName:brand,category:category,name:name,mrp:mrp}
+	if(productData.barcode=="" || productData.brandName=="" || productData.category=="" || productData.name==""){
+		Swal.fire({title: "Error", text:"Please fill all the fields properly", icon: "error"});
+		return;
+	}
+	if(productData.mrp==""){
+		Swal.fire({title: "Error", text:"Please enter a valid MRP", icon: "error"});
+		return;
+	}
 	$.ajax({
 	   url: url,
 	   type: 'PUT',
@@ -134,7 +149,10 @@ function uploadRows(){
 	   		uploadRows();  
 	   },
 	   error: function(response){
-			row.error=JSON.parse(response.responseText).message;
+			if(response.responseText=="Invalid request body")
+				row.error="Invalid data";
+			else
+				row.error=JSON.parse(response.responseText).message;
 	   		errorData.push(row);
 	   		uploadRows();
 	   }
@@ -327,13 +345,20 @@ function populateBrandDropDown(){
         url: url,
         type: 'GET',
         success: function(data) {
+			//create a set of string
+			var brandSet = new Set();
+			for(var i in data){
+				var e = data[i];
+				brandSet.add(e.brand);
+			}
+			data = Array.from(brandSet);
             var $select = $('#inputBrand');
             $select.empty();
 			$select.append('<option value="" disabled selected style="display: none;">' + 'Choose Brand' + '</option>');
 			$select.attr('placeholder', 'Select Brand');
             for(var i in data){
                 var e = data[i];
-                var option = '<option value="' + e.brand + '">' + e.brand + '</option>';
+                var option = '<option value="' + e + '">' + e + '</option>';
                 $select.append(option);
             }
         },

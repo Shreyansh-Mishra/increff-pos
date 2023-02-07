@@ -97,7 +97,7 @@ public class ReportDto {
         Date date2 = sdf.parse(endDate);
 		System.out.println("date2: "+date2);
         Instant from = date.toInstant();
-		Instant to = date2.toInstant();
+		Instant to = date2.toInstant().plus(1,ChronoUnit.DAYS);
 		
 		//map of brand id and list<product id>
 		HashMap<Integer,List<Integer>> map=new HashMap<>();
@@ -127,7 +127,7 @@ public class ReportDto {
 		for(BrandPojo brand: brands) {
 			List<Integer> productids = new ArrayList<Integer>();
 			for(ProductPojo product: products) {
-				if(product.getBrand_category()==brand.getId()) {
+				if(product.getBrand_category().equals(brand.getId())) {
 					productids.add(product.getId());
 				}
 			}

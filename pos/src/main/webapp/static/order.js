@@ -400,10 +400,10 @@ function addRow(){
 	var barcode = $form.find('select[name=barcode]').val();
 	var mrp = $form.find('input[name=mrp]').val();
 	var q = $form.find('input[name=quantity]').val();
-	if(barcode=='' || mrp=='' || q==''){
+	if(barcode=='' || mrp=='' || q=='' || barcode==null || mrp==0 || q==0){
 		Swal.fire({
 			title: "Error",
-			text: "Please fill all the fields!",
+			text: "Please fill all the fields properly!",
 			icon: "error",
 		  });
 		return;
@@ -497,8 +497,11 @@ function saveRow(i){
 	var $tr = $('#'+i);
 	console.log('.'+$tr.attr('class'));
 	getMrpAndQuantity($tr.find('input[name=barcode]').val());
-
-	if($tr.find('input[name=quantity]').val()<0){
+	if($tr.find('input[name=quantity]').val()=='' || $tr.find('input[name=mrp]').val()==''){
+		Swal.fire({icon: 'error',title: 'Oops...',text: 'Please fill all the fields properly!'});
+		return;
+	}
+	else if($tr.find('input[name=quantity]').val()<0){
 		Swal.fire({icon: 'error',title: 'Oops...',text: 'Quantity cannot be negative!'});
 		return;
 	}

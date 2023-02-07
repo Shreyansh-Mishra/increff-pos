@@ -3,11 +3,10 @@ package com.increff.pos.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.*;
 
 import com.increff.pos.dto.InventoryDto;
 import com.increff.pos.model.InventoryData;
@@ -19,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api
 @RestController
+@ControllerAdvice
 @RequestMapping(path = "/api")
 public class InventoryController {
 	
@@ -47,6 +47,11 @@ public class InventoryController {
 	@RequestMapping(path="/inventory/{id}", method=RequestMethod.PUT)
 	public void updateInventory(@PathVariable Integer id,@RequestBody InventoryForm i) throws ApiException {
 		inventoryDto.editInventory(id,i);
+	}
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<String> handleException(HttpMessageNotReadableException e) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
 	}
 	
 }
