@@ -19,6 +19,7 @@ public class OrderService {
 	private OrderDao orderDao;
 
 	public void addOrder(OrderPojo orderPojo) throws ApiException {
+		System.out.println("service:"+orderPojo.getTime());
 		orderDao.insert(orderPojo);
 	}
 
@@ -34,7 +35,10 @@ public class OrderService {
 		return order;
 	}
 	
-	public List<OrderPojo> selectOrdersBetweenDates(Instant startDate, Instant endDate){
+	public List<OrderPojo> selectOrdersBetweenDates(Instant startDate, Instant endDate) throws ApiException {
+		if(startDate.isAfter(endDate)) {
+			throw new ApiException("Start date cannot be after end date");
+		}
 		return orderDao.selectBetweenDates(startDate, endDate);
 	}
 

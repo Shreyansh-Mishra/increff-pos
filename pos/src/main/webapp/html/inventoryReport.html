@@ -12,8 +12,28 @@
 
 <br>
 
-<button type="button" class="btn btn-primary" id="download-report">Download Report</button>
-
+<div class="container">
+	<div class="row mb-2">
+		<div class="col form-outline mr-3">
+			<select id="inputBrand" name="brand" class="form-select col mr-2" aria-placeholder="Please Choose Brand">
+				<option value="placeholder" disabled selected>Choose Brand</option>
+			</select>
+		</div>
+		<div class="col form-outline mr-3" >
+			<select id="inputCategory" name="category" aria-placeholder="Please Choose Category" class="form-select col mr-2">
+				<option value="placeholder" disabled selected>Choose Category</option>
+			</select>
+		</div>
+		<div class="col">
+			<button type="button" class="btn btn-primary" id="get-inventory-report">Get Report</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<button type="button" class="btn btn-primary" id="download-report">Download Report</button>
+		</div>
+	</div>
+</div>
 <br>
 <br>
 <div class="row">

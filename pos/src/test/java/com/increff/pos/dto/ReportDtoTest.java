@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -57,7 +58,7 @@ public class ReportDtoTest extends AbstractUnitTest {
         inventoryDao.insert(inventory3);
         InventoryPojo inventory4 = createInventory(product5, 300);
         inventoryDao.insert(inventory4);
-        List<InventoryReportData> inventoryReportData = reportDto.getInventoryReport();
+        List<InventoryReportData> inventoryReportData = reportDto.getInventoryReport("all","all");
         assertEquals(3, inventoryReportData.size());
         assertEquals(brand.getBrand().toLowerCase(), inventoryReportData.get(0).getBrand());
         assertEquals(brand.getCategory().toLowerCase(), inventoryReportData.get(0).getCategory());
@@ -225,6 +226,12 @@ public class ReportDtoTest extends AbstractUnitTest {
         assertEquals((Integer) 3, dayWiseReportData.get(0).getInvoiced_orders_count());
         assertEquals((Integer) 93, dayWiseReportData.get(0).getInvoiced_items_count());
         assertEquals(100*13+200*14+300*15+400*16+500*17+100*18, dayWiseReportData.get(0).getTotal_revenue(), 0.1);
+        try{
+            reportDto.getDayWiseReport(to.toString(),from.toString());
+            fail();
+        }
+        catch (ApiException e) {
+        }
     }
 
     @Test

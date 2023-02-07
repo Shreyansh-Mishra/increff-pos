@@ -5,7 +5,9 @@ function getReportUrl(){
 }
 
 function getReportList(){
-	var url = getReportUrl()+"/inventory-report";
+	let brand = $('#inputBrand').val();
+	let category = $('#inputCategory').val();
+	var url = getReportUrl()+"/inventory-report"+"/"+brand+"/"+category;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
@@ -71,9 +73,72 @@ function downloadCSV(){
 }
 
 
+function getBrandUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/brands";
+}
+
+function populateBrandDropDown(){
+    var url = getBrandUrl();
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(data) {
+            var brandSet = new Set();
+			for(var i in data){
+				var e = data[i];
+				brandSet.add(e.brand);
+			}
+            data = Array.from(brandSet);
+            var $select = $('#inputBrand');
+			$select.append('<option value="all">' + 'All' + '</option>');
+            for(var i in data){
+                var e = data[i];
+                var option = '<option value="' + e + '">' + e + '</option>';
+                $select.append(option);
+            }
+        },
+        error: handleError
+    });
+}
+
+function populateCategoryDropdown(){
+    var url = getBrandUrl();
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(data) {
+            var categorySet = new Set();
+            for(var i in data){
+                var e = data[i];
+                categorySet.add(e.category);
+            }
+            data = Array.from(categorySet);
+            var $select = $('#inputCategory');
+			$select.append('<option value="all">' + 'All' + '</option>');
+            $select.removeAttr('disabled');
+            for(var i in data){
+                var e = data[i];
+                var option = '<option value="' + e + '">' + e + '</option>';
+                $select.append(option);
+            }
+        },
+        error: handleError
+    });
+}
+
 //INITIALIZATION CODE
 function init(){
     $('#download-report').click(downloadCSV);
+	$('#get-inventory-report').click(getReportList);
+	$('#inputCategory').on('click', (e)=>{
+        if(e.target.value == "placeholder")
+            populateCategoryDropdown();
+    });
+    $('#inputBrand').on('click', (e)=>{
+        if(e.target.value == "placeholder")
+            populateBrandDropDown();
+    });
 }
 
 
@@ -84,4 +149,3 @@ function paginate(id) {
 }
 
 $(document).ready(init);
-$(document).ready(getReportList)

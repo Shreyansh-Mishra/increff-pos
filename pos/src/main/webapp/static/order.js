@@ -20,6 +20,25 @@ function convertToArrayOfObject(data){
 
 //BUTTON ACTIONS
 function addOrder(event){
+	let sellingPriceInput = document.getElementById('inputSellingPrice');
+	let quantityInput = document.getElementById('inputQuantity');
+	let sellingPriceCorrect = document.getElementById('sellingPriceValid');
+	let sellingPriceError = document.getElementById('sellingPriceError');
+	console.log(sellingPriceInput, sellingPriceInput.classList);
+	if(sellingPriceInput.classList.contains('is-invalid'))
+		sellingPriceInput.classList.remove('is-invalid');
+	if(quantityInput.classList.contains('is-invalid'))
+		quantityInput.classList.remove('is-invalid');
+	if(sellingPriceInput.classList.contains('is-valid'))
+		sellingPriceInput.classList.remove('is-valid');
+	if(quantityInput.classList.contains('is-valid'))
+		quantityInput.classList.remove('is-valid');
+	sellingPriceCorrect.style.display = 'none';
+	sellingPriceError.style.display = 'none';
+	let quantityError = document.getElementById('quantityError');
+	let quantityCorrect = document.getElementById('quantityValid');
+	quantityError.style.display = 'none';
+	quantityCorrect.style.display = 'none';
 	$('#create-order-modal').modal('toggle');
 	var url = getOrderUrl();
 	let data = []
@@ -306,17 +325,25 @@ function getProductUrl(){
 	return baseUrl + "/api/products";
 }
 
+function getInventoryUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/inventory";
+}
+
 function populateBarcode(){
-	var url = getProductUrl();
+	var url = getInventoryUrl()+"/barcodes";
 	$.ajax({
 		url: url,
 		type: 'GET',
 		success: function(data) {
 			//find #inputBarcode and append the rows as option in it
 			var $select = $('#inputBarcode');
+			if($select.children().length > 1){
+				return;
+			}
 			for(var i in data){
 				var e = data[i];
-				var option = '<option value="'+e.barcode+'">'+e.barcode+'</option>';
+				var option = '<option value="'+e+'">'+e+'</option>';
 				$select.append(option);
 			}
 		},
@@ -335,6 +362,25 @@ function getInventoryUrl(){
 }
 
 function getMrpAndQuantity(barcode){
+	let sellingPriceInput = document.getElementById('inputSellingPrice');
+	let quantityInput = document.getElementById('inputQuantity');
+	let sellingPriceCorrect = document.getElementById('sellingPriceValid');
+	let sellingPriceError = document.getElementById('sellingPriceError');
+	console.log(sellingPriceInput, sellingPriceInput.classList);
+	if(sellingPriceInput.classList.contains('is-invalid'))
+		sellingPriceInput.classList.remove('is-invalid');
+	if(quantityInput.classList.contains('is-invalid'))
+		quantityInput.classList.remove('is-invalid');
+	if(sellingPriceInput.classList.contains('is-valid'))
+		sellingPriceInput.classList.remove('is-valid');
+	if(quantityInput.classList.contains('is-valid'))
+		quantityInput.classList.remove('is-valid');
+	sellingPriceCorrect.style.display = 'none';
+	sellingPriceError.style.display = 'none';
+	let quantityError = document.getElementById('quantityError');
+	let quantityCorrect = document.getElementById('quantityValid');
+	quantityError.style.display = 'none';
+	quantityCorrect.style.display = 'none';
 	var url = getProductUrl() + '/barcode/' + barcode;
 	$.ajax({
 		url: url,
@@ -372,6 +418,44 @@ function init(){
 	$('#inputBarcode').change((e)=>{
 		getMrpAndQuantity($('#inputBarcode').val());
 	});
+	$('#inputSellingPrice').change((e)=>{
+		let sellingPriceInput = document.getElementById('inputSellingPrice');
+		let sellingPriceError = document.getElementById('sellingPriceError');
+		let sellingPriceCorrect = document.getElementById('sellingPriceValid');
+		if(Number(e.target.value) > Number(mrpAndQuantity.mrp)){
+			sellingPriceInput.classList.remove('is-valid');
+			sellingPriceInput.classList.add('is-invalid');
+			sellingPriceError.style.display = 'block';
+			sellingPriceCorrect.style.display = 'none';
+		}
+		else{
+			sellingPriceCorrect.innerHTML = "MRP: " + mrpAndQuantity.mrp;
+			sellingPriceInput.classList.add('is-valid');
+			sellingPriceInput.classList.remove('is-invalid');
+			sellingPriceError.style.display = 'none';
+			sellingPriceCorrect.style.display = 'block';
+		}
+	});
+	$('#inputQuantity').change((e)=>{
+		let quantityInput = document.getElementById('inputQuantity');
+		let quantityError = document.getElementById('quantityError');
+		let quantityCorrect = document.getElementById('quantityValid');
+		//change the text of the quantity error
+		quantityError.innerHTML = "Quantity should be less than or equal to " + mrpAndQuantity.quantity;
+		if(Number(e.target.value) > Number(mrpAndQuantity.quantity)){
+			quantityInput.classList.remove('is-valid');
+			quantityInput.classList.add('is-invalid');
+			quantityError.style.display = 'block';
+			quantityCorrect.style.display = 'none';
+		}
+		else{
+			quantityCorrect.innerHTML = "Available Quantity: " + mrpAndQuantity.quantity;
+			quantityInput.classList.add('is-valid');
+			quantityInput.classList.remove('is-invalid');
+			quantityError.style.display = 'none';
+			quantityCorrect.style.display = 'block';
+		}
+	});
 }
 
 let i=1;
@@ -396,6 +480,25 @@ $(document).on('keydown', 'input[pattern]', function(e){
 });
 
 function addRow(){
+	let sellingPriceInput = document.getElementById('inputSellingPrice');
+	let quantityInput = document.getElementById('inputQuantity');
+	let sellingPriceCorrect = document.getElementById('sellingPriceValid');
+	let sellingPriceError = document.getElementById('sellingPriceError');
+	console.log(sellingPriceInput, sellingPriceInput.classList);
+	if(sellingPriceInput.classList.contains('is-invalid'))
+		sellingPriceInput.classList.remove('is-invalid');
+	if(quantityInput.classList.contains('is-invalid'))
+		quantityInput.classList.remove('is-invalid');
+	if(sellingPriceInput.classList.contains('is-valid'))
+		sellingPriceInput.classList.remove('is-valid');
+	if(quantityInput.classList.contains('is-valid'))
+		quantityInput.classList.remove('is-valid');
+	sellingPriceCorrect.style.display = 'none';
+	sellingPriceError.style.display = 'none';
+	let quantityError = document.getElementById('quantityError');
+	let quantityCorrect = document.getElementById('quantityValid');
+	quantityError.style.display = 'none';
+	quantityCorrect.style.display = 'none';
 	$form = $('#order-create-form');
 	var barcode = $form.find('select[name=barcode]').val();
 	var mrp = $form.find('input[name=mrp]').val();
@@ -443,7 +546,7 @@ function addRow(){
 	}
 	let isExist = $('.'+barcode).length
 	//set a default option attribute to barcode
-	$form.find('select[name=barcode]').append('<option selected disabled>Enter Barcode</option>');
+	// $form.find('select[name=barcode]').append('<option selected disabled>Enter Barcode</option>');
 	$form.find('input[name=mrp]').val('');
 	$form.find('input[name=quantity]').val('');
 	if(isExist>0){

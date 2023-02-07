@@ -162,7 +162,10 @@ function init(){
         return new Date().toJSON().split('T')[0];
     });
     $("#download-report").click(downloadCSV);
-    $('#inputBrand').on('click', populateCategoryDropdown);
+    $('#inputCategory').on('click', (e)=>{
+        if(e.target.value == "placeholder")
+            populateCategoryDropdown();
+    });
     $('#inputBrand').on('click', (e)=>{
         if(e.target.value == "placeholder")
             populateBrandDropDown();

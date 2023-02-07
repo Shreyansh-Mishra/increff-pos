@@ -51,6 +51,10 @@ option {
     background-color: #fff;
   }
 
-  input {
+  #startDate {
 	opacity: 1!important;
   }
+
+  #endDate {
+	opacity: 1!important;
+  }	

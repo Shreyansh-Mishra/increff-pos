@@ -17,6 +17,7 @@ public class OrderDao extends AbstractDao {
 	private static final String SELECT_BY_DATE = "select o from OrderPojo o where time between :from and :to";
 
 	public void insert(OrderPojo o) {
+		System.out.println("dao:"+o.getTime());
 		em().persist(o);
 	}
 

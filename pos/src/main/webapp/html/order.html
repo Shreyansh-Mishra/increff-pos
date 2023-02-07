@@ -39,24 +39,6 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Romil Jain</td>
-                <td>30</td>
-                <td>Edit | Delete</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Rajul Jain</td>
-                <td>31</td>
-                <td>Edit | Delete</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Anaisha Jain</td>
-                <td>7</td>
-                <td>Edit | Delete</td>
-              </tr>
             </tbody>
           </table>
 
@@ -94,12 +76,16 @@
                           <label for="inputSellingPrice" class="col-sm-2 col-form-label">Selling Price</label>
                           <div class="col-sm-10">
                             <input type="number" required pattern="^\d*(\.\d{0,2})?$" class="form-control" name="mrp" id="inputSellingPrice" placeholder="Enter Selling Price">
+                            <div class="invalid-feedback" id="sellingPriceError">Selling price cannot be greater than MRP</div>
+                            <div class="valid-feedback" id="sellingPriceValid">MRP:</div>
                           </div>
                         </div>
                         <div class="form-group">
                           <label for="inputQuantity" class="col-sm-2 col-form-label">Quantity</label>
                           <div class="col-sm-10">
                             <input type="number" required step="1" class="form-control" name="quantity" id="inputQuantity" placeholder="Enter Quantity">
+                            <div class="invalid-feedback" id="quantityError">Insufficient Quantity in the Inventory</div>
+                            <div class="valid-feedback" id="quantityValid">MRP:</div>
                           </div>
                         </div>
                         <div class="form-group">

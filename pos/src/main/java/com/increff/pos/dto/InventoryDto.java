@@ -59,4 +59,13 @@ public class InventoryDto {
 		return i;
 	}
 
+	public List<String> getBarcodes() throws ApiException{
+		List<InventoryPojo> inventory = inventoryService.selectInventory();
+		List<String> barcodes = new ArrayList<>();
+		for(InventoryPojo item: inventory){
+			barcodes.add(productService.selectById(item.getId()).getBarcode());
+		}
+		return barcodes;
+	}
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.increff.pos.model.BrandReportData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +30,7 @@ public class ReportController {
 	
 	@ApiOperation(value="Scheduler")
 	@RequestMapping(path="/report/day-wise-report/{startDate}/{endDate}", method=RequestMethod.GET)
-	public List<DayWiseReportData> getDayByDayReport(@PathVariable String startDate, @PathVariable String endDate) throws ParseException{
+	public List<DayWiseReportData> getDayByDayReport(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, ApiException {
 		return salesReportDto.getDayWiseReport(startDate, endDate);
 	}
 	
@@ -41,9 +42,9 @@ public class ReportController {
 	}
 	
 	@ApiOperation(value="Get Inventory Report")
-	@RequestMapping(path="/report/inventory-report",method=RequestMethod.GET)
-	public List<InventoryReportData> getInventoryReport() throws ApiException {
-		return salesReportDto.getInventoryReport();
+	@RequestMapping(path="/report/inventory-report/{brand}/{category}",method=RequestMethod.GET)
+	public List<InventoryReportData> getInventoryReport(@PathVariable String brand, @PathVariable String category) throws ApiException {
+		return salesReportDto.getInventoryReport(brand,category);
 	}
 
 	@ApiOperation(value="Get Brand Report")

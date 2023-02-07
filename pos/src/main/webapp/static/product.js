@@ -95,6 +95,11 @@ var processCount = 0;
 
 
 function processData(){
+	let fileName = document.getElementById('employeeFileName').innerHTML;
+	if(fileName.split('.')[1]!='tsv'){
+		Swal.fire({title: "Error",text: "Please upload a tsv file",icon: "error",});
+		return;
+	}
 	var file = $('#employeeFile')[0].files[0];
 	readFileData(file, readFileDataCallback);
 }
@@ -243,6 +248,11 @@ function updateFileName(){
 	var $file = $('#employeeFile');
 	var fileName = $file.val();
 	$('#employeeFileName').html(fileName.split('\\')[fileName.split('\\').length-1]);
+	fileName = fileName.split('\\')[fileName.split('\\').length-1].split('.')[1];
+	if(fileName!='tsv'){
+		Swal.fire({title: "Error",text: "Invalid file type",icon: "error",});
+		return;
+	}
 }
 
 function displayUploadData(){

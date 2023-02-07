@@ -40,6 +40,7 @@ public class OrderDto {
 		List<OrderItemPojo> orderItems = convert(o);
 		updateOrderInventory(orderItems);
 		OrderPojo order = new OrderPojo();
+		System.out.println(order.getTime());
 		orderService.addOrder(order);
 		orderItemsService.addItems(orderItems,order.getId());
 

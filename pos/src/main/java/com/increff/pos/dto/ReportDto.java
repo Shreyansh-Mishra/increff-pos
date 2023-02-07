@@ -54,7 +54,7 @@ public class ReportDto {
 	//schedule at 12:01 am everyday
 
 	//set cron timezone to utc
-	@Scheduled(cron = "0 0 0 * * *" , zone = "UTC")
+	@Scheduled(cron = "0 0 0 * * *")
 	@Transactional
 	public void updateScheduler(){
 		SchedulerPojo scheduler = new SchedulerPojo();
@@ -78,7 +78,7 @@ public class ReportDto {
 		schedulerService.insertScheduler(scheduler);
 	}
 
-	public List<DayWiseReportData> getDayWiseReport(String startDate, String endDate) throws ParseException {
+	public List<DayWiseReportData> getDayWiseReport(String startDate, String endDate) throws ParseException, ApiException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		sdf.setTimeZone(TimeZone.getTimeZone("utc"));
 		Date date = sdf.parse(startDate);
@@ -89,6 +89,8 @@ public class ReportDto {
 	}
 	
 	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(String startDate, String endDate, String brandName, String category) throws ParseException, ApiException{
+		brandName = brandName.toLowerCase();
+		category = category.toLowerCase();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("utc"));
 		sdf.setLenient(false);
@@ -186,12 +188,39 @@ public class ReportDto {
 	}
 	
 	
-	public List<InventoryReportData> getInventoryReport() throws ApiException{
+	public List<InventoryReportData> getInventoryReport(String brandName, String category) throws ApiException{
+		brandName = brandName.toLowerCase();
+		category = category.toLowerCase();
+		System.out.println("brandName: "+brandName+" category: "+category);
 		List<InventoryPojo> inventory = inventoryService.selectInventory();
 		List<InventoryReportData> inventoryReport = new ArrayList<InventoryReportData>();
+
+		List<BrandPojo> brands = new ArrayList<>();
+		if(brandName.equals("all") && category.equals("all")){
+			brands = brandService.selectAll();
+		}
+		else if(brandName.equals("all")){
+			brands = brandService.getByCategory(category);
+		}
+		else if(category.equals("all")){
+			brands = brandService.getByName(brandName);
+		}
+		else{
+			brands.add(brandService.selectByNameAndCategory(brandName, category));
+		}
+		List<Integer> brandIds = new ArrayList<Integer>();
+
+		for(BrandPojo brand: brands){
+			brandIds.add(brand.getId());
+		}
+
+
 		HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
 		for(InventoryPojo item: inventory) {
 			ProductPojo product = productService.selectById(item.getId());
+			if(!brandIds.contains(product.getBrand_category())){
+				continue;
+			}
 			if(map.containsKey(product.getBrand_category())) {
 				map.put(product.getBrand_category(), map.get(product.getBrand_category())+item.getQuantity());
 			}

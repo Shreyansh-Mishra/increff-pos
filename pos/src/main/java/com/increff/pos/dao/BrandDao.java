@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import com.increff.pos.pojo.BrandPojo;
 @Repository
 public class BrandDao extends AbstractDao {
-	private static final String DELETE_ID = "delete from BrandPojo b where id=:id";
 	private static final String SELECT_ID = "select b from BrandPojo b where id=:id";
 	private static final String SELECT_NAME_CATEGORY = "select b from BrandPojo b where brand=:brand and category=:category";
 	private static final String SELECT_ALL = "select b from BrandPojo b";

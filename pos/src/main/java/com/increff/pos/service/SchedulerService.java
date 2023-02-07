@@ -25,8 +25,10 @@ public class SchedulerService {
         schedulerDao.insert(scheduler);
     }
 
-    @Transactional
-    public List<SchedulerPojo> selectSchedulerData(Instant startDate, Instant endDate) {
+    @Transactional(rollbackOn = ApiException.class)
+    public List<SchedulerPojo> selectSchedulerData(Instant startDate, Instant endDate) throws ApiException {
+        if(startDate.isAfter(endDate))
+            throw new ApiException("Start date cannot be after end date");
         return schedulerDao.select(startDate, endDate);
     }
 }

@@ -49,9 +49,16 @@ public class InventoryController {
 		inventoryDto.editInventory(id,i);
 	}
 
+	@ApiOperation(value="get barcodes")
+	@RequestMapping(path="/inventory/barcodes", method=RequestMethod.GET)
+	public List<String> getBarcodes() throws ApiException {
+		return inventoryDto.getBarcodes();
+	}
+
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<String> handleException(HttpMessageNotReadableException e) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
 	}
+
 	
 }
