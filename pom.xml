@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>
-            employee-spring-full
+            pos
         </module>
         <module>invoice-pdf</module>
     </modules>
@@ -249,7 +249,7 @@
                     <systemProperties>
                         <systemProperty>
                             <name>log4j.configuration</name>
-                            <value>file:C:/Users/Shreyansh/Desktop/increff2/point-of-sale/employee-spring-full/log4j.properties</value>
+                            <value>file:C:/Users/Shreyansh/Desktop/increff2/point-of-sale/pos/log4j.properties</value>
                         </systemProperty>
                     </systemProperties>
                     <httpConnector>

@@ -3,8 +3,8 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/../../increff/employee-spring-full" />
-    <file type="web" url="file://$PROJECT_DIR$/employee-spring-full" />
     <file type="web" url="file://$PROJECT_DIR$/invoice-pdf" />
+    <file type="web" url="file://$PROJECT_DIR$/pos" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">

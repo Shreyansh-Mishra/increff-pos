@@ -13,7 +13,7 @@
                 <fo:flow flow-name="xsl-region-body">
                     <fo:block>
                     <fo:inline>
-                        <fo:external-graphic src="url(C:\Users\Shreyansh\Desktop\increff2\point-of-sale\employee-spring-full\src\main\resources\com\increff\pos\increff-logo1.png)" content-width="5.45cm" content-height="2.11cm"/>
+                        <fo:external-graphic src="url(C:\Users\Shreyansh\Desktop\increff2\point-of-sale\pos\src\main\resources\com\increff\pos\increff-logo1.png)" content-width="5.45cm" content-height="2.11cm"/>
                     </fo:inline>                         
                     </fo:block>
                     <fo:block margin="1cm" text-align="center">
