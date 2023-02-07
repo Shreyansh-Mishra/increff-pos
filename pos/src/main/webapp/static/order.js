@@ -447,7 +447,8 @@ function addRow(){
 	$form.find('input[name=mrp]').val('');
 	$form.find('input[name=quantity]').val('');
 	if(isExist>0){
-		if(orderArr[barcodeMap[barcode]-1]['mrp']!=mrp){
+		if(Number(orderArr[barcodeMap[barcode]-1]['mrp'])!=Number(mrp)){
+			console.log(typeof orderArr[barcodeMap[barcode]-1]['mrp']+" "+typeof mrp);
 			Swal.fire({
 				title: "Error",
 				text: "Selling price of already existing item can't be different!",
