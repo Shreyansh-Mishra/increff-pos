@@ -154,10 +154,13 @@ function uploadRows(){
 	   		uploadRows();  
 	   },
 	   error: function(response){
-	   		row.error=JSON.parse(response.responseText).message;
+		if(response.responseText=="Invalid request body")
+			row.error="Invalid data";
+		else
+			row.error=JSON.parse(response.responseText).message;
 	   		errorData.push(row);
 	   		uploadRows();
-	   }
+	   	}
 	});
 
 }
