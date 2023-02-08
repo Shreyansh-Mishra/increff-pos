@@ -35,7 +35,6 @@ public class ProductServiceTest extends AbstractUnitTest{
         ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productService.add(product);
         List<ProductPojo> products = productDao.selectAll();
-        System.out.println(products.get(0).getBrandName());
         assertEquals(1, products.size());
         assertEquals("testbarcode", products.get(0).getBarcode());
         assertEquals("testproduct", products.get(0).getName());
@@ -139,7 +138,7 @@ public class ProductServiceTest extends AbstractUnitTest{
         ProductPojo product2 = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productService.add(product2);
     }
-    
+
     @Test(expected = ApiException.class)
     public void testIsEmpty() throws ApiException {
         BrandPojo brandPojo = createBrandPojo("testbrand", "testcategory");

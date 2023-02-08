@@ -20,7 +20,6 @@ public class SchedulerDao extends AbstractDao{
 	
 	public SchedulerPojo checkExisting(Instant date) {
 		TypedQuery<SchedulerPojo> query = getQuery(CHECK_DATE, SchedulerPojo.class);
-		System.out.print(date);
 		query.setParameter("instant", date);
 		return getSingle(query);
 	}

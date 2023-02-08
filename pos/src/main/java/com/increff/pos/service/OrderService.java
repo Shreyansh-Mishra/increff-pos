@@ -18,7 +18,6 @@ public class OrderService {
 	private OrderDao orderDao;
 
 	public OrderPojo addOrder(OrderPojo orderPojo) {
-		System.out.println("service:"+orderPojo.getTime());
 		return orderDao.insert(orderPojo);
 	}
 

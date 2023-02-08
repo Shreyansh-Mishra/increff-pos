@@ -27,15 +27,21 @@ public class InventoryDto {
 	
 	@Transactional(rollbackOn = ApiException.class)
 	public InventoryData addToInventory(InventoryForm form) throws ApiException {
+		//convert form to pojo
 		InventoryPojo inventoryPojo = ObjectUtil.objectMapper(form, InventoryPojo.class);
+		//get the product of the relevant barcode
 		ProductPojo product = productService.selectByBarcode(inventoryPojo.getBarcode().toLowerCase());
+		//set id of the product to the inventory pojo
 		inventoryPojo.setId(product.getId());
+		//add the inventory pojo to the database
 		return convert(ObjectUtil.objectMapper(inventoryService.add(inventoryPojo), InventoryData.class),inventoryPojo);
 	}
 	
 	public List<InventoryData> getInventory() throws ApiException{
+		//get all the inventory pojos from the database
 		List<InventoryPojo> inventory = inventoryService.selectInventory();
 		List<InventoryData> inventoryData = new ArrayList<>();
+		//convert each pojo to data and add to the list
 		for(InventoryPojo item: inventory) {
 			inventoryData.add(convert(ObjectUtil.objectMapper(item,InventoryData.class),item));
 		}
@@ -43,15 +49,18 @@ public class InventoryDto {
 	}
 	
 	public InventoryData getById(Integer id) throws ApiException {
+		//get the inventory pojo from the database and convert it to data
 		return ObjectUtil.objectMapper(inventoryService.selectById(id), InventoryData.class);
 	}
 	
 	public void editInventory(Integer id, InventoryForm form) throws ApiException {
+		//convert form to pojo
 		InventoryPojo inventory = ObjectUtil.objectMapper(form,InventoryPojo.class);
 		inventory.setId(id);
 		inventoryService.update(inventory);
 	}
-	
+
+	//function to convert InventoryPojo to InventoryData by querying the product table
 	public InventoryData convert(InventoryData i, InventoryPojo i2) throws ApiException {
 		ProductPojo p = productService.selectById(i2.getId());
 		i.setBarcode(p.getBarcode());
@@ -59,6 +68,7 @@ public class InventoryDto {
 		return i;
 	}
 
+	//function to get all the barcodes of the products in the inventory
 	public List<String> getBarcodes() throws ApiException{
 		List<InventoryPojo> inventory = inventoryService.selectInventory();
 		List<String> barcodes = new ArrayList<>();

@@ -61,7 +61,6 @@ public class ReportDto {
 		Instant from = Instant.now().minusSeconds(600).truncatedTo(java.time.temporal.ChronoUnit.DAYS);
 		Instant to = Instant.now();
 		List<OrderPojo> o = orderService.selectByDate(from,to);
-		System.out.println(o.size());
 		Double revenue = 0.0;
 		Integer itemcount = 0;
 		for(OrderPojo order: o){
@@ -94,10 +93,8 @@ public class ReportDto {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("utc"));
 		sdf.setLenient(false);
-        System.out.println(endDate);
 		Date date = sdf.parse(startDate);
         Date date2 = sdf.parse(endDate);
-		System.out.println("date2: "+date2);
         Instant from = date.toInstant();
 		Instant to = date2.toInstant().plus(1,ChronoUnit.DAYS);
 		
@@ -108,19 +105,16 @@ public class ReportDto {
 		HashMap<Integer,List<Double>> map2 = new HashMap<>();
 		List<BrandPojo> brands = new ArrayList<>();
 		if(brandName.equals("all") && category.equals("all")){
-			System.out.println("all");
+
 			brands = brandService.selectAll();
 		}
 		else if(brandName.equals("all")){
-			System.out.println("all 2");
 			brands = brandService.getByCategory(category);
 		}
 		else if(category.equals("all")){
-			System.out.println("all 3");
 			brands = brandService.getByName(brandName);
 		}
 		else{
-			System.out.println("all 4");
 			brands.add(brandService.selectByNameAndCategory(brandName, category));
 		}
 		List<ProductPojo> products = productService.selectAll();
@@ -137,7 +131,6 @@ public class ReportDto {
 		}
 		
 		List<OrderPojo> orders = orderService.selectOrdersBetweenDates(from, to);
-		System.out.println("Order:"+orders.size()+"from: "+ from +"to: "+ to);
 		for(OrderPojo order: orders) {
 			List<OrderItemPojo> orderItems = orderItemsService.selectItems(order.getId());
 			Double revenue = 0.0;
@@ -158,8 +151,7 @@ public class ReportDto {
 				}
 			}
 		}
-		System.out.println("here");
-		
+
 		//map of brand id and revenue
 		HashMap<Integer,List<Double>> map3 = new HashMap<Integer, List<Double>>();
 		for(Integer key: map.keySet()) {
@@ -191,7 +183,6 @@ public class ReportDto {
 	public List<InventoryReportData> getInventoryReport(String brandName, String category) throws ApiException{
 		brandName = brandName.toLowerCase();
 		category = category.toLowerCase();
-		System.out.println("brandName: "+brandName+" category: "+category);
 		List<InventoryPojo> inventory = inventoryService.selectInventory();
 		List<InventoryReportData> inventoryReport = new ArrayList<InventoryReportData>();
 

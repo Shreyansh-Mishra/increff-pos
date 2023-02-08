@@ -29,16 +29,22 @@ public class ProductDto {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public ProductData createProduct(ProductForm form) throws ApiException {
+		//convert form to pojo
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
+		//fetch brand by brand name and category
 		BrandPojo brand = brandService.selectByNameAndCategory(RefactorUtil.toLowerCase(product.getBrandName()), RefactorUtil.toLowerCase(product.getCategory()));
+		//set the brand id to the product pojo
 		product.setBrand_category(brand.getId());
 		product.setMrp(RefactorUtil.round(product.getMrp(),2));
+		//add the product pojo to the database
 		return ObjectUtil.objectMapper(productService.add(product), ProductData.class);
 	}
 
 	public List<ProductData> getAllProducts() throws ApiException {
+		//fetch all products from the database
 		List<ProductPojo> products = productService.selectAll();
 		List<ProductData> productList = new ArrayList<>();
+		//convert pojo to data
 		for(ProductPojo product: products) {
 			ProductData data = ObjectUtil.objectMapper(product,ProductData.class);
 			BrandPojo brand = brandService.selectById(product.getBrand_category());
@@ -74,15 +80,20 @@ public class ProductDto {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateProduct(Integer id, EditProductForm form) throws ApiException {
+		//convert form to pojo
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
+		//fetch brand by brand name and category
 		BrandPojo brand = brandService.selectByNameAndCategory(RefactorUtil.toLowerCase(product.getBrandName()), RefactorUtil.toLowerCase(product.getCategory()));
 		product.setBrand_category(brand.getId());
 		product.setMrp(RefactorUtil.round(product.getMrp(),2));
+		//update the product pojo to the database
 		productService.update(product,id);
 	}
 
+	//function to get product by barcode
 	public ProductData getProductByBarcode(String barcode) throws ApiException {
 		ProductPojo p = productService.selectByBarcode(barcode);
+		//fetch brand to set brandName and category in ProductData
 		BrandPojo brand = brandService.selectById(p.getBrand_category());
 		ProductData data = ObjectUtil.objectMapper(p,ProductData.class);
 		data.setBrandName(brand.getBrand());

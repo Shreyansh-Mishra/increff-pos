@@ -36,11 +36,11 @@ public class OrderDto {
 
 	@Transactional(rollbackOn = ApiException.class)
 	public OrderData createOrder(List<OrderForm> o) throws Exception {
+		//everything is wrapped in a transaction so if any error occurs, the database is rolled back to the previous state
 		//create an order
 		List<OrderItemPojo> orderItems = ObjectUtil.convert(o);
 		updateOrderInventory(orderItems);
 		OrderPojo order = new OrderPojo();
-		System.out.println(order.getTime());
 		OrderPojo orderPojo = orderService.addOrder(order);
 		OrderData orderData = ObjectUtil.convert(orderPojo);
 		orderItemsService.addItems(orderItems,order.getId());
@@ -69,8 +69,11 @@ public class OrderDto {
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateOrderInventory(List<OrderItemPojo> orderItems) throws ApiException {
 		for(OrderItemPojo item: orderItems){
+			//select the product by barcode
 			ProductPojo product = productService.selectByBarcode(item.getBarcode());
+			//check if mrp is less than selling price
 			productService.checkMrp(item.getMrp(), product);
+			//update the inventory of the product
 			InventoryPojo newInventory = new InventoryPojo();
 			InventoryPojo oldInventory = inventoryService.selectById(product.getId());
 			newInventory.setBarcode(product.getBarcode());
@@ -86,11 +89,12 @@ public class OrderDto {
 	public String generateInvoice(Integer orderId) throws Exception {
 		OrderPojo order = orderService.selectOrderById(orderId);
 		List<OrderItemPojo> orderItems = orderItemsService.selectItems(orderId);
-
+		//plan is to fetch the models from invoice module, set them here and then pass them to the invoice module
 		//fop object of the invoice module
 		OrderFOPObject orderFop = new OrderFOPObject();
 		orderFop.setOrderId(order.getId());
 		orderFop.setDate(order.getTime().toString().split("T")[0]);
+		//OrderItemData object is from the invoice module
 		List<org.example.model.OrderItemData> fopItems = new ArrayList<>();
 		Double total = 0.0;
 		for(OrderItemPojo item: orderItems) {
@@ -105,14 +109,18 @@ public class OrderDto {
 			total += itemData.getCost();
 			fopItems.add(itemData);
 		}
+		//set the attributes of the fop object
 		orderFop.setOrderItems(fopItems);
 		orderFop.setTotal(RefactorUtil.round(total,2));
+		//call the generateInvoice method of the invoice module
 		return invoiceDto.generateInvoice(orderFop);
 	}
 	
 	public List<OrderData> getOrders(){
+		//select all the orders
 		List<OrderPojo> orders = orderService.selectOrders();
 		List<OrderData> orderData = new ArrayList<>();
+		//convert the pojo to data
 		for(OrderPojo order: orders) {
 			orderData.add(ObjectUtil.convert(order));
 		}
@@ -120,12 +128,12 @@ public class OrderDto {
 	}
 	
 	public List<OrderItemData> getOrderItems(Integer id) throws ApiException {
+		//select all the order items
 		List<OrderItemPojo> items = orderItemsService.selectItems(id);
 		List<OrderItemData> orderItemsData = new ArrayList<>();
+		//convert the pojo to data
 		for(OrderItemPojo item: items) {
-			System.out.println(item.getMrp());
 			OrderItemData o = ObjectUtil.objectMapper(item,OrderItemData.class);
-			System.out.println(o.getMrp());
 			ProductPojo p = productService.selectById(item.getProductId());
 			o.setItemName(p.getName());
 			o.setBarcode(p.getBarcode());

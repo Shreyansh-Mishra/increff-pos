@@ -25,7 +25,6 @@ public class OrderPojo {
 	protected void onCreate() {
 		//get instant in utc
 		Instant it = Instant.now();
-		System.out.println(it);
 		time = it;
 	}
 	
