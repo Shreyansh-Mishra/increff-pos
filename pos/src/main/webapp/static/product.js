@@ -32,7 +32,12 @@ function addProduct(event){
        },	   
 	   success: function(response) {	
 		getProductList();
+		//empty all the input fields
+		$("#product-form").trigger("reset");
+		//disable the category input
+		$("#inputCategory").prop("disabled", true);
 		handleSuccess("Product added successfully");
+		
 	   },
 	   error: (response) => {
 		handleError(response);
