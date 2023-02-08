@@ -58,15 +58,10 @@ public class ProductService {
 
 
 	public void update(ProductPojo product,Integer id) throws ApiException {
-		isEmpty(product.getName(),product.getBarcode());
+		isEmpty(product.getName(),product.getName());
 		isNegative(product.getMrp());
 		normalize(product);
-		ProductPojo prod2 = productDao.selectBarcode(product.getBarcode());
-		if(prod2!=null && !prod2.getId().equals(id)) {
-			throw new ApiException("A Product already exists with the same barcode!");
-		}
-		prod2 = this.selectById(id);
-		prod2.setBarcode(product.getBarcode());
+		ProductPojo prod2 = this.selectById(id);
 		prod2.setBrand_category(product.getBrand_category());
 		prod2.setMrp(product.getMrp());
 		prod2.setName(product.getName());
@@ -90,7 +85,8 @@ public class ProductService {
 
 	protected static void normalize(ProductPojo p) {
 		p.setName(p.getName().toLowerCase().trim());
-		p.setBarcode(p.getBarcode().toLowerCase().trim());
+		if(p.getBarcode()!=null)
+			p.setBarcode(p.getBarcode().toLowerCase().trim());
 		p.setBrandName(p.getBrandName().toLowerCase().trim());
 		p.setCategory(p.getCategory().toLowerCase().trim());
 	}

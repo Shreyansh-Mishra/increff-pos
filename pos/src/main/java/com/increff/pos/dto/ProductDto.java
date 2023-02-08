@@ -3,6 +3,7 @@ package com.increff.pos.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.increff.pos.model.EditProductForm;
 import com.increff.pos.util.ObjectUtil;
 import com.increff.pos.util.RefactorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class ProductDto {
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void updateProduct(Integer id, ProductForm form) throws ApiException {
+	public void updateProduct(Integer id, EditProductForm form) throws ApiException {
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
 		BrandPojo brand = brandService.selectByNameAndCategory(RefactorUtil.toLowerCase(product.getBrandName()), RefactorUtil.toLowerCase(product.getCategory()));
 		product.setBrand_category(brand.getId());

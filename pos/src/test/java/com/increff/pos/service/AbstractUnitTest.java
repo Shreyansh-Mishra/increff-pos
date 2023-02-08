@@ -3,6 +3,7 @@ package com.increff.pos.service;
 import javax.transaction.Transactional;
 
 import com.increff.pos.model.BrandForm;
+import com.increff.pos.model.EditProductForm;
 import com.increff.pos.model.InventoryForm;
 import com.increff.pos.model.ProductForm;
 import com.increff.pos.pojo.*;
@@ -49,6 +50,15 @@ public abstract class AbstractUnitTest {
         p.setMrp(mrp);
         p.setName(name);
         p.setBarcode(barcode);
+        return p;
+    }
+
+    public EditProductForm createEditProductForm(BrandPojo brand, String name, Double mrp){
+        EditProductForm p = new EditProductForm();
+        p.setBrandName(brand.getBrand());
+        p.setCategory(brand.getCategory());
+        p.setMrp(mrp);
+        p.setName(name);
         return p;
     }
 

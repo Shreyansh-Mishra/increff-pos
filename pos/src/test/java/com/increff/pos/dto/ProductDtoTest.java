@@ -111,12 +111,11 @@ public class ProductDtoTest extends AbstractUnitTest {
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
         productDao.insert(productPojo);
         List<ProductPojo> products = productDao.selectAll();
-        ProductForm form1 = createProductForm(brand, "testProduct1","testBarcode1", 200.0);
+        EditProductForm form1 = createEditProductForm(brand, "testProduct1", 200.0);
         productDto.updateProduct(products.get(0).getId(),form1);
         List<ProductPojo> products1 = productDao.selectAll();
         assertEquals(1,products1.size());
         assertEquals("testproduct1",products1.get(0).getName());
-        assertEquals("testbarcode1",products1.get(0).getBarcode());
         assertEquals(200,products1.get(0).getMrp(),0);
     }
 }

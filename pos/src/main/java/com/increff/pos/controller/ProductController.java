@@ -2,6 +2,7 @@ package com.increff.pos.controller;
 
 import java.util.List;
 
+import com.increff.pos.model.EditProductForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class ProductController {
 
 	@ApiOperation("Edit Product")
 	@RequestMapping(path="/products/{id}", method=RequestMethod.PUT)
-	public void updateProduct(@PathVariable Integer id, @RequestBody ProductForm product) throws ApiException{
+	public void updateProduct(@PathVariable Integer id, @RequestBody EditProductForm product) throws ApiException{
 		productDto.updateProduct(id, product);
 	}
 

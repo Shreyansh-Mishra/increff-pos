@@ -42,10 +42,10 @@ function addProduct(event){
 	return false;
 }
 
-function updateProduct(id,brand,category,name,mrp,barcode){
+function updateProduct(id,brand,category,name,mrp){
 	var url = getProductUrl() + "/" + id;
-	let productData = {barcode:barcode,brandName:brand,category:category,name:name,mrp:mrp}
-	if(productData.barcode=="" || productData.brandName=="" || productData.category=="" || productData.name==""){
+	let productData = {brandName:brand,category:category,name:name,mrp:mrp}
+	if(productData.brandName=="" || productData.category=="" || productData.name==""){
 		Swal.fire({title: "Error", text:"Please fill all the fields properly", icon: "error"});
 		return;
 	}
@@ -293,11 +293,6 @@ function displayProduct(data,brandName,category){
 		<input placeholder="MRP" pattern="^\\d*(\\.\\d{0,2})?$" value="${data.mrp}" id="mrp" type="number" name="mrp" class="swal2-input col" />
 		</div>
 
-		<div class="form-outline row">
-		<label class="col" for="barcode">Barcode</label>
-		<input placeholder="Barcode" value="${data.barcode}" id="barcode" type="text" name="barcode" class="swal2-input col" />
-		</div>
-
 		<input id="id" type="hidden" value=${data.id} name="id">
 		</div>
 		</form>`,
@@ -310,11 +305,10 @@ function displayProduct(data,brandName,category){
 			let category = Swal.getPopup().querySelector('#category').value;
 			let name = Swal.getPopup().querySelector('#name').value;
 			let mrp = Swal.getPopup().querySelector('#mrp').value;
-			let barcode = Swal.getPopup().querySelector('#barcode').value;
-			return {id,brand,category,name,mrp,barcode}
+			return {id,brand,category,name,mrp}
 		}
 	}).then((result)=>{
-		updateProduct(result.value.id,result.value.brand,result.value.category,result.value.name,result.value.mrp,result.value.barcode);
+		updateProduct(result.value.id,result.value.brand,result.value.category,result.value.name,result.value.mrp);
 	})
 }
 

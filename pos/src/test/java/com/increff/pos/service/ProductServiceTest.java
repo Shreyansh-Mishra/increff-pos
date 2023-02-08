@@ -139,24 +139,7 @@ public class ProductServiceTest extends AbstractUnitTest{
         ProductPojo product2 = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productService.add(product2);
     }
-
-    @Test(expected = ApiException.class)
-    public void testUpdateDuplicate() throws ApiException {
-        BrandPojo brandPojo = createBrandPojo("testbrand", "testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
-        productDao.insert(product);
-        ProductPojo product2 = createProduct(brandPojo, "testproduct2", "testbarcode2",200.0);
-        productDao.insert(product2);
-        ProductPojo product3 = new ProductPojo();
-        product3.setId(product.getId());
-        product3.setBrandName("testbrand");
-        product3.setCategory("testcategory");
-        product3.setMrp(200.0);
-        product3.setName("testproduct2");
-        product3.setBarcode("testbarcode2");
-        productService.update(product3, product.getId());
-    }
-
+    
     @Test(expected = ApiException.class)
     public void testIsEmpty() throws ApiException {
         BrandPojo brandPojo = createBrandPojo("testbrand", "testcategory");
