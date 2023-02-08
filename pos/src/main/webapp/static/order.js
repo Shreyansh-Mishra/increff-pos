@@ -75,7 +75,7 @@ function addOrder(event){
 
 function clearOrderItemsTable(){
 	console.log($("#dtBasicExample-order-create > tbody").html)
-	$("#dtBasicExample-order-create").DataTable().clear().draw();
+	$("#dtBasicExample-order-create tbody tr").remove();
 }
 
 function updateOrder(event){
@@ -581,7 +581,6 @@ function addRow(){
 	+ '</tr>';
 	$tbody.append(row);
 	i++;
-	// paginate("#dtBasicExample-order-create");
 	}
 }
 
