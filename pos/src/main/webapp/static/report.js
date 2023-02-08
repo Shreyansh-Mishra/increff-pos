@@ -12,7 +12,6 @@ function getReportList(){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-			jsontocsv(data);
 			displayReportList(data);  
 	   },
 	   error: (response)=>{
@@ -32,12 +31,11 @@ function jsontocsv(data){
         })
         return;
     }
-    csv = '';
-	const keys = Object.keys(data[0]);
-	csv += keys.join(',') + '\n';
-	data.forEach(item=>{
-		csv += Object.values(item).join(',') + '\n';
-	})
+    csv='';
+    console.log(data);
+    let headers = "Date,Invoiced Orders,Invoiced Items,Total Revenue\n";
+	csv += headers;
+    data.map( row => csv += row.join( ',' ) + '\n' )
 }
 
 function downloadCSV(){
@@ -48,6 +46,9 @@ function downloadCSV(){
 	hiddenElement.click();
 }
 
+function roundToTwo(num) {    
+	return +(Math.round(num + "e+2") + "e-2");
+  }
 
 function displayReportList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
@@ -62,7 +63,7 @@ function displayReportList(data){
 		+ '<td>' + e.date.split('T')[0] + '</td>'
 		+ '<td>' + e.invoiced_orders_count + '</td>'
 		+ '<td>'  + e.invoiced_items_count + '</td>'
-		+ '<td>' + Math.round((e.total_revenue + Number.EPSILON) * 100) / 100 + '</td>'
+		+ '<td>' + roundToTwo(e.total_revenue) + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 		j++;	
@@ -85,6 +86,9 @@ function init(){
 function paginate(id) {
 	$(id).DataTable();
 	$('.dataTables_length').addClass('bs-select');
+	let table = $(id).DataTable();
+    let data = table.rows().data();
+    jsontocsv(data);
 }
 
 $(document).ready(init);

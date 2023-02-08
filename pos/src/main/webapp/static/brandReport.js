@@ -39,7 +39,6 @@ function getBrandReportList(){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-        jsontocsv(data);
         displayBrandReportList(data);
 	   },
 	   error: (response)=>{
@@ -81,12 +80,11 @@ function jsontocsv(data){
         })
         return;
     }
-    csv = '';
-	const keys = Object.keys(data[0]);
-	csv += keys.join(',') + '\n';
-	data.forEach(item=>{
-		csv += Object.values(item).join(',') + '\n';
-	})
+    csv='';
+    console.log(data);
+    let headers = "S.no,Brand,Category\n"
+    csv += headers
+    data.map( row => csv += row.join( ',' ) + '\n' )
 }
 
 function downloadCSV(){
@@ -177,6 +175,9 @@ function init(){
 function paginate(id) {
 	$(id).DataTable();
 	$('.dataTables_length').addClass('bs-select');
+    let table = $(id).DataTable();
+    let data = table.rows().data();
+    jsontocsv(data);
 }
 
 

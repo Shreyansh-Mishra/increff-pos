@@ -217,9 +217,8 @@ function displayOrderList(data){
 		   [d.getHours().padLeft(),
 			d.getMinutes().padLeft()].join(':');
         var buttonHtml = ' <button class="btn btn-link btn-sm btn-rounded" onclick="displayWholeOrder('+e.id+')">view</button> &nbsp <button class="btn btn-link btn-sm btn-rounded" onclick="downloadPdf('+e.id+')">Download</button>';
-		var row = '<tr>'
+		var row = '<tr align="center">'
 		+ '<td>' + j + '</td>'
-		+ '<td>' + e.id + '</td>'
 		+ '<td>'  + time + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';

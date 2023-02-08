@@ -11,7 +11,7 @@ import com.increff.pos.pojo.OrderPojo;
 
 @Repository
 public class OrderDao extends AbstractDao {
-	private static final String SELECT_ALL = "select o from OrderPojo o order by o.id DESC";
+	private static final String SELECT_ALL = "select o from OrderPojo o order by o.time DESC";
 	private static final String SELECT_ID = "select o from OrderPojo o where id=:id";
 	private static final String SELECT_DATE = "select o from OrderPojo o where time between :startDate and :endDate";
 	private static final String SELECT_BY_DATE = "select o from OrderPojo o where time between :from and :to";

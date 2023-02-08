@@ -39,7 +39,7 @@ function getSalesReportList(){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-        jsontocsv(data);
+
         displaySalesReportList(data);
 	   },
 	   error: (response)=>{
@@ -48,6 +48,10 @@ function getSalesReportList(){
 	});
 }
 
+
+function roundToTwo(num) {    
+	return +(Math.round(num + "e+2") + "e-2");
+  }
 
 function displaySalesReportList(data){
 	var $tbody = $('#dtBasicExample').find('tbody');
@@ -63,7 +67,7 @@ function displaySalesReportList(data){
 		+ '<td>' + e.brand + '</td>'
 		+ '<td>' + e.category + '</td>'
 		+ '<td>'  + e.quantity + '</td>'
-		+ '<td>' + Math.round((e.revenue + Number.EPSILON) * 100) / 100 + '</td>'
+		+ '<td>' + roundToTwo(e.revenue) + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 		j++;	
@@ -83,20 +87,24 @@ function jsontocsv(data){
         })
         return;
     }
-    csv = '';
-	const keys = Object.keys(data[0]);
-	csv += keys.join(',') + '\n';
-	data.forEach(item=>{
-		csv += Object.values(item).join(',') + '\n';
-	})
+    csv='';
+    console.log(data);
+    let headers = "S.no,Brand,Category,Quantity,Revenue\n";
+    csv += headers;
+    data.map( row => csv += row.join( ',' ) + '\n' )
 }
 
 function downloadCSV(){
-	var hiddenElement = document.createElement('a');
-	hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
-	hiddenElement.target = '_blank';
-	hiddenElement.download = 'sales_report.csv';
-	hiddenElement.click();
+	const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+
+    link.style.display = 'none';
+    link.href = URL.createObjectURL(blob);
+    link.download = 'sales_report.csv';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 function filterByDate(){
@@ -219,6 +227,9 @@ function init(){
 function paginate(id) {
 	$(id).DataTable();
 	$('.dataTables_length').addClass('bs-select');
+    let table = $(id).DataTable();
+    let data = table.rows().data();
+    jsontocsv(data);
 }
 
 
