@@ -36,8 +36,8 @@ public class OrderController {
 	
 	@ApiOperation(value = "Create an order")
 	@RequestMapping(path= "/order", method=RequestMethod.POST)
-	public void createOrder(@RequestBody List<OrderForm> o) throws ApiException, Exception {
-		orderDto.createOrder(o);
+	public OrderData createOrder(@RequestBody List<OrderForm> o) throws Exception {
+		return orderDto.createOrder(o);
 	}
 	
 	@ApiOperation(value = "Get all orders")

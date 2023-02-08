@@ -29,7 +29,7 @@ import com.increff.pos.pojo.SchedulerPojo;
 
 import javax.transaction.Transactional;
 
-import com.increff.pos.util.StringUtil;
+import com.increff.pos.util.RefactorUtil;
 
 @Component
 public class ReportDto {
@@ -51,11 +51,11 @@ public class ReportDto {
 	@Autowired
 	private SchedulerService schedulerService;
 
-	//schedule at 12:01 am everyday
+	//schedule at 12:00 am everyday
 
-	//set cron timezone to utc
+	//seting cron
 	@Scheduled(cron = "0 0 0 * * *")
-	@Transactional
+	@Transactional(rollbackOn = ApiException.class)
 	public void updateScheduler(){
 		SchedulerPojo scheduler = new SchedulerPojo();
 		Instant from = Instant.now().minusSeconds(600).truncatedTo(java.time.temporal.ChronoUnit.DAYS);
@@ -71,7 +71,7 @@ public class ReportDto {
 				itemcount+=item.getQuantity();
 			}
 		}
-		scheduler.setRevenue(StringUtil.round(revenue, 2));
+		scheduler.setRevenue(RefactorUtil.round(revenue, 2));
 		scheduler.setInvoiced_items_count(itemcount);
 		scheduler.setInvoiced_orders_count(o.size());
 		scheduler.setDate(from);
@@ -273,7 +273,7 @@ public class ReportDto {
 		for(Integer key: m.keySet()) {
 			SalesByBrandAndCategoryData d = new SalesByBrandAndCategoryData();
 			BrandPojo brand = brandService.selectById(key);
-			d.setRevenue(StringUtil.round(m.get(key).get(0), 2));
+			d.setRevenue(RefactorUtil.round(m.get(key).get(0), 2));
 			d.setBrand(brand.getBrand());
 			d.setCategory(brand.getCategory());
 			d.setQuantity((m.get(key).get(1)).intValue());
@@ -290,7 +290,7 @@ public class ReportDto {
 			d.setDate(day.getDate().toString());
 			d.setInvoiced_items_count(day.getInvoiced_items_count());
 			d.setInvoiced_orders_count(day.getInvoiced_orders_count());
-			d.setTotal_revenue(StringUtil.round(day.getRevenue(), 2));
+			d.setTotal_revenue(RefactorUtil.round(day.getRevenue(), 2));
 			data.add(d);
 		}
 		return data;

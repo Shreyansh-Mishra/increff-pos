@@ -6,7 +6,7 @@ import java.util.List;
 import com.increff.pos.pojo.*;
 import com.increff.pos.service.*;
 import com.increff.pos.util.ObjectUtil;
-import com.increff.pos.util.StringUtil;
+import com.increff.pos.util.RefactorUtil;
 import org.example.dto.InvoiceDto;
 import org.example.model.OrderFOPObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +35,14 @@ public class OrderDto {
 	private InvoiceService invoiceService;
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void createOrder(List<OrderForm> o) throws Exception {
+	public OrderData createOrder(List<OrderForm> o) throws Exception {
 		//create an order
-		List<OrderItemPojo> orderItems = convert(o);
+		List<OrderItemPojo> orderItems = ObjectUtil.convert(o);
 		updateOrderInventory(orderItems);
 		OrderPojo order = new OrderPojo();
 		System.out.println(order.getTime());
-		orderService.addOrder(order);
+		OrderPojo orderPojo = orderService.addOrder(order);
+		OrderData orderData = ObjectUtil.convert(orderPojo);
 		orderItemsService.addItems(orderItems,order.getId());
 
 		//generate the invoice and get the base64 string
@@ -60,8 +61,9 @@ public class OrderDto {
 
 		//insert the invoice path in the database
 		String path2 = "C:\\Users\\Shreyansh\\Desktop\\increff2\\point-of-sale\\pos\\src\\main\\resources\\com\\increff\\pos\\invoices\\"+fileName;
-		InvoicePojo invoice = convert(order.getId(), path2);
+		InvoicePojo invoice = ObjectUtil.convert(order.getId(), path2);
 		invoiceService.insertInvoice(invoice);
+		return orderData;
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
@@ -98,13 +100,13 @@ public class OrderDto {
 			itemData.setBarcode(product.getBarcode());
 			itemData.setOrderId(item.getOrderId());
 			itemData.setQuantity(item.getQuantity());
-			itemData.setSellingPrice(StringUtil.round(item.getMrp(),2));
+			itemData.setSellingPrice(RefactorUtil.round(item.getMrp(),2));
 			itemData.setCost(item.getMrp()*item.getQuantity());
 			total += itemData.getCost();
 			fopItems.add(itemData);
 		}
 		orderFop.setOrderItems(fopItems);
-		orderFop.setTotal(StringUtil.round(total,2));
+		orderFop.setTotal(RefactorUtil.round(total,2));
 		return invoiceDto.generateInvoice(orderFop);
 	}
 	
@@ -112,7 +114,7 @@ public class OrderDto {
 		List<OrderPojo> orders = orderService.selectOrders();
 		List<OrderData> orderData = new ArrayList<>();
 		for(OrderPojo order: orders) {
-			orderData.add(convert(order));
+			orderData.add(ObjectUtil.convert(order));
 		}
 		return orderData;
 	}
@@ -138,28 +140,5 @@ public class OrderDto {
 
 
 
-	public static InvoicePojo convert(Integer id, String path){
-		InvoicePojo invoice = new InvoicePojo();
-		invoice.setId(id);
-		invoice.setPath(path);
-		return invoice;
-	}
 
-	public static OrderData convert(OrderPojo order) {
-		OrderData data = new OrderData();
-		String time = order.getTime().toString();
-		data.setId(order.getId());
-		data.setTime(time);
-		return data;
-	}
-
-	public static List<OrderItemPojo> convert(List<OrderForm> form){
-		List<OrderItemPojo> list= new ArrayList<>();
-		for(OrderForm i: form) {
-			OrderItemPojo o = ObjectUtil.objectMapper(i,OrderItemPojo.class);
-			o.setMrp(StringUtil.round(i.getMrp(), 2));
-			list.add(o);
-		}
-		return list;
-	}
 }

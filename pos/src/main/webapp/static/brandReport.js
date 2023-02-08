@@ -1,7 +1,7 @@
 
 function getBrandReportUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/report";
+	return baseUrl + "/api/report/brand-report";
 }
 
 function getBrandReportList(){
@@ -34,7 +34,7 @@ function getBrandReportList(){
         });
         return;
     }
-	var url = getBrandReportUrl()+"/"+json['brand']+"/"+json['category']+"/brand-report";
+	var url = getBrandReportUrl()+"/?brand="+json['brand']+"&category="+json['category'];
 	$.ajax({
 	   url: url,
 	   type: 'GET',

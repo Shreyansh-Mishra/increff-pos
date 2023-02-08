@@ -1,13 +1,8 @@
 package com.increff.pos.service;
 
-import com.increff.pos.dao.OrderDao;
-import com.increff.pos.dao.OrderItemDao;
 import com.increff.pos.dao.SchedulerDao;
-import com.increff.pos.pojo.OrderItemPojo;
-import com.increff.pos.pojo.OrderPojo;
 import com.increff.pos.pojo.SchedulerPojo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

@@ -5,13 +5,10 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 
-import com.increff.pos.model.ProductForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.increff.pos.dao.BrandDao;
 import com.increff.pos.dao.ProductDao;
-import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.ProductPojo;
 
 @Service
@@ -65,7 +62,7 @@ public class ProductService {
 		isNegative(product.getMrp());
 		normalize(product);
 		ProductPojo prod2 = productDao.selectBarcode(product.getBarcode());
-		if(prod2!=null && prod2.getId()!=id) {
+		if(prod2!=null && !prod2.getId().equals(id)) {
 			throw new ApiException("A Product already exists with the same barcode!");
 		}
 		prod2 = this.selectById(id);

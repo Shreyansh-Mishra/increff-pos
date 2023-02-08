@@ -32,21 +32,20 @@ public class ReportController {
 	}
 	
 	@ApiOperation(value="Get Sales Report")
-	@RequestMapping(path="/report/{brandName}/{category}/{startDate}/{endDate}/sales-report",method=RequestMethod.GET)
-	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(@PathVariable String brandName, @PathVariable String category, @PathVariable String startDate, @PathVariable String endDate) throws ParseException, ApiException{
-		System.out.println("brandName: "+brandName);
+	@RequestMapping(path="/report/sales-report",method=RequestMethod.GET)
+	public List<SalesByBrandAndCategoryData> getSalesByBrandAndCategory(@RequestParam String brandName, @RequestParam String category, @RequestParam String startDate, @RequestParam String endDate) throws ParseException, ApiException{
 		return salesReportDto.getSalesByBrandAndCategory(startDate, endDate, brandName, category);
 	}
 	
 	@ApiOperation(value="Get Inventory Report")
-	@RequestMapping(path="/report/inventory-report/{brand}/{category}",method=RequestMethod.GET)
-	public List<InventoryReportData> getInventoryReport(@PathVariable String brand, @PathVariable String category) throws ApiException {
+	@RequestMapping(path="/report/inventory-report",method=RequestMethod.GET)
+	public List<InventoryReportData> getInventoryReport(@RequestParam String brand, @RequestParam String category) throws ApiException {
 		return salesReportDto.getInventoryReport(brand,category);
 	}
 
 	@ApiOperation(value="Get Brand Report")
-	@RequestMapping(path="/report/{brand}/{category}/brand-report", method=RequestMethod.GET)
-	public List<BrandReportData> getBrandReport(@PathVariable String brand, @PathVariable String category) throws ApiException{
+	@RequestMapping(path="/report/brand-report", method=RequestMethod.GET)
+	public List<BrandReportData> getBrandReport(@RequestParam String brand, @RequestParam String category) throws ApiException{
 		return salesReportDto.getBrandReport(brand, category);
 	}
 }

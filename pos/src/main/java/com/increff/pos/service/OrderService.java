@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 import com.increff.pos.dao.*;
 import com.increff.pos.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,9 +17,9 @@ public class OrderService {
 	@Autowired
 	private OrderDao orderDao;
 
-	public void addOrder(OrderPojo orderPojo) throws ApiException {
+	public OrderPojo addOrder(OrderPojo orderPojo) {
 		System.out.println("service:"+orderPojo.getTime());
-		orderDao.insert(orderPojo);
+		return orderDao.insert(orderPojo);
 	}
 
 	public List<OrderPojo> selectOrders(){

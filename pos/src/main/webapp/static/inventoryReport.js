@@ -7,7 +7,7 @@ function getReportUrl(){
 function getReportList(){
 	let brand = $('#inputBrand').val();
 	let category = $('#inputCategory').val();
-	var url = getReportUrl()+"/inventory-report"+"/"+brand+"/"+category;
+	var url = getReportUrl()+"/inventory-report"+"/?brand="+brand+"&category="+category;
 	$.ajax({
 	   url: url,
 	   type: 'GET',

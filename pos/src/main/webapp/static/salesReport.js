@@ -1,7 +1,7 @@
 
 function getSalesReportUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/report";
+	return baseUrl + "/api/report/sales-report";
 }
 
 function getSalesReportList(){
@@ -34,7 +34,7 @@ function getSalesReportList(){
         });
         return;
     }
-	var url = getSalesReportUrl()+"/"+json['brand']+"/"+json['category']+"/"+json['startDate']+"/"+json['endDate']+"/sales-report";
+	var url = getSalesReportUrl()+"/?brandName="+json['brand']+"&category="+json['category']+"&startDate="+json['startDate']+"&endDate="+json['endDate'];
 	$.ajax({
 	   url: url,
 	   type: 'GET',

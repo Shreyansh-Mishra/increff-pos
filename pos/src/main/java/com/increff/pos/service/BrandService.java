@@ -69,12 +69,10 @@ public class BrandService {
 		return brandDao.selectCategories(brandName);
 	}
 
-	@Transactional
 	public List<BrandPojo> getByCategory(String category){
 		return brandDao.selectByCategory(category);
 	}
 
-	@Transactional
 	public List<BrandPojo> getByName(String name){
 		return brandDao.select(name);
 	}

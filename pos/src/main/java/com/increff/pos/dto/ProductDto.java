@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.increff.pos.util.ObjectUtil;
-import com.increff.pos.util.StringUtil;
+import com.increff.pos.util.RefactorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,13 +29,12 @@ public class ProductDto {
 	@Transactional(rollbackOn = ApiException.class)
 	public ProductData createProduct(ProductForm form) throws ApiException {
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
-		BrandPojo brand = brandService.selectByNameAndCategory(StringUtil.toLowerCase(product.getBrandName()),StringUtil.toLowerCase(product.getCategory()));
+		BrandPojo brand = brandService.selectByNameAndCategory(RefactorUtil.toLowerCase(product.getBrandName()), RefactorUtil.toLowerCase(product.getCategory()));
 		product.setBrand_category(brand.getId());
-		product.setMrp(StringUtil.round(product.getMrp(),2));
+		product.setMrp(RefactorUtil.round(product.getMrp(),2));
 		return ObjectUtil.objectMapper(productService.add(product), ProductData.class);
 	}
 
-	@Transactional(rollbackOn = ApiException.class)
 	public List<ProductData> getAllProducts() throws ApiException {
 		List<ProductPojo> products = productService.selectAll();
 		List<ProductData> productList = new ArrayList<>();
@@ -75,9 +74,9 @@ public class ProductDto {
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateProduct(Integer id, ProductForm form) throws ApiException {
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
-		BrandPojo brand = brandService.selectByNameAndCategory(StringUtil.toLowerCase(product.getBrandName()),StringUtil.toLowerCase(product.getCategory()));
+		BrandPojo brand = brandService.selectByNameAndCategory(RefactorUtil.toLowerCase(product.getBrandName()), RefactorUtil.toLowerCase(product.getCategory()));
 		product.setBrand_category(brand.getId());
-		product.setMrp(StringUtil.round(product.getMrp(),2));
+		product.setMrp(RefactorUtil.round(product.getMrp(),2));
 		productService.update(product,id);
 	}
 

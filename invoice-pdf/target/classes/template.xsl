@@ -45,10 +45,10 @@
                                     <fo:block font-weight="bold">Quantity</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell text-align="center" padding="2mm">
-                                    <fo:block font-weight="bold">Price per unit</fo:block>
+                                    <fo:block font-weight="bold">Price per unit(Rs.)</fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell text-align="center" padding="2mm">
-                                    <fo:block font-weight="bold">Amount</fo:block>
+                                    <fo:block font-weight="bold">Amount(Rs.)</fo:block>
                                 </fo:table-cell>
                                 </fo:table-row>
                             </fo:table-header>
@@ -57,7 +57,7 @@
                                     <fo:table-cell padding="2mm" number-columns-spanned="3">
                                         <fo:block font-weight="bold">Total</fo:block>
                                     </fo:table-cell>
-                                    <fo:table-cell padding="2mm">
+                                    <fo:table-cell text-align="right" padding="2mm">
                                         <fo:block font-weight="bold">
                                             <xsl:value-of select="total"/>
                                         </fo:block>
