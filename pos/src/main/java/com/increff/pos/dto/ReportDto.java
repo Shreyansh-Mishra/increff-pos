@@ -84,7 +84,7 @@ public class ReportDto {
 		Date date = sdf.parse(startDate);
 		Date date2 = sdf.parse(endDate);
 		Instant from = date.toInstant();
-		Instant to = date2.toInstant().plus(1, ChronoUnit.DAYS);
+		Instant to = date2.toInstant().plus(1, ChronoUnit.DAYS).minus(1, ChronoUnit.SECONDS);
 		return convert(schedulerService.selectSchedulerData(from, to));
 	}
 	

@@ -7,7 +7,7 @@ function getReportUrl(){
 function getReportList(){
 	let startDate = $('#startDate').val();
 	let endDate = $('#endDate').val();
-	var url = getReportUrl()+"/day-wise-report"+"/"+startDate+"/"+endDate;
+	var url = getReportUrl()+"/day-wise-report"+"?startDate="+startDate+"&endDate="+endDate;
 	$.ajax({
 	   url: url,
 	   type: 'GET',

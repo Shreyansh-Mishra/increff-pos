@@ -6,10 +6,7 @@ import java.util.List;
 import com.increff.pos.model.BrandReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.increff.pos.dto.ReportDto;
 import com.increff.pos.model.DayWiseReportData;
@@ -29,8 +26,8 @@ public class ReportController {
 	
 	
 	@ApiOperation(value="Scheduler")
-	@RequestMapping(path="/report/day-wise-report/{startDate}/{endDate}", method=RequestMethod.GET)
-	public List<DayWiseReportData> getDayByDayReport(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, ApiException {
+	@RequestMapping(path="/report/day-wise-report", method=RequestMethod.GET)
+	public List<DayWiseReportData> getDayByDayReport(@RequestParam String startDate, @RequestParam String endDate) throws ParseException, ApiException {
 		return salesReportDto.getDayWiseReport(startDate, endDate);
 	}
 	
