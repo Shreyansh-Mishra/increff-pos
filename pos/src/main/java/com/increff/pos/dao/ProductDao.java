@@ -12,8 +12,7 @@ import com.increff.pos.pojo.ProductPojo;
 @Repository
 public class ProductDao extends AbstractDao {
 	private static final String SELECT_ID = "select p from ProductPojo p where id=:id";
-	private static final String SELECT_BRAND = "select b from ProductPojo b where b.brand_category in (select c.id from BrandPojo c where c.brand = :brand)";
-	private static final String SELECT_BRAND_CATEGORY = "select b from ProductPojo b where brand_category in (select c.id from BrandPojo c where c.brand = :brand and c.category = :category)";
+	private static final String SELECT_BRAND = "select b from ProductPojo b where b.brand_category=:brand";
 	private static final String SELECT_ALL = "select p from ProductPojo p";
 	private static final String SELECT_BARCODE = "select p from ProductPojo p where barcode=:barcode";
 
@@ -28,7 +27,7 @@ public class ProductDao extends AbstractDao {
 		return query.getResultList();
 	}
 	
-	public List<ProductPojo> selectBrand(String brand){
+	public List<ProductPojo> selectBrand(Integer brand){
 		TypedQuery<ProductPojo> query = getQuery(SELECT_BRAND, ProductPojo.class);
 		query.setParameter("brand", brand);
 		return query.getResultList();
@@ -40,12 +39,6 @@ public class ProductDao extends AbstractDao {
 		return getSingle(query);
 	}
 
-	public List<ProductPojo> selectBrandAndCategory(String brand, String category){
-		TypedQuery<ProductPojo> query = getQuery(SELECT_BRAND_CATEGORY, ProductPojo.class);
-		query.setParameter("brand", brand);
-		query.setParameter("category", category);
-		return query.getResultList();
-	}
 	
 	public ProductPojo selectId(Integer id) {
 		TypedQuery<ProductPojo> query = getQuery(SELECT_ID, ProductPojo.class);

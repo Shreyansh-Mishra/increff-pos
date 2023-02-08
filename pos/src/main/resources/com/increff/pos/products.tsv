@@ -1,4 +1,4 @@
-name	brandName	category	mrp	barcode
-pavilion 15	hp	laptop	49999	random123
-inspiron	dell	laptop	35000	random321
-galaxy m32	samsung	mobile	15000	random231
+name	mrp	barcode	brandName	category
+adidas1	1500	adidas1	adidas	bat
+adidas2	2000	adidas2	adidas	bat
+puma1	1399	puma1	puma	shoes

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +33,8 @@ public class ProductService {
 		return productDao.selectAll();
 	}
 	
-	public List<ProductPojo> selectByBrand(String brandName){
-		return productDao.selectBrand(brandName.toLowerCase());
+	public List<ProductPojo> selectByBrand(Integer brandId){
+		return productDao.selectBrand(brandId);
 	}
 	
 	public ProductPojo selectById(Integer id) throws ApiException {
@@ -43,10 +44,6 @@ public class ProductService {
 		return product;
 	}
 
-	
-	public List<ProductPojo> selectByBrandAndCategory(String brand, String category){
-		return productDao.selectBrandAndCategory(brand.toLowerCase(), category.toLowerCase());
-	}
 
 	public ProductPojo selectByBarcode(String barcode) throws ApiException {
 		isEmpty(barcode,barcode);

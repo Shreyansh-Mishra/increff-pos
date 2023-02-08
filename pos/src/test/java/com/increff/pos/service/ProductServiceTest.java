@@ -60,7 +60,8 @@ public class ProductServiceTest extends AbstractUnitTest{
         BrandPojo brandPojo = createBrandPojo("testbrand", "testcategory");
         ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productDao.insert(product);
-        List<ProductPojo> products  = productService.selectByBrand("testbrand");
+        Integer id = brandDao.select("testbrand", "testcategory").getId();
+        List<ProductPojo> products  = productService.selectByBrand(id);
         assertEquals(1, products.size());
         assertEquals("testbarcode", products.get(0).getBarcode());
         assertEquals("testproduct", products.get(0).getName());
@@ -96,19 +97,6 @@ public class ProductServiceTest extends AbstractUnitTest{
         ProductPojo product2 = productService.selectById(100);
     }
 
-    @Test
-    public void testSelectByBrandAndCategory() throws ApiException{
-        BrandPojo brandPojo = createBrandPojo("testbrand", "testcategory");
-        ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
-        productDao.insert(product);
-        List<ProductPojo> products = productService.selectByBrandAndCategory("testbrand", "testcategory");
-        assertEquals(1, products.size());
-        assertEquals("testbarcode", products.get(0).getBarcode());
-        assertEquals("testproduct", products.get(0).getName());
-        assertEquals(100.0, products.get(0).getMrp(), 0.0);
-        assertEquals("testbrand", products.get(0).getBrandName());
-        assertEquals("testcategory", products.get(0).getCategory());
-    }
 
     @Test
     public void testUpdate() throws ApiException {

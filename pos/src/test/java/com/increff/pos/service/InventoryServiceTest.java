@@ -3,6 +3,7 @@ package com.increff.pos.service;
 import com.increff.pos.dao.BrandDao;
 import com.increff.pos.dao.InventoryDao;
 import com.increff.pos.dao.ProductDao;
+import com.increff.pos.dto.ProductDto;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.InventoryPojo;
 import com.increff.pos.pojo.ProductPojo;
@@ -24,6 +25,9 @@ public class InventoryServiceTest extends AbstractUnitTest{
     @Autowired
     private InventoryDao inventoryDao;
 
+    @Autowired
+    private ProductDto productDto;
+
     public ProductPojo createBrandAndProductPojo(String brandName, String category, String productName, String barcode, Double mrp) throws ApiException {
         BrandPojo brand = createBrand(brandName, category);
         brandDao.insert(brand);
@@ -39,7 +43,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
         ProductPojo product = createBrandAndProductPojo("testbrand","testcategory", "testproduct", "testbarcode",100.0);
         InventoryPojo inventory = createInventory(product, 100);
         inventoryService.add(inventory);
-        Integer id = productDao.selectBrandAndCategory("testbrand", "testcategory").get(0).getId();
+        Integer id = productDto.getProductsByBrandAndCategory("testbrand", "testcategory").get(0).getId();
         List<InventoryPojo> inventories = inventoryDao.selectAll();
         assertEquals(1, inventories.size());
         assertEquals(inventory.getQuantity(), inventories.get(0).getQuantity());
@@ -52,7 +56,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
         InventoryPojo inventory = createInventory(product, 100);
         inventoryService.add(inventory);
         inventoryService.add(inventory);
-        Integer id = productDao.selectBrandAndCategory("testbrand", "testcategory").get(0).getId();
+        Integer id = productDto.getProductsByBrandAndCategory("testbrand", "testcategory").get(0).getId();
         List<InventoryPojo> inventories = inventoryDao.selectAll();
         assertEquals(1, inventories.size());
         assertEquals((Integer) 200, inventories.get(0).getQuantity());
@@ -71,7 +75,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
         ProductPojo product = createBrandAndProductPojo("testbrand","testcategory", "testproduct", "testbarcode",100.0);
         InventoryPojo inventory = createInventory(product, 100);
         inventoryDao.insert(inventory);
-        Integer id = productDao.selectBrandAndCategory("testbrand", "testcategory").get(0).getId();
+        Integer id = productDto.getProductsByBrandAndCategory("testbrand", "testcategory").get(0).getId();
         InventoryPojo inventoryPojo = inventoryService.selectById(id);
         assertEquals(inventory.getQuantity(), inventoryPojo.getQuantity());
         assertEquals(id, inventoryPojo.getId());
@@ -90,7 +94,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
         ProductPojo product = createBrandAndProductPojo("testbrand","testcategory", "testproduct", "testbarcode",100.0);
         InventoryPojo inventory = createInventory(product, 100);
         inventoryDao.insert(inventory);
-        Integer id = productDao.selectBrandAndCategory("testbrand", "testcategory").get(0).getId();
+        Integer id = productDto.getProductsByBrandAndCategory("testbrand", "testcategory").get(0).getId();
         InventoryPojo i2 = createInventory(product, 200);
         inventoryService.update(i2);
         InventoryPojo inventoryPojo = inventoryDao.selectId(id);

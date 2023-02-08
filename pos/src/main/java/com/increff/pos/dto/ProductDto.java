@@ -61,16 +61,21 @@ public class ProductDto {
 	}
 	
 	public List<ProductData> getProductByBrandName(String brandName){
-		List<ProductPojo> products = productService.selectByBrand(brandName);
+		List<BrandPojo> brands = brandService.getByName(brandName);
+		System.out.println(brands.get(0).getId());
 		List<ProductData> productList = new ArrayList<>();
-		for(ProductPojo product: products) {
-			productList.add(ObjectUtil.objectMapper(product,ProductData.class));
+		for(BrandPojo brand: brands) {
+			List<ProductPojo> products = productService.selectByBrand(brand.getId());
+			for(ProductPojo product: products) {
+				productList.add(ObjectUtil.objectMapper(product,ProductData.class));
+			}
 		}
 		return productList;
 	}
 	
-	public List<ProductData> getProductsByBrandAndCategory(String brandName, String category){
-		List<ProductPojo> products = productService.selectByBrandAndCategory(brandName,category);
+	public List<ProductData> getProductsByBrandAndCategory(String brandName, String category) throws ApiException {
+		BrandPojo brand = brandService.selectByNameAndCategory(brandName, category);
+		List<ProductPojo> products = productService.selectByBrand(brand.getId());
 		List<ProductData> productList = new ArrayList<>();
 		for(ProductPojo product: products) {
 			productList.add(ObjectUtil.objectMapper(product,ProductData.class));

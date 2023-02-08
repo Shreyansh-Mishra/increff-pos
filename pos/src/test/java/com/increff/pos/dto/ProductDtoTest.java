@@ -84,7 +84,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         brandDao.insert(brand);
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
         productDao.insert(productPojo);
-        List<ProductData> products = productDto.getProductByBrandName("testBrand");
+        List<ProductData> products = productDto.getProductByBrandName("testbrand");
         assertEquals(1,products.size());
         assertEquals("testproduct",products.get(0).getName());
         assertEquals("testbarcode",products.get(0).getBarcode());
@@ -97,7 +97,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         brandDao.insert(brand);
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
         productDao.insert(productPojo);
-        List<ProductData> products = productDto.getProductsByBrandAndCategory("testBrand","testCategory");
+        List<ProductData> products = productDto.getProductsByBrandAndCategory("testbrand","testcategory");
         assertEquals(1,products.size());
         assertEquals("testproduct",products.get(0).getName());
         assertEquals("testbarcode",products.get(0).getBarcode());
