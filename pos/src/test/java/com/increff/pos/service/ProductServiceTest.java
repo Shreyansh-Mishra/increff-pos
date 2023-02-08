@@ -1,6 +1,5 @@
 package com.increff.pos.service;
 
-import com.google.protobuf.Api;
 import com.increff.pos.dao.BrandDao;
 import com.increff.pos.dao.ProductDao;
 import com.increff.pos.pojo.BrandPojo;

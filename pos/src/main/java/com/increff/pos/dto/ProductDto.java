@@ -29,7 +29,7 @@ public class ProductDto {
 	@Transactional(rollbackOn = ApiException.class)
 	public ProductData createProduct(ProductForm form) throws ApiException {
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
-		BrandPojo brand = brandService.selectByNameAndCategory(product.getBrandName().toLowerCase(),product.getCategory().toLowerCase());
+		BrandPojo brand = brandService.selectByNameAndCategory(StringUtil.toLowerCase(product.getBrandName()),StringUtil.toLowerCase(product.getCategory()));
 		product.setBrand_category(brand.getId());
 		product.setMrp(StringUtil.round(product.getMrp(),2));
 		return ObjectUtil.objectMapper(productService.add(product), ProductData.class);
@@ -75,7 +75,7 @@ public class ProductDto {
 	@Transactional(rollbackOn = ApiException.class)
 	public void updateProduct(Integer id, ProductForm form) throws ApiException {
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
-		BrandPojo brand = brandService.selectByNameAndCategory(product.getBrandName().toLowerCase(),product.getCategory().toLowerCase());
+		BrandPojo brand = brandService.selectByNameAndCategory(StringUtil.toLowerCase(product.getBrandName()),StringUtil.toLowerCase(product.getCategory()));
 		product.setBrand_category(brand.getId());
 		product.setMrp(StringUtil.round(product.getMrp(),2));
 		productService.update(product,id);
