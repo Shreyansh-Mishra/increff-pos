@@ -17,7 +17,7 @@ public class SchedulerServiceTest extends AbstractUnitTest{
     SchedulerDao schedulerDao;
 
     @Test
-    public void insertScheduler() throws ApiException{
+    public void insertScheduler(){
         SchedulerPojo scheduler = new SchedulerPojo();
         scheduler.setDate(Instant.now().truncatedTo(ChronoUnit.DAYS));
         scheduler.setRevenue(100.00);
@@ -54,6 +54,6 @@ public class SchedulerServiceTest extends AbstractUnitTest{
         scheduler.setInvoiced_items_count(10);
         scheduler.setInvoiced_orders_count(2);
         schedulerDao.insert(scheduler);
-        List<SchedulerPojo> SchedulerData = schedulerService.selectSchedulerData(Instant.now().plus(1, ChronoUnit.DAYS), Instant.now().minus(1, ChronoUnit.DAYS));
+        schedulerService.selectSchedulerData(Instant.now().plus(1, ChronoUnit.DAYS), Instant.now().minus(1, ChronoUnit.DAYS));
     }
 }

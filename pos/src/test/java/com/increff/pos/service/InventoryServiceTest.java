@@ -42,7 +42,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
     public void testAdd() throws ApiException {
         ProductPojo product = createBrandAndProductPojo("testbrand","testcategory", "testproduct", "testbarcode",100.0);
         InventoryPojo inventory = createInventory(product, 100);
-        inventoryService.add(inventory);
+        inventoryService.add(inventory,"testbarcode");
         Integer id = productDto.getProductsByBrandAndCategory("testbrand", "testcategory").get(0).getId();
         List<InventoryPojo> inventories = inventoryDao.selectAll();
         assertEquals(1, inventories.size());
@@ -54,8 +54,8 @@ public class InventoryServiceTest extends AbstractUnitTest{
     public void testAddDuplicate() throws ApiException{
         ProductPojo product = createBrandAndProductPojo("testbrand","testcategory", "testproduct", "testbarcode",100.0);
         InventoryPojo inventory = createInventory(product, 100);
-        inventoryService.add(inventory);
-        inventoryService.add(inventory);
+        inventoryService.add(inventory,"testbarcode");
+        inventoryService.add(inventory,"testbarcode");
         Integer id = productDto.getProductsByBrandAndCategory("testbrand", "testcategory").get(0).getId();
         List<InventoryPojo> inventories = inventoryDao.selectAll();
         assertEquals(1, inventories.size());
@@ -67,7 +67,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
     public void testNegativeInventory() throws ApiException{
         ProductPojo product = createBrandAndProductPojo("testbrand","testcategory", "testproduct", "testbarcode",100.0);
         InventoryPojo inventory = createInventory(product, -100);
-        inventoryService.add(inventory);
+        inventoryService.add(inventory,"testbarcode");
     }
 
     @Test
@@ -96,7 +96,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
         inventoryDao.insert(inventory);
         Integer id = productDto.getProductsByBrandAndCategory("testbrand", "testcategory").get(0).getId();
         InventoryPojo i2 = createInventory(product, 200);
-        inventoryService.update(i2);
+        inventoryService.update(i2,"testbarcode");
         InventoryPojo inventoryPojo = inventoryDao.selectId(id);
         assertEquals(i2.getQuantity(), inventoryPojo.getQuantity());
         assertEquals(id, inventoryPojo.getId());

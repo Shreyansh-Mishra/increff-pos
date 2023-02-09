@@ -34,8 +34,6 @@ public abstract class AbstractUnitTest {
 
     public ProductPojo createProduct(BrandPojo brand, String name, String barcode, Double mrp) throws ApiException {
         ProductPojo p = new ProductPojo();
-        p.setBrandName(brand.getBrand());
-        p.setCategory(brand.getCategory());
         p.setMrp(mrp);
         p.setName(name);
         p.setBarcode(barcode);
@@ -71,7 +69,6 @@ public abstract class AbstractUnitTest {
 
     public InventoryPojo createInventory(ProductPojo product, Integer quantity){
         InventoryPojo i = new InventoryPojo();
-        i.setBarcode(product.getBarcode());
         i.setQuantity(quantity);
         i.setId(product.getId());
         return i;
@@ -84,7 +81,6 @@ public abstract class AbstractUnitTest {
 
     public OrderItemPojo createOrderItem(ProductPojo product, OrderPojo order, Integer quantity, Double sellingPrice){
         OrderItemPojo oi = new OrderItemPojo();
-        oi.setBarcode(product.getBarcode());
         oi.setProductId(product.getId());
         oi.setOrderId(order.getId());
         oi.setQuantity(quantity);

@@ -39,7 +39,11 @@ public class OrderDto {
 		//everything is wrapped in a transaction so if any error occurs, the database is rolled back to the previous state
 		//create an order
 		List<OrderItemPojo> orderItems = ObjectUtil.convert(o);
-		updateOrderInventory(orderItems);
+		List<String> barcodes = new ArrayList<>();
+		for(OrderForm orderForm : o){
+			barcodes.add(orderForm.getBarcode());
+		}
+		updateOrderInventory(orderItems,barcodes);
 		OrderPojo order = new OrderPojo();
 		OrderPojo orderPojo = orderService.addOrder(order);
 		OrderData orderData = ObjectUtil.convert(orderPojo);
@@ -67,20 +71,19 @@ public class OrderDto {
 	}
 
 	@Transactional(rollbackOn = ApiException.class)
-	public void updateOrderInventory(List<OrderItemPojo> orderItems) throws ApiException {
+	public void updateOrderInventory(List<OrderItemPojo> orderItems,List<String> barcodes) throws ApiException {
+		int i = 0;
 		for(OrderItemPojo item: orderItems){
 			//select the product by barcode
-			ProductPojo product = productService.selectByBarcode(item.getBarcode());
+			ProductPojo product = productService.selectByBarcode(barcodes.get(i));
 			//check if mrp is less than selling price
 			productService.checkMrp(item.getMrp(), product);
 			//update the inventory of the product
 			InventoryPojo newInventory = new InventoryPojo();
 			InventoryPojo oldInventory = inventoryService.selectById(product.getId());
-			newInventory.setBarcode(product.getBarcode());
 			newInventory.setQuantity(oldInventory.getQuantity()-item.getQuantity());
 			newInventory.setId(product.getId());
-			newInventory.setBarcode(product.getBarcode());
-			inventoryService.update(newInventory);
+			inventoryService.update(newInventory, barcodes.get(i++));
 			item.setProductId(product.getId());
 		}
 	}
@@ -96,7 +99,7 @@ public class OrderDto {
 		orderFop.setDate(order.getTime().toString().split("T")[0]);
 		//OrderItemData object is from the invoice module
 		List<org.example.model.OrderItemData> fopItems = new ArrayList<>();
-		Double total = 0.0;
+		double total = 0.0;
 		for(OrderItemPojo item: orderItems) {
 			org.example.model.OrderItemData itemData = new org.example.model.OrderItemData();
 			ProductPojo product = productService.selectById(item.getProductId());

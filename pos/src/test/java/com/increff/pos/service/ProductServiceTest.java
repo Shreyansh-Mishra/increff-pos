@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -26,8 +25,7 @@ public class ProductServiceTest extends AbstractUnitTest{
     public BrandPojo createBrandPojo(String brandName, String category) throws ApiException {
         BrandPojo brand = createBrand(brandName, category);
         brandDao.insert(brand);
-        BrandPojo brandPojo = brandDao.select(brandName.toLowerCase(),category.toLowerCase());
-        return brandPojo;
+        return brandDao.select(brandName.toLowerCase(),category.toLowerCase());
     }
     @Test
     public void testAdd() throws ApiException {
@@ -39,8 +37,7 @@ public class ProductServiceTest extends AbstractUnitTest{
         assertEquals("testbarcode", products.get(0).getBarcode());
         assertEquals("testproduct", products.get(0).getName());
         assertEquals(100.0, products.get(0).getMrp(), 0.0);
-        assertEquals("testbrand", products.get(0).getBrandName());
-        assertEquals("testcategory", products.get(0).getCategory());
+        assertEquals(brandPojo.getId(), products.get(0).getBrand_category());
     }
 
     @Test
@@ -66,8 +63,7 @@ public class ProductServiceTest extends AbstractUnitTest{
         assertEquals("testbarcode", products.get(0).getBarcode());
         assertEquals("testproduct", products.get(0).getName());
         assertEquals(100.0, products.get(0).getMrp(), 0.0);
-        assertEquals("testbrand", products.get(0).getBrandName());
-        assertEquals("testcategory", products.get(0).getCategory());
+        assertEquals(brandPojo.getId(), products.get(0).getBrand_category());
     }
 
     @Test
@@ -79,14 +75,7 @@ public class ProductServiceTest extends AbstractUnitTest{
         assertEquals("testbarcode", product2.getBarcode());
         assertEquals("testproduct", product2.getName());
         assertEquals(100.0, product2.getMrp(), 0.0);
-        assertEquals("testbrand", product2.getBrandName());
-        assertEquals("testcategory", product2.getCategory());
-        try{
-            product2 = productService.selectById(100);
-            fail();
-        }catch(ApiException e){
-            assertEquals("The product with id "+ 100 +" does not exists", e.getMessage());
-        }
+        assertEquals(brandPojo.getId(), product2.getBrand_category());
     }
 
     @Test(expected = ApiException.class)
@@ -94,7 +83,7 @@ public class ProductServiceTest extends AbstractUnitTest{
         BrandPojo brandPojo = createBrandPojo("testbrand", "testcategory");
         ProductPojo product = createProduct(brandPojo, "testproduct", "testbarcode",100.0);
         productDao.insert(product);
-        ProductPojo product2 = productService.selectById(100);
+        productService.selectById(100);
     }
 
 
@@ -150,8 +139,7 @@ public class ProductServiceTest extends AbstractUnitTest{
         assertEquals("testbarcode", product2.getBarcode());
         assertEquals("testproduct", product2.getName());
         assertEquals(100.0, product2.getMrp(), 0.0);
-        assertEquals("testbrand", product2.getBrandName());
-        assertEquals("testcategory", product2.getCategory());
+        assertEquals(brandPojo.getId(), product2.getBrand_category());
     }
 
     @Test(expected = ApiException.class)

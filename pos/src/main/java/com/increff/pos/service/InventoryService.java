@@ -16,8 +16,8 @@ public class InventoryService {
 	private InventoryDao inventoryDao;
 	
 
-	public InventoryPojo add(InventoryPojo inventoryItem) throws ApiException {
-		isNegative(inventoryItem.getQuantity(), inventoryItem.getBarcode());
+	public InventoryPojo add(InventoryPojo inventoryItem, String barcode) throws ApiException {
+		isNegative(inventoryItem.getQuantity(), barcode);
 		InventoryPojo inventory = inventoryDao.selectId(inventoryItem.getId());
 		if(inventory!=null) {
 			inventory.setQuantity(inventoryItem.getQuantity()+inventory.getQuantity());
@@ -40,8 +40,8 @@ public class InventoryService {
 		return inventory;
 	}
 	
-	public void update(InventoryPojo inventoryItem) throws ApiException {
-		isNegative(inventoryItem.getQuantity(), inventoryItem.getBarcode());
+	public void update(InventoryPojo inventoryItem, String barcode) throws ApiException {
+		isNegative(inventoryItem.getQuantity(), barcode);
 		InventoryPojo inventory = this.selectById(inventoryItem.getId());
 		inventory.setQuantity(inventoryItem.getQuantity());
 		inventoryDao.update(inventory);

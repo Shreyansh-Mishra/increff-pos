@@ -5,7 +5,6 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +81,7 @@ public class ProductService {
 
 	protected static void normalize(ProductPojo p) {
 		p.setName(p.getName().toLowerCase().trim());
-		if(p.getBarcode()!=null)
+		if(p.getBarcode()!=null && !p.getBarcode().equals("") )
 			p.setBarcode(p.getBarcode().toLowerCase().trim());
 	}
 

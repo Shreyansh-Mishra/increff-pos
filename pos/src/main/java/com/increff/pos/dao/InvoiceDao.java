@@ -16,6 +16,8 @@ public class InvoiceDao extends AbstractDao{
     public InvoicePojo selectId(Integer id){
         TypedQuery<InvoicePojo> query = getQuery(SELECT_ID, InvoicePojo.class);
         query.setParameter("id", id);
-        return getSingle(query);
+        InvoicePojo invoice = getSingle(query);
+        System.out.println(invoice.getPath());
+        return invoice;
     }
 }

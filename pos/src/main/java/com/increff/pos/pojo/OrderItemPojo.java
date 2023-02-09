@@ -27,6 +27,4 @@ public class OrderItemPojo {
 	@NonNull
 	@Column(nullable = false)
 	private Double mrp;
-	@Transient
-	private String barcode;
 }

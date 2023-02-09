@@ -27,9 +27,4 @@ public class ProductPojo{
 	@NonNull
 	@Column(nullable = false)
 	private Integer brand_category;
-	@Transient
-	private String brandName;
-	@Transient
-	private String category;
-
 }

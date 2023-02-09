@@ -32,7 +32,7 @@ public class ProductDto {
 		//convert form to pojo
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
 		//fetch brand by brand name and category
-		BrandPojo brand = brandService.selectByNameAndCategory(RefactorUtil.toLowerCase(product.getBrandName()), RefactorUtil.toLowerCase(product.getCategory()));
+		BrandPojo brand = brandService.selectByNameAndCategory(RefactorUtil.toLowerCase(form.getBrandName()), RefactorUtil.toLowerCase(form.getCategory()));
 		//set the brand id to the product pojo
 		product.setBrand_category(brand.getId());
 		product.setMrp(RefactorUtil.round(product.getMrp(),2));
@@ -88,7 +88,7 @@ public class ProductDto {
 		//convert form to pojo
 		ProductPojo product = ObjectUtil.objectMapper(form, ProductPojo.class);
 		//fetch brand by brand name and category
-		BrandPojo brand = brandService.selectByNameAndCategory(RefactorUtil.toLowerCase(product.getBrandName()), RefactorUtil.toLowerCase(product.getCategory()));
+		BrandPojo brand = brandService.selectByNameAndCategory(RefactorUtil.toLowerCase(form.getBrandName()), RefactorUtil.toLowerCase(form.getCategory()));
 		product.setBrand_category(brand.getId());
 		product.setMrp(RefactorUtil.round(product.getMrp(),2));
 		//update the product pojo to the database

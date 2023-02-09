@@ -16,6 +16,4 @@ public class InventoryPojo {
 	@NonNull
 	@Column(nullable = false)
 	private Integer quantity;
-	@Transient
-	private String barcode;
 }

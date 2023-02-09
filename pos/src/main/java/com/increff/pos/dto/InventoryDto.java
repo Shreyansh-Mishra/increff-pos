@@ -29,12 +29,13 @@ public class InventoryDto {
 	public InventoryData addToInventory(InventoryForm form) throws ApiException {
 		//convert form to pojo
 		InventoryPojo inventoryPojo = ObjectUtil.objectMapper(form, InventoryPojo.class);
+		String barcode = form.getBarcode().toLowerCase();
 		//get the product of the relevant barcode
-		ProductPojo product = productService.selectByBarcode(inventoryPojo.getBarcode().toLowerCase());
+		ProductPojo product = productService.selectByBarcode(barcode);
 		//set id of the product to the inventory pojo
 		inventoryPojo.setId(product.getId());
 		//add the inventory pojo to the database
-		return convert(ObjectUtil.objectMapper(inventoryService.add(inventoryPojo), InventoryData.class),inventoryPojo);
+		return convert(ObjectUtil.objectMapper(inventoryService.add(inventoryPojo,barcode), InventoryData.class),inventoryPojo);
 	}
 	
 	public List<InventoryData> getInventory() throws ApiException{
@@ -57,7 +58,8 @@ public class InventoryDto {
 		//convert form to pojo
 		InventoryPojo inventory = ObjectUtil.objectMapper(form,InventoryPojo.class);
 		inventory.setId(id);
-		inventoryService.update(inventory);
+		String barcode = form.getBarcode().toLowerCase();
+		inventoryService.update(inventory, barcode);
 	}
 
 	//function to convert InventoryPojo to InventoryData by querying the product table
