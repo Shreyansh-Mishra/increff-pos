@@ -24,6 +24,8 @@ public class SchedulerService {
     public List<SchedulerPojo> selectSchedulerData(Instant startDate, Instant endDate) throws ApiException {
         if(startDate.isAfter(endDate))
             throw new ApiException("Start date cannot be after end date");
+        if(startDate.plusSeconds(15552000).isBefore(endDate))
+            throw new ApiException("Start date and end date cannot be more than 6 months apart");
         return schedulerDao.select(startDate, endDate);
     }
 }

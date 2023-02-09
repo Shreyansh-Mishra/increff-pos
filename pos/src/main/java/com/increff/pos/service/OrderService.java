@@ -37,6 +37,10 @@ public class OrderService {
 		if(startDate.isAfter(endDate)) {
 			throw new ApiException("Start date cannot be after end date");
 		}
+		//throw an exception if startDate and endDate have a difference of more than 6 months
+		if(startDate.plusSeconds(15552000).isBefore(endDate)) {
+			throw new ApiException("Start date and end date cannot be more than 6 months apart");
+		}
 		return orderDao.selectBetweenDates(startDate, endDate);
 	}
 
