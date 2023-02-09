@@ -7,10 +7,12 @@ import java.time.Instant;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Getter
 @Setter
 @Entity
+@Table(name = "Scheduler")
 public class SchedulerPojo {
 	@Id
 	private Instant date;

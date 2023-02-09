@@ -107,11 +107,11 @@ public class ProductServiceTest extends AbstractUnitTest{
         product2.setId(product.getId());
         BrandPojo brand2 = createBrand("testbrand2", "testcategory2");
         brandDao.insert(brand2);
-        product2.setBrandName("testbrand2");
-        product2.setCategory("testcategory2");
         product2.setMrp(200.0);
         product2.setName("testproduct2");
         product2.setBarcode("testbarcode2");
+        Integer brandId = brandDao.select("testbrand2", "testcategory2").getId();
+        product2.setBrand_category(brandId);
         ProductPojo p2 = productDao.selectId(product.getId());
         productService.update(product2,p2.getId());
         ProductPojo product3 = productDao.selectId(product.getId());

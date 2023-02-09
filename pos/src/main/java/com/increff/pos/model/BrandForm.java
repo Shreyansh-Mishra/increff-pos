@@ -8,4 +8,5 @@ import lombok.Setter;
 public class BrandForm {
 	private String brand;
 	private String category;
+
 }

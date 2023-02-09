@@ -84,8 +84,6 @@ public class ProductService {
 		p.setName(p.getName().toLowerCase().trim());
 		if(p.getBarcode()!=null)
 			p.setBarcode(p.getBarcode().toLowerCase().trim());
-		p.setBrandName(p.getBrandName().toLowerCase().trim());
-		p.setCategory(p.getCategory().toLowerCase().trim());
 	}
 
 }
