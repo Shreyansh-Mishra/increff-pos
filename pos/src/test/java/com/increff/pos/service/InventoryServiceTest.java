@@ -93,9 +93,10 @@ public class InventoryServiceTest extends AbstractUnitTest{
     public void testUpdate() throws ApiException {
         ProductPojo product = createBrandAndProductPojo("testbrand","testcategory", "testproduct", "testbarcode",100.0);
         InventoryPojo inventory = createInventory(product, 100);
-        inventoryDao.insert(inventory);
+        InventoryPojo i = inventoryDao.insert(inventory);
         Integer id = productDto.getProductsByBrandAndCategory("testbrand", "testcategory").get(0).getId();
         InventoryPojo i2 = createInventory(product, 200);
+        i2.setId(i.getId());
         inventoryService.update(i2,"testbarcode");
         InventoryPojo inventoryPojo = inventoryDao.selectId(id);
         assertEquals(i2.getQuantity(), inventoryPojo.getQuantity());

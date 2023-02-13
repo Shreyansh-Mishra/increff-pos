@@ -64,7 +64,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
         InventoryPojo inventoryPojo = createInventory(productPojo, 100);
         inventoryDao.insert(inventoryPojo);
         List<InventoryPojo> inventoryData = inventoryDao.selectAll();
-        InventoryData inventory = inventoryDto.getById(inventoryData.get(0).getProductId());
+        InventoryData inventory = inventoryDto.getByProductId(inventoryData.get(0).getProductId());
         assertEquals(100,inventory.getQuantity(),0);
     }
 
@@ -78,7 +78,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
         inventoryDao.insert(inventoryPojo);
         List<InventoryPojo> inventoryData = inventoryDao.selectAll();
         InventoryForm inventoryForm1 = createInventoryForm(productPojo.getBarcode(), 200);
-        inventoryDto.editInventory(inventoryData.get(0).getProductId(), inventoryForm1);
+        inventoryDto.editInventory(inventoryData.get(0).getId(), inventoryForm1);
         InventoryPojo inventory = inventoryDao.selectId(inventoryData.get(0).getProductId());
         assertEquals(200,inventory.getQuantity(),0);
     }

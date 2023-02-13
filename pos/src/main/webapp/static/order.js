@@ -387,7 +387,7 @@ function getMrpAndQuantity(barcode){
 		success: function(data) {
 			mrpAndQuantity.mrp = data.mrp;
 			$.ajax({
-				url: getInventoryUrl() + '/' + data.id,
+				url: getInventoryUrl() + '/product/' + data.id,
 				type: 'GET',
 				success: function(data) {
 					mrpAndQuantity.quantity = data.quantity;

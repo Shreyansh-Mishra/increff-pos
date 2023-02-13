@@ -80,9 +80,11 @@ public class OrderDto {
 			productService.checkMrp(item.getMrp(), product);
 			//update the inventory of the product
 			InventoryPojo newInventory = new InventoryPojo();
+			System.out.println(product.getId());
 			InventoryPojo oldInventory = inventoryService.selectById(product.getId());
 			newInventory.setQuantity(oldInventory.getQuantity()-item.getQuantity());
 			newInventory.setProductId(product.getId());
+			newInventory.setId(oldInventory.getId());
 			inventoryService.update(newInventory, barcodes.get(i++));
 			item.setProductId(product.getId());
 		}

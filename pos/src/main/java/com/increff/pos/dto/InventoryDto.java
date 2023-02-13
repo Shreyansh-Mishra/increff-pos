@@ -79,13 +79,17 @@ public class InventoryDto {
 	
 	public InventoryData getById(Integer id) throws ApiException {
 		//get the inventory pojo from the database and convert it to data
+		return ObjectUtil.objectMapper(inventoryService.selectByInvId(id), InventoryData.class);
+	}
+
+	public InventoryData getByProductId(Integer id) throws ApiException{
 		return ObjectUtil.objectMapper(inventoryService.selectById(id), InventoryData.class);
 	}
 	
 	public void editInventory(Integer id, InventoryForm form) throws ApiException {
 		//convert form to pojo
 		InventoryPojo inventory = ObjectUtil.objectMapper(form,InventoryPojo.class);
-		inventory.setProductId(id);
+		inventory.setId(id);
 		String barcode = form.getBarcode().toLowerCase();
 		inventoryService.update(inventory, barcode);
 	}

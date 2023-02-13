@@ -28,6 +28,13 @@ public class InventoryService {
 			return inventoryDao.insert(inventoryItem);
 		}
 	}
+
+	public InventoryPojo selectByInvId(Integer id) throws ApiException {
+		InventoryPojo inventory = inventoryDao.selectByInvId(id);
+		if(inventory==null)
+			throw new ApiException("The product does not exists in the Inventory");
+		return inventory;
+	}
 	
 	public List<InventoryPojo> selectInventory(){
 		return inventoryDao.selectAll();
@@ -42,7 +49,7 @@ public class InventoryService {
 	
 	public void update(InventoryPojo inventoryItem, String barcode) throws ApiException {
 		isNegative(inventoryItem.getQuantity(), barcode);
-		InventoryPojo inventory = this.selectById(inventoryItem.getProductId());
+		InventoryPojo inventory = this.selectByInvId(inventoryItem.getId());
 		inventory.setQuantity(inventoryItem.getQuantity());
 		inventoryDao.update(inventory);
 	}
