@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head th:replace="snippets.html :: name_head"></head>
-
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <body>
 
 <nav th:replace="snippets.html :: name_app_navbar"></nav>
@@ -15,18 +15,9 @@
  
  <!-- Top row with form-->
  <div th:switch="${info.getRole()}" class="row">
-	 <div th:case="'supervisor'" class="col-7 overflow-hidden" >
+	 <div th:case="'supervisor'" class="col-3 overflow-hidden" >
 			<form class="bg-white rounded p-3" id="brand-form">
 				<div class="row" >
-				<div class="col form-outline mb-4 mr-2">
-					<input type="text" id="form1Example1" name="brand" class="form-control" />
-					<label class="form-label" for="form1Example1">Brand Name</label>
-				</div>
-				<div class="col form-outline mb-4 ml-1 mr-2">
-					<input type="text" id="form1Example1" name="category" class="form-control" />
-					<label class="form-label" for="form1Example1">Category</label>
-				</div>
-
 			  <button type="button" class="btn btn-primary btn-sm col form-outline mb-4 ml-1 mr-1" style="width:10%;" id="add-brand" >Add Brand</button>
 			  <button type="button" class="btn btn-primary btn-sm col form-outline mb-4 ml-1" style="width:10%;" id="upload-data" >Upload</button>
 			</div>
@@ -101,7 +92,8 @@
 <!-- brand upload Modal -->
 <div class="modal" tabindex="-1" role="dialog" id="upload-brand-modal">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <form id="brandtsv" method="post" th:action="@{/api/file?entity=brand}" enctype="multipart/form-data">
+	<div class="modal-content">
       
       <div class="modal-header">
         <h5 class="modal-title">Upload Brands</h5>
@@ -110,24 +102,20 @@
         </button>
       </div>
       
-      <div class="modal-body">
+	  <div class="modal-body">
       	<div class="brand-file">
-		  <input type="file" class="custom-file-input" accept=".tsv" id="brandFile">
+			<input type="file" class="custom-file-input" accept=".tsv" id="brandFile" name="tsvFile">
 		  <label class="custom-file-label" for="brandFile" id="brandFileName">Choose file</label>
 		</div>
 		<a th:href="@{/static/brands.tsv}" target="_blank">Download Sample</a> 
 		<br>
-		Rows: <span id="rowCount">0</span>, 
-		Processed: <span id="processCount">0</span>, 
-		Errors: <span id="errorCount">0</span>
-      </div>
-      
+      </div>  
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="process-data">Upload</button>
-        <button type="button" class="btn btn-warning" id="download-errors">Download Errors</button>
-      </div>
+		<button type="submit" class="btn btn-primary">Upload</button>
+		</div>
     </div>
+	</form>
   </div>
 </div>
 

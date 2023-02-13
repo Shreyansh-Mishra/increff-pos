@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head th:replace="snippets.html :: name_head"></head>
-
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <body>
 
 <nav th:replace="snippets.html :: name_app_navbar"></nav>
@@ -83,8 +83,8 @@
 <!-- inventory Edit Modal -->
 <div class="modal" tabindex="-1" role="dialog" id="upload-inventory-modal">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      
+    <form id="inventorytsv" method="post" th:action="@{/api/file?entity=inventory}" enctype="multipart/form-data">
+	<div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Upload inventory</h5>
         <button type="button" class="close" data-mdb-dismiss="modal" aria-label="Close">
@@ -94,22 +94,19 @@
       
       <div class="modal-body">
       	<div class="inventory-file">
-		  <input type="file" class="custom-file-input" accept=".tsv" id="inventoryFile">
+		  <input type="file" name="tsvFile" class="custom-file-input" accept=".tsv" id="inventoryFile">
 		  <label class="custom-file-label" for="inventoryFile" id="inventoryFileName">Choose file</label>
 		</div>
 		<a th:href="@{/static/inventory.tsv}" target="_blank">Download Sample</a> 
 		<br>
-		Rows: <span id="rowCount">0</span>, 
-		Processed: <span id="processCount">0</span>, 
-		Errors: <span id="errorCount">0</span>
       </div>
       
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="process-data">Upload</button>
-        <button type="button" class="btn btn-warning" id="download-errors">Download Errors</button>
+        <button type="submit" class="btn btn-primary">Upload</button>
       </div>
     </div>
+	</form>
   </div>
 </div>
 

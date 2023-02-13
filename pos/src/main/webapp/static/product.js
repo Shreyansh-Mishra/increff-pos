@@ -9,24 +9,48 @@ function getBrandUrl(){
 	return baseUrl + "/api/brands";
 }
 
+
+document.getElementById('producttsv').addEventListener('submit', (e)=>{
+	e.preventDefault();
+	let url = $("meta[name=baseUrl]").attr("content") + "/api/file?entity=product";
+	axios.post(url, new FormData(e.target)).then((res)=>{
+		console.log(res.data);
+		if(res.data!=""){
+		const blob = new Blob([res.data], {type: 'text/tsv'});
+		const url = window.URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = "error.tsv";
+		link.click();
+		}
+		else{
+			$('#upload-product-modal').modal('toggle');
+			handleSuccess("Products added successfully");
+			getProductList();
+		}
+	}).catch(err=>{
+		console.log(err);
+		Swal.fire({title: "Error",text: "Invalid TSV file",icon: "error",});
+	})
+})
+
 //BUTTON ACTIONS
-function addProduct(event){
+function addProduct(brand,category,name,mrp,barcode){
 	//Set the values to update
-	var $form = $("#product-form");
-	var json = toJson($form);
+	json = {brandName:brand,category:category,name:name,mrp:mrp,barcode:barcode}
 	var url = getProductUrl();
-	if(JSON.parse(json).barcode=="" || JSON.parse(json).brandName=="" || JSON.parse(json).category=="" || JSON.parse(json).name==""){
+	if(json.barcode=="" || json.brandName=="" || json.category=="" || json.name==""){
 		Swal.fire({title: "Error", text:"Please fill all the fields properly", icon: "error"});
 		return;
 	}
-	if(JSON.parse(json).mrp==""){
+	if(json.mrp==""){
 		Swal.fire({title: "Error", text:"Please enter a valid MRP", icon: "error"});
 		return;
 	}
 	$.ajax({
 	   url: url,
 	   type: 'POST',
-	   data: json,
+	   data: JSON.stringify(json),
 	   headers: {
        	'Content-Type': 'application/json'
        },	   
@@ -37,7 +61,6 @@ function addProduct(event){
 		//disable the category input
 		$("#inputCategory").prop("disabled", true);
 		handleSuccess("Product added successfully");
-		
 	   },
 	   error: (response) => {
 		handleError(response);
@@ -317,14 +340,66 @@ function displayProduct(data,brandName,category){
 	})
 }
 
+function displayProductForm(){
+	$("#product-form input[name=name]").val("");	
+	$("#product-form input[name=brandName]").val("");	
+	$("#product-form input[name=category]").val("");
+	$("#product-form input[name=mrp]").val("");
+	$("#product-form input[name=barcode]").val("");	
+	$("#product-form input[name=id]").val("");
+	Swal.fire({
+		title: 'Add Product',
+		width: '70%',
+		html:`<form class="form-inline" id="#product-form">
+		<div class="container">
+		<div class="form-outline row">
+		<label class="col" for="name">Product Name</label>
+		<input placeholder="Product Name" id="name" type="text" name="name" class="swal2-input col" />
+		</div>
+
+		<div class="form-outline row">
+		<label class="col" for="brand">Brand Name</label>
+		<input placeholder="Brand Name" id="brand" type="text" name="brandName" class="swal2-input col" />
+		</div>
+
+		<div class="form-outline row">
+		<label class="col" for="category">Category</label>
+		<input placeholder="Category" id="category" type="text" name="category" class="swal2-input col" />
+		</div>
+
+		<div class="form-outline row">
+		<label class="col" for="mrp">Barcode</label>
+		<input placeholder="Barcode" id="barcode" type="text" name="barcode" class="swal2-input col" />
+		</div>
+
+		<div class="form-outline row">
+		<label class="col" for="mrp">MRP</label>
+		<input placeholder="MRP" pattern="^\\d*(\\.\\d{0,2})?$" id="mrp" type="number" name="mrp" class="swal2-input col" />
+		</div>
+
+		</div>
+		</form>`,
+		showCancelButton: true,
+		confirmButtonText: `Add Product`,
+		preConfirm: () => {
+			let brand = Swal.getPopup().querySelector('#brand').value;
+			let category = Swal.getPopup().querySelector('#category').value;
+			let name = Swal.getPopup().querySelector('#name').value;
+			let mrp = Swal.getPopup().querySelector('#mrp').value;
+			let barcode = Swal.getPopup().querySelector('#barcode').value;
+			return {brand,category,name,mrp,barcode}
+		}
+	}).then((result)=>{
+		addProduct(result.value.brand,result.value.category,result.value.name,result.value.mrp,result.value.barcode);
+	})
+}
+
 
 //INITIALIZATION CODE
 function init(){
-	$('#add-product').click(addProduct);
+	$('#add-product').click(displayProductForm);
 	$('#update-product').click(updateProduct);
 	$('#upload-data').click(displayUploadData);
-	$('#process-data').click(processData);
-	$('#download-errors').click(downloadErrors);
     $('#employeeFile').on('change', updateFileName);
     $('#inputBrand').on('change', populateCategoryDropdown);
 }

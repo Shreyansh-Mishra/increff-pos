@@ -32,9 +32,9 @@ public class InventoryDtoTest extends AbstractUnitTest {
     @Test
     public void testAddToInventory() throws ApiException {
         BrandPojo brand = createBrand("testbrand", "testcategory");
-        brandDao.insert(brand);
+        brand = brandDao.insert(brand);
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
-        productDao.insert(productPojo);
+        productPojo = productDao.insert(productPojo);
         InventoryForm inventoryForm = createInventoryForm(productPojo.getBarcode(), 100);
         inventoryDto.addToInventory(inventoryForm);
         List<InventoryPojo> inventoryData = inventoryDao.selectAll();
@@ -47,7 +47,7 @@ public class InventoryDtoTest extends AbstractUnitTest {
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandDao.insert(brand);
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
-        productDao.insert(productPojo);
+        productPojo = productDao.insert(productPojo);
         InventoryPojo inventoryPojo = createInventory(productPojo, 100);
         inventoryDao.insert(inventoryPojo);
         List<InventoryData> inventoryData = inventoryDto.getInventory();
@@ -58,28 +58,28 @@ public class InventoryDtoTest extends AbstractUnitTest {
     @Test
     public void testGetById() throws ApiException {
         BrandPojo brand = createBrand("testbrand", "testcategory");
-        brandDao.insert(brand);
+        brand = brandDao.insert(brand);
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
-        productDao.insert(productPojo);
+        productPojo = productDao.insert(productPojo);
         InventoryPojo inventoryPojo = createInventory(productPojo, 100);
         inventoryDao.insert(inventoryPojo);
         List<InventoryPojo> inventoryData = inventoryDao.selectAll();
-        InventoryData inventory = inventoryDto.getById(inventoryData.get(0).getId());
+        InventoryData inventory = inventoryDto.getById(inventoryData.get(0).getProductId());
         assertEquals(100,inventory.getQuantity(),0);
     }
 
     @Test
     public void testEditInventory() throws ApiException{
         BrandPojo brand = createBrand("testbrand", "testcategory");
-        brandDao.insert(brand);
+        brand = brandDao.insert(brand);
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
-        productDao.insert(productPojo);
+        productPojo = productDao.insert(productPojo);
         InventoryPojo inventoryPojo = createInventory(productPojo, 100);
         inventoryDao.insert(inventoryPojo);
         List<InventoryPojo> inventoryData = inventoryDao.selectAll();
         InventoryForm inventoryForm1 = createInventoryForm(productPojo.getBarcode(), 200);
-        inventoryDto.editInventory(inventoryData.get(0).getId(), inventoryForm1);
-        InventoryPojo inventory = inventoryDao.selectId(inventoryData.get(0).getId());
+        inventoryDto.editInventory(inventoryData.get(0).getProductId(), inventoryForm1);
+        InventoryPojo inventory = inventoryDao.selectId(inventoryData.get(0).getProductId());
         assertEquals(200,inventory.getQuantity(),0);
     }
 }

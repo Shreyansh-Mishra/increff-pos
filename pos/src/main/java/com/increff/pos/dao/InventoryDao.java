@@ -12,7 +12,7 @@ import com.increff.pos.pojo.InventoryPojo;
 @Repository
 public class InventoryDao extends AbstractDao {
 	private static final String SELECT_ALL = "select i from InventoryPojo i";
-	private static final String SELECT_ID = "select i from InventoryPojo i where i.id=:id";
+	private static final String SELECT_ID = "select i from InventoryPojo i where i.productId=:id";
 	
 	@Transactional
 	public InventoryPojo insert(InventoryPojo i) {

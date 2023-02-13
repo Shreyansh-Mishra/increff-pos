@@ -82,7 +82,7 @@ public class OrderDto {
 			InventoryPojo newInventory = new InventoryPojo();
 			InventoryPojo oldInventory = inventoryService.selectById(product.getId());
 			newInventory.setQuantity(oldInventory.getQuantity()-item.getQuantity());
-			newInventory.setId(product.getId());
+			newInventory.setProductId(product.getId());
 			inventoryService.update(newInventory, barcodes.get(i++));
 			item.setProductId(product.getId());
 		}

@@ -70,7 +70,7 @@ public abstract class AbstractUnitTest {
     public InventoryPojo createInventory(ProductPojo product, Integer quantity){
         InventoryPojo i = new InventoryPojo();
         i.setQuantity(quantity);
-        i.setId(product.getId());
+        i.setProductId(product.getId());
         return i;
     }
 

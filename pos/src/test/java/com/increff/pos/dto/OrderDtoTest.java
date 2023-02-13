@@ -38,9 +38,9 @@ public class OrderDtoTest extends AbstractUnitTest {
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandDao.insert(brand);
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
-        productDao.insert(productPojo);
+        productPojo = productDao.insert(productPojo);
         ProductPojo productPojo2 = createProduct(brand, "testproduct2", "testbarcode2", 200.0);
-        productDao.insert(productPojo2);
+        productPojo2 = productDao.insert(productPojo2);
         InventoryPojo inventoryPojo = createInventory(productPojo, 100);
         inventoryDao.insert(inventoryPojo);
         InventoryPojo inventoryPojo2 = createInventory(productPojo2, 100);
@@ -72,9 +72,9 @@ public class OrderDtoTest extends AbstractUnitTest {
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandDao.insert(brand);
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
-        productDao.insert(productPojo);
+        productPojo = productDao.insert(productPojo);
         ProductPojo productPojo2 = createProduct(brand, "testproduct2", "testbarcode2", 200.0);
-        productDao.insert(productPojo2);
+        productPojo2 = productDao.insert(productPojo2);
         InventoryPojo inventoryPojo = createInventory(productPojo, 100);
         inventoryDao.insert(inventoryPojo);
         InventoryPojo inventoryPojo2 = createInventory(productPojo2, 100);
@@ -105,9 +105,9 @@ public class OrderDtoTest extends AbstractUnitTest {
         BrandPojo brand = createBrand("testbrand", "testcategory");
         brandDao.insert(brand);
         ProductPojo productPojo = createProduct(brand, "testproduct", "testbarcode", 100.0);
-        productDao.insert(productPojo);
+        productPojo = productDao.insert(productPojo);
         ProductPojo productPojo2 = createProduct(brand, "testproduct2", "testbarcode2", 200.0);
-        productDao.insert(productPojo2);
+        productPojo2 = productDao.insert(productPojo2);
         InventoryPojo inventoryPojo = createInventory(productPojo, 100);
         inventoryDao.insert(inventoryPojo);
         InventoryPojo inventoryPojo2 = createInventory(productPojo2, 100);

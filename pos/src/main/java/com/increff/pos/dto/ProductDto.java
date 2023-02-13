@@ -1,11 +1,14 @@
 package com.increff.pos.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.increff.pos.model.EditProductForm;
+import com.increff.pos.model.StatusReport;
 import com.increff.pos.util.ObjectUtil;
 import com.increff.pos.util.RefactorUtil;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +41,35 @@ public class ProductDto {
 		product.setMrp(RefactorUtil.round(product.getMrp(),2));
 		//add the product pojo to the database
 		return ObjectUtil.objectMapper(productService.add(product), ProductData.class);
+	}
+
+	public List<StatusReport> createProducts(List<CSVRecord> records, HashMap<String, Integer> headerMap){
+		List<StatusReport> report = new ArrayList<>();
+		for(CSVRecord record :records){
+			//skip the header
+			if(record.getRecordNumber()==1)
+				continue;
+			ProductForm productForm = new ProductForm();
+			productForm.setBrandName(record.get(headerMap.get("brandName")));
+			productForm.setCategory(record.get(headerMap.get("category")));
+			productForm.setMrp(Double.parseDouble(record.get(headerMap.get("mrp"))));
+			productForm.setName(record.get(headerMap.get("name")));
+			productForm.setBarcode(record.get(headerMap.get("barcode")));
+			try {
+				createProduct(productForm);
+			}
+			catch(ApiException e){
+				StatusReport statusReport = new StatusReport();
+				statusReport.setBarcode(productForm.getBarcode());
+				statusReport.setCategory(productForm.getCategory());
+				statusReport.setBrand(productForm.getBrandName());
+				statusReport.setName(productForm.getName());
+				statusReport.setMrp(productForm.getMrp());
+				statusReport.setMessage(e.getMessage());
+				report.add(statusReport);
+			}
+		}
+		return report;
 	}
 
 	public List<ProductData> getAllProducts() throws ApiException {

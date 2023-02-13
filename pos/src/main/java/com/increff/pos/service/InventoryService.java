@@ -18,7 +18,7 @@ public class InventoryService {
 
 	public InventoryPojo add(InventoryPojo inventoryItem, String barcode) throws ApiException {
 		isNegative(inventoryItem.getQuantity(), barcode);
-		InventoryPojo inventory = inventoryDao.selectId(inventoryItem.getId());
+		InventoryPojo inventory = inventoryDao.selectId(inventoryItem.getProductId());
 		if(inventory!=null) {
 			inventory.setQuantity(inventoryItem.getQuantity()+inventory.getQuantity());
 			inventoryDao.update(inventory);
@@ -42,13 +42,16 @@ public class InventoryService {
 	
 	public void update(InventoryPojo inventoryItem, String barcode) throws ApiException {
 		isNegative(inventoryItem.getQuantity(), barcode);
-		InventoryPojo inventory = this.selectById(inventoryItem.getId());
+		InventoryPojo inventory = this.selectById(inventoryItem.getProductId());
 		inventory.setQuantity(inventoryItem.getQuantity());
 		inventoryDao.update(inventory);
 	}
 	public static void isNegative(Integer a, String barcode) throws ApiException {
-		if(a<0)
+		System.out.println(a);
+		if(a<0){
+			System.out.println("Enter a valid quantity for product with barcode "+barcode);
 			throw new ApiException("Enter a valid quantity for product with barcode "+barcode);
+		}
 	}
 
 }

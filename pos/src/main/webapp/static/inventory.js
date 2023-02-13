@@ -5,6 +5,28 @@ function getInventoryUrl(){
 }
 
 
+document.getElementById('inventorytsv').addEventListener('submit', (e)=>{
+	e.preventDefault();
+	let url = $("meta[name=baseUrl]").attr("content") + "/api/file?entity=inventory";
+	axios.post(url, new FormData(e.target)).then((res)=>{
+		if(res.data!=""){
+		const blob = new Blob([res.data], {type: 'text/tsv'});
+		const url = window.URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = "error.tsv";
+		link.click();
+		}
+		else{
+			$('#upload-inventory-modal').modal('toggle');
+			handleSuccess("Inventory updated successfully");
+			getInventoryList();
+		}
+	}).catch(err=>{
+		Swal.fire({title: "Error",text: "Invalid TSV file",icon: "error",});
+	})
+})
+
 //BUTTON ACTIONS
 function addInventory(event){
 	//Set the values to update
@@ -291,7 +313,6 @@ function displayInventory(data,barcode){
 function init(){
 	$('#add-inventory').click(addInventory);
 	$('#upload-data').click(displayUploadData);
-	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#inventoryFile').on('change', updateFileName)
 }

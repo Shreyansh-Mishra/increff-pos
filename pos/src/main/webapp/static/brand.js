@@ -5,16 +5,15 @@ function getBrandUrl(){
 }
 
 //BUTTON ACTIONS
-function addBrand(event){
+function addBrand(brand, category){
 	//Set the values to update
-	var $form = $("#brand-form");
-	var json = toJson($form);
+	var json = {brand: brand,category: category}
 	var url = getBrandUrl();
 
 	$.ajax({
 	   url: url,
 	   type: 'POST',
-	   data: json,
+	   data: JSON.stringify(json),
 	   headers: {
        	'Content-Type': 'application/json'
        },	   
@@ -81,75 +80,32 @@ var errorData = [];
 var processCount = 0;
 
 
-function processData(){
-	let fileName = document.getElementById('brandFileName').innerHTML;
-	if(fileName.split('.')[1]!='tsv'){
-		Swal.fire({title: "Error",text: "Please upload a tsv file",icon: "error",});
-		return;
-	}
-	var file = $('#brandFile')[0].files[0];
-	console.log(file);
-	readFileData(file, readFileDataCallback);
-}
-
-function readFileDataCallback(results){
-	fileData = results.data;
-	if(fileData.length>5000){
-		Swal.fire({title: "Error",text: "You can upload maximum 5000 rows at a time",icon: "error",});
-		return;
-	}
-	uploadRows();
-}
-
-function uploadRows(){
-	//Update progress
-	updateUploadDialog();
-	//If everything processed then return
-	if(processCount==fileData.length){
-		if(errorData.length>0){
-			// alert("There was some problem with some of your entries!");
+document.getElementById('brandtsv').addEventListener('submit', (e)=>{
+	e.preventDefault();
+	let url = $("meta[name=baseUrl]").attr("content") + "/api/file?entity=brand";
+	axios.post(url, new FormData(e.target)).then((res)=>{
+		if(res.data!=""){
+		const blob = new Blob([res.data], {type: 'text/tsv'});
+		const url = window.URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = "error.tsv";
+		link.click();
 		}
-		else if(errorData.length==0){
+		else{
 			$('#upload-brand-modal').modal('toggle');
 			handleSuccess("All brands uploaded successfully");
+			getBrandList();
 		}
-		getBrandList();
-		return;
-	}
-	
-	if(fileData[processCount].brand==undefined || fileData[processCount].category==undefined){
-		Swal.fire({title: "Error",text: "Invalid headers in TSV file",icon: "error",});
-		return;
-	}
-	//Process next row
-	var row = fileData[processCount];
-	processCount++;
-	
-	var json = JSON.stringify(row);
-	var url = getBrandUrl();
-	//Make ajax call
-	$.ajax({
-	   url: url,
-	   type: 'POST',
-	   data: json,
-	   headers: {
-       	'Content-Type': 'application/json'
-       },	   
-	   success: function(response) {
-	   		uploadRows();  
-	   },
-	   error: function(response){
-			row.error=JSON.parse(response.responseText).message;
-	   		errorData.push(row);
-	   		uploadRows();
-	   }
-	});
+	}).catch(err=>{
+		Swal.fire({title: "Error",text: "Invalid TSV file",icon: "error",});
+	})
+})
 
-}
 
-function downloadErrors(){
-	writeFileData(errorData);
-}
+
+
+
 
 //UI DISPLAY METHODS
 
@@ -212,14 +168,11 @@ function resetUploadDialog(){
 	updateUploadDialog();
 }
 
-function updateUploadDialog(){
-	$('#rowCount').html("" + fileData.length);
-	$('#processCount').html("" + processCount);
-	$('#errorCount').html("" + errorData.length);
-}
+
 
 function updateFileName(){
 	var $file = $('#brandFile');
+	console.log($file.val());
 	var fileName = $file.val();
 	$('#brandFileName').html(fileName.split('\\')[fileName.split('\\').length-1]);
 	fileName = fileName.split('\\')[fileName.split('\\').length-1].split('.')[1];
@@ -268,14 +221,40 @@ function displayBrand(data){
 	})
 }
 
+function displayBrandForm(){
+	Swal.fire({
+		title: 'Add Brand',
+		width: "40%",
+		html:`<form class="form-inline" id="#brand-form">
+		<div class="container">
+		<div class="form-outline row">
+		<label class="col" for="brand">Brand</label>
+		<input placeholder="Brand Name" id="brand" type="text" name="brand" class="swal2-input col" />
+		</div>
+		<div class="form-outline row">
+		<label class="col" for="category">Category</label>
+		<input placeholder="Category" id="category" type="text" name="category" class="swal2-input col" />
+		</div>
+		</div>
+		</form>`,
+		showCancelButton: true,
+		confirmButtonText: `Add brand`,
+		preConfirm: () => {
+			let brand = Swal.getPopup().querySelector('#brand').value;
+			let category = Swal.getPopup().querySelector('#category').value;
+			return {brand,category}
+		}
+	}).then((result)=>{
+		addBrand(result.value.brand,result.value.category);
+	})
+}
+
 
 //INITIALIZATION CODE
 function init(){
-	$('#add-brand').click(addBrand);
+	$('#add-brand').click(displayBrandForm);
 	$('#update-brand').click(updateBrand);
 	$('#upload-data').click(displayUploadData);
-	$('#process-data').click(processData);
-	$('#download-errors').click(downloadErrors);
     $('#brandFile').on('change', updateFileName);
 }
 

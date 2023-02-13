@@ -1,8 +1,11 @@
 package com.increff.pos.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.increff.pos.model.StatusReport;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +26,29 @@ public class BrandDto {
 		BrandPojo brand = ObjectUtil.objectMapper(form, BrandPojo.class);
 		//add brand and return brand data
 		return ObjectUtil.objectMapper(brandService.add(brand), BrandData.class);
+	}
+
+	public List<StatusReport> createBrands(List<CSVRecord> records, HashMap<String,Integer> headerMap) {
+		List<StatusReport> report = new ArrayList<>();
+		for (CSVRecord record : records) {
+			//skip the header
+			if (record.getRecordNumber() == 1)
+				continue;
+			BrandForm brandForm = new BrandForm();
+			brandForm.setBrand(record.get(headerMap.get("brand")));
+			brandForm.setCategory(record.get(headerMap.get("category")));
+			try {
+				createBrand(brandForm);
+			}
+			catch(ApiException e){
+				StatusReport statusReport = new StatusReport();
+				statusReport.setBrand(brandForm.getBrand());
+				statusReport.setCategory(brandForm.getCategory());
+				statusReport.setMessage(e.getMessage());
+				report.add(statusReport);
+			}
+		}
+		return report;
 	}
 	
 	public List<BrandData> getAllBrands() {

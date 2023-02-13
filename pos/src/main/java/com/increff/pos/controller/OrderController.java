@@ -1,5 +1,6 @@
 package com.increff.pos.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -60,16 +61,18 @@ public class OrderController {
 		File file = new File(invoice.getPath());
 
 		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()+"");
+		response.setHeader("Content-Disposition", "attachment; filename=" + file.getName() + "");
 		InputStream inputStream = new FileInputStream(new File(invoice.getPath()));
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-		return outputStream -> {
-			Integer nRead;
-			byte[] data = new byte[1024];
-			while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
-				outputStream.write(data, 0, nRead);
-			}
-		};
+		Integer nRead;
+		byte[] data = new byte[1024];
+		while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+			baos.write(data, 0, nRead);
+		}
+
+		response.setContentLength(baos.size());
+		return outputStream -> baos.writeTo(outputStream);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)

@@ -47,7 +47,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
         List<InventoryPojo> inventories = inventoryDao.selectAll();
         assertEquals(1, inventories.size());
         assertEquals(inventory.getQuantity(), inventories.get(0).getQuantity());
-        assertEquals(id, inventories.get(0).getId());
+        assertEquals(id, inventories.get(0).getProductId());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
         List<InventoryPojo> inventories = inventoryDao.selectAll();
         assertEquals(1, inventories.size());
         assertEquals((Integer) 200, inventories.get(0).getQuantity());
-        assertEquals(id, inventories.get(0).getId());
+        assertEquals(id, inventories.get(0).getProductId());
     }
 
     @Test(expected = ApiException.class)
@@ -78,7 +78,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
         Integer id = productDto.getProductsByBrandAndCategory("testbrand", "testcategory").get(0).getId();
         InventoryPojo inventoryPojo = inventoryService.selectById(id);
         assertEquals(inventory.getQuantity(), inventoryPojo.getQuantity());
-        assertEquals(id, inventoryPojo.getId());
+        assertEquals(id, inventoryPojo.getProductId());
     }
 
     @Test(expected = ApiException.class)
@@ -99,8 +99,7 @@ public class InventoryServiceTest extends AbstractUnitTest{
         inventoryService.update(i2,"testbarcode");
         InventoryPojo inventoryPojo = inventoryDao.selectId(id);
         assertEquals(i2.getQuantity(), inventoryPojo.getQuantity());
-        assertEquals(id, inventoryPojo.getId());
-        assertEquals(id, inventoryPojo.getId());
+        assertEquals(id, inventoryPojo.getProductId());
     }
 
     @Test

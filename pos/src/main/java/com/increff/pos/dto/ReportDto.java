@@ -208,7 +208,7 @@ public class ReportDto {
 
 		HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
 		for(InventoryPojo item: inventory) {
-			ProductPojo product = productService.selectById(item.getId());
+			ProductPojo product = productService.selectById(item.getProductId());
 			if(!brandIds.contains(product.getBrand_category())){
 				continue;
 			}

@@ -1,9 +1,12 @@
 package com.increff.pos.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.increff.pos.model.StatusReport;
 import com.increff.pos.util.ObjectUtil;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,9 +36,34 @@ public class InventoryDto {
 		//get the product of the relevant barcode
 		ProductPojo product = productService.selectByBarcode(barcode);
 		//set id of the product to the inventory pojo
-		inventoryPojo.setId(product.getId());
+		inventoryPojo.setProductId(product.getId());
 		//add the inventory pojo to the database
 		return convert(ObjectUtil.objectMapper(inventoryService.add(inventoryPojo,barcode), InventoryData.class),inventoryPojo);
+	}
+
+	public List<StatusReport> addInventories(List<CSVRecord> records, HashMap<String, Integer> headerMap){
+		List<StatusReport> reportList = new ArrayList<>();
+		for(CSVRecord record: records){
+			if(record.getRecordNumber()==1)
+				continue;
+			InventoryForm inventory = new InventoryForm();
+			inventory.setBarcode(record.get(headerMap.get("barcode")));
+			inventory.setQuantity(Integer.parseInt(record.get(headerMap.get("quantity"))));
+			System.out.println(inventory.getQuantity());
+			try{
+				addToInventory(inventory);
+				System.out.println("added");
+			}
+			catch(ApiException e){
+				System.out.println(e.getMessage());
+				StatusReport report = new StatusReport();
+				report.setBarcode(inventory.getBarcode());
+				report.setQuantity(inventory.getQuantity());
+				report.setMessage(e.getMessage());
+				reportList.add(report);
+			}
+		}
+		return reportList;
 	}
 	
 	public List<InventoryData> getInventory() throws ApiException{
@@ -57,14 +85,14 @@ public class InventoryDto {
 	public void editInventory(Integer id, InventoryForm form) throws ApiException {
 		//convert form to pojo
 		InventoryPojo inventory = ObjectUtil.objectMapper(form,InventoryPojo.class);
-		inventory.setId(id);
+		inventory.setProductId(id);
 		String barcode = form.getBarcode().toLowerCase();
 		inventoryService.update(inventory, barcode);
 	}
 
 	//function to convert InventoryPojo to InventoryData by querying the product table
 	public InventoryData convert(InventoryData i, InventoryPojo i2) throws ApiException {
-		ProductPojo p = productService.selectById(i2.getId());
+		ProductPojo p = productService.selectById(i2.getProductId());
 		i.setBarcode(p.getBarcode());
 		i.setName(p.getName());
 		return i;
@@ -75,7 +103,7 @@ public class InventoryDto {
 		List<InventoryPojo> inventory = inventoryService.selectInventory();
 		List<String> barcodes = new ArrayList<>();
 		for(InventoryPojo item: inventory){
-			barcodes.add(productService.selectById(item.getId()).getBarcode());
+			barcodes.add(productService.selectById(item.getProductId()).getBarcode());
 		}
 		return barcodes;
 	}

@@ -12,7 +12,12 @@ import javax.persistence.*;
 @Table(name="Inventory")
 public class InventoryPojo {
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+
+	@NonNull
+	@Column(nullable = false)
+	private Integer productId;
 	@NonNull
 	@Column(nullable = false)
 	private Integer quantity;
